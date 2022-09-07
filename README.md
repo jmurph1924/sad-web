@@ -1,3 +1,8 @@
+# Team Members for this project
+Brayckner Bueres Torres
+Jonathan Murphree
+Cliff Herr
+Julianny Pinott Velez
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
