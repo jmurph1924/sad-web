@@ -4,13 +4,19 @@ import { Row, Col, Button } from "antd"
 
 const login = () => {
 
+    const buttonClick = (e) => {
+
+    }
+
     return (
         <>
+            {user.isEqual(authorization) ? 
             <Row>
                 <Col>
-                    <Button> This is a Button </Button>
+                    <Button onClick={(e) => buttonClick(e)}> This is a Button </Button>
                 </Col>
             </Row>
+            : <> </>}
         </>
     );
 }
