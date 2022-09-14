@@ -1,24 +1,19 @@
 import * as React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Row, Col, Button } from "antd"
+import { Row, Col, Button, Typography } from "antd"
+import styles from "./Login.less"
 
-const login = () => {
+const Login = () => {
 
     const buttonClick = (e) => {
 
     }
 
     return (
-        <>
-            {user.isEqual(authorization) ? 
-            <Row>
-                <Col>
-                    <Button onClick={(e) => buttonClick(e)}> This is a Button </Button>
-                </Col>
-            </Row>
-            : <> </>}
-        </>
+        <div classname="content">
+            <h1>Hello World</h1>
+        </div>
     );
 }
 
-export default login;
+export default Login;
