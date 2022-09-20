@@ -4,7 +4,7 @@ import _ from "lodash"
 export default {
 
     state: {
-        authorization: "",
+        isModalVisible: true,
     },
 
     // Effect:
@@ -22,10 +22,16 @@ export default {
 
     // Reducer:
 
-    *setLoginAuthorization( { state, action } ){
+    *setOpenModal(state){
         return {
             ...state,
-            authorization: action.payload,
+            isModalVisible: true,
+        }
+    },
+    *setClosedModal(state){
+        return {
+            ...state,
+            isModalVisible: false,
         }
     }
 };

@@ -1,0 +1,21 @@
+.loginContainer{
+    padding: 0 10px;
+}
+
+.pageTitle {
+    margin-top: 25px;
+    margin-top: 20px;
+}
+
+.TypographyTitle {
+    display: grid;
+    text-align: center;
+    margin-top: 200px;
+}
+
+.Input {
+    width: 300px;
+    margin: 5px; 
+    opacity: .8;
+}
+

@@ -1,37 +1,46 @@
 import "antd/dist/antd.min.css"
-import { BrowserRouter, Route, Routes} from 'react-router-dom'
-import { Layout, Menu, Row, Col } from 'antd'
+import { BrowserRouter, Route, Routes, Link} from 'react-router-dom'
+import { Layout, Menu, Row, Col, Typography } from 'antd'
 
 import Login from './components/Login/Login'
 import Homepage from './components/Homepage/Homepage';
+import Administrator from "./components/Administrator/Administrator";
 
 const { Header, Footer, Content } = Layout;
 
 function App() {
+  const loggedIn = true;
 
   return (
       
-        <Layout className="layout">
+        <Layout>
           <BrowserRouter>
-          <Header>
-            <Row>
+          <Header style={{background: "white"}}>
+            {loggedIn === true ? 
+            <Row >
               <Col span={4}>
-                <img src={require('./images/instacount.png')} alt="Instacount" className="logo"/>
+                <img src={require('./images/instacount.png')} style={{width: "274px", marginBottom: "10px", paddingLeft: "0px"}} alt="Instacount" className="logo"/>
               </Col>
               <Col span={20}>
                 <Menu
-                  theme="dark"
+                  theme="white"
                   mode="horizontal"
                   defaultSelectedKeys={['login']}
                 >
-                  <Menu.Item key="login">
-                    Login
-                  </Menu.Item>
                   <Menu.Item key="homepage">
-                    Homepage
+                    <Link to="/homepage">
+                      Homepage
+                    </Link>
+                  </Menu.Item>
+                  <Menu.Item key="administrator">
+                    <Link to="/administrator">
+                      Administrator
+                    </Link>
                   </Menu.Item>
                   <Menu.Item key="chartsofaccounts">
-                    Charts of Accounts
+                    <Link to="/">
+                      Charts of Accounts
+                    </Link>
                   </Menu.Item>
                   <Menu.Item key="journals">
                     Journals
@@ -39,11 +48,21 @@ function App() {
                 </Menu>
               </Col>
             </Row>
+            :
+            <>
+             <Row >
+              <Col span={4}>
+                <img src={require('./images/instacount.png')} style={{width: "274px", marginBottom: "10px", paddingLeft: "0px"}} alt="Instacount" className="logo"/>
+              </Col>
+             </Row>
+            </>  
+          }
           </Header>
-          <Content style={{ padding: '0 50px' }}>
+          <Content style={{ padding: '0 500px', background: "#041C32", height: "850px" }}>
             <Routes>
               <Route path="/" element={<Login />} />
               <Route path="/homepage" element={<Homepage />} />
+              <Route path="/administrator" element={<Administrator />} />
               {/* <Route exact path="/chartofaccounts">
                 <Chartofaccounts />
               </Route>
@@ -52,8 +71,17 @@ function App() {
               </Route> */}
             </Routes>
           </Content>
-          <Footer style={{ textAlign: 'center' }}>
-
+          <Footer style={{ textAlign: 'center'}}>
+            <Row style={{color: "white" }}>
+                <Col span={4}>
+                  <img src={require('./images/instacount.png')} style={{width: "274px", alignContent: "left"}} alt="Instacount" className="logo"/>
+                </Col>
+                <Col span={16}>
+                  <Typography.Text style={{opacity: ".6"}}>
+                    This website is brought to you by Jonathan Murphree, Bray Torres, Julianny Pinott, and Cliff Herr 
+                  </Typography.Text>
+                </Col>
+            </Row>
           </Footer>
          </BrowserRouter> 
         </Layout>
