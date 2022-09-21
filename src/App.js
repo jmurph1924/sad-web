@@ -6,6 +6,7 @@ import Login from './components/Login/Login'
 import Homepage from './components/Homepage/Homepage';
 import Administrator from "./components/Administrator/Administrator";
 import ForgotPassword from "./components/ForgotPassword/ForgotPassword";
+import CreateUser from "./components/CreateUser/CreateUser";
 
 const { Header, Footer, Content } = Layout;
 
@@ -66,6 +67,7 @@ function App() {
               <Route path="/homepage" element={<Homepage />} />
               <Route path="/administrator" element={<Administrator />} />
               <Route path="/forgotPassword" element={<ForgotPassword />} />
+              <Route path="/createUser" element={<CreateUser />} />
             </Routes>
           </Content>
           <Footer style={{ textAlign: 'center'}}>

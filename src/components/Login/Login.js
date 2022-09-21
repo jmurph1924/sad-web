@@ -9,7 +9,7 @@ const Login = () => {
     const navigate = useNavigate();
 
     const createUser = () => {
-        navigate('/administrator')
+        navigate('/createUser')
     }
     const forgotPassword = () => {
         navigate('/forgotPassword')
