@@ -5,6 +5,7 @@ import { Layout, Menu, Row, Col, Typography } from 'antd'
 import Login from './components/Login/Login'
 import Homepage from './components/Homepage/Homepage';
 import Administrator from "./components/Administrator/Administrator";
+import ForgotPassword from "./components/ForgotPassword/ForgotPassword";
 
 const { Header, Footer, Content } = Layout;
 
@@ -64,12 +65,7 @@ function App() {
               <Route path="/" element={<Login />} />
               <Route path="/homepage" element={<Homepage />} />
               <Route path="/administrator" element={<Administrator />} />
-              {/* <Route exact path="/chartofaccounts">
-                <Chartofaccounts />
-              </Route>
-              <Route exact path="/journals">
-                <Journals />
-              </Route> */}
+              <Route path="/forgotPassword" element={<ForgotPassword />} />
             </Routes>
           </Content>
           <Footer style={{ textAlign: 'center'}}>

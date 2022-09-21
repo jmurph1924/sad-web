@@ -8,8 +8,11 @@ import "./Login.css"
 const Login = () => {
     const navigate = useNavigate();
 
-    const redirect = () => {
+    const createUser = () => {
         navigate('/administrator')
+    }
+    const forgotPassword = () => {
+        navigate('/forgotPassword')
     }
 
     return (
@@ -34,12 +37,12 @@ const Login = () => {
                     <Button size="large" style={{width: "150px", margin: "5px", opacity: ".8"}}>Login</Button>
                 </Col>
                 <Col>
-                    <Button size="large" style={{width: "150px", margin: "5px", opacity: ".8"}}>Forgot Password</Button>
+                    <Button size="large" style={{width: "150px", margin: "5px", opacity: ".8"}} onClick={forgotPassword}>Forgot Password</Button>
                 </Col>
             </Row>
             <Row style={{justifyContent: "center"}} >
                 <Col>
-                    <Button size="large" style={{width: "150px", margin: "5px", opacity: ".8"}} onClick={redirect}>Create New User</Button>
+                    <Button size="large" style={{width: "150px", margin: "5px", opacity: ".8"}} onClick={createUser}>Create New User</Button>
                 </Col>
             </Row>
         </div>
