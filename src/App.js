@@ -26,6 +26,7 @@ function App() {
                   theme="white"
                   mode="horizontal"
                   defaultSelectedKeys={['login']}
+                  selectedKeys={[]}
                 >
                   <Menu.Item key="homepage">
                     <Link to="/homepage">
@@ -58,7 +59,7 @@ function App() {
             </>  
           }
           </Header>
-          <Content style={{ padding: '0 500px', background: "#041C32", height: "850px" }}>
+          <Content style={{ background: "#041C32", height: "850px" }}>
             <Routes>
               <Route path="/" element={<Login />} />
               <Route path="/homepage" element={<Homepage />} />

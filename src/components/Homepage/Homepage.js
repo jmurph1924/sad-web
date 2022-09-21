@@ -1,5 +1,4 @@
 import * as React from "react";
-import { useSelector, useDispatch } from "react-redux";
 import { Row, Col, Button } from "antd"
 
 const Homepage = () => {
