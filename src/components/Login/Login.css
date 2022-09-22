@@ -19,3 +19,8 @@
     opacity: .8;
 }
 
+.buttonStyle{
+    width: 150px; 
+    margin: 5px;
+    opacity: .9;
+}

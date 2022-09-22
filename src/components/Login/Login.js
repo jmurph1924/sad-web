@@ -34,15 +34,15 @@ const Login = () => {
             </Row>
             <Row style={{justifyContent: "center"}} >
                 <Col>
-                    <Button size="large" style={{width: "150px", margin: "5px", opacity: ".9"}}>Login</Button>
+                    <Button size="large" className="buttonStyle">Login</Button>
                 </Col>
                 <Col>
-                    <Button size="large" style={{width: "150px", margin: "5px", opacity: ".9"}} onClick={forgotPassword}>Forgot Password</Button>
+                    <Button size="large" className="buttonStyle" onClick={forgotPassword}>Forgot Password</Button>
                 </Col>
             </Row>
             <Row style={{justifyContent: "center"}} >
                 <Col>
-                    <Button size="large" style={{width: "150px", margin: "5px", opacity: ".9"}} onClick={createUser}>Create New User</Button>
+                    <Button size="large" className="buttonStyle" onClick={createUser}>Create New User</Button>
                 </Col>
             </Row>
         </div>
