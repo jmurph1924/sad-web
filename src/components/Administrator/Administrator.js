@@ -13,7 +13,7 @@ const Administrator = () => {
                     </Collapse.Panel>
                     <Collapse.Panel header="Expired Passwords" key="2">
                     </Collapse.Panel>
-                    <Collapse.Panel header="This is Collapse.Panel header 3" key="3">
+                    <Collapse.Panel header="Disabled Users" key="3">
                     </Collapse.Panel>
                 </Collapse>
             </Row>
