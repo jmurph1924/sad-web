@@ -19,7 +19,7 @@ const Login = () => {
         <div className="loginContainer">
             <Row style={{justifyContent: "center"}}>
                 <Col>
-                    <Typography.Title className="TypographyTitle" style={{color: "white", opacity: ".8"}}>Login</Typography.Title>
+                    <Typography.Title className="TypographyTitle" style={{color: "white", opacity: ".9"}}>Login</Typography.Title>
                 </Col>
             </Row>
             <Row style={{justifyContent: "center"}}>
@@ -34,15 +34,15 @@ const Login = () => {
             </Row>
             <Row style={{justifyContent: "center"}} >
                 <Col>
-                    <Button size="large" style={{width: "150px", margin: "5px", opacity: ".8"}}>Login</Button>
+                    <Button size="large" style={{width: "150px", margin: "5px", opacity: ".9"}}>Login</Button>
                 </Col>
                 <Col>
-                    <Button size="large" style={{width: "150px", margin: "5px", opacity: ".8"}} onClick={forgotPassword}>Forgot Password</Button>
+                    <Button size="large" style={{width: "150px", margin: "5px", opacity: ".9"}} onClick={forgotPassword}>Forgot Password</Button>
                 </Col>
             </Row>
             <Row style={{justifyContent: "center"}} >
                 <Col>
-                    <Button size="large" style={{width: "150px", margin: "5px", opacity: ".8"}} onClick={createUser}>Create New User</Button>
+                    <Button size="large" style={{width: "150px", margin: "5px", opacity: ".9"}} onClick={createUser}>Create New User</Button>
                 </Col>
             </Row>
         </div>

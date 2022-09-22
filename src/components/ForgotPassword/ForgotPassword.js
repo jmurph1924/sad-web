@@ -26,7 +26,7 @@ const ForgotPassword = () => {
             </Row>
             <Row style={{justifyContent: "center"}}>
                 <Col>
-                    <Typography.Title className="TypographyTitle" style={{color: "white", opacity: ".8"}}>Reset Password</Typography.Title>
+                    <Typography.Title className="TypographyTitle" style={{color: "white", opacity: ".9"}}>Reset Password</Typography.Title>
                 </Col>
             </Row>
             <Row style={{justifyContent: "center"}}>
@@ -58,7 +58,7 @@ const ForgotPassword = () => {
             </Row>
             <Row style={{justifyContent: "center"}} >
                 <Col>
-                    <Button size="large" style={{width: "150px", margin: "5px", opacity: ".8"}}>Submit</Button>
+                    <Button size="large" style={{width: "150px", margin: "5px", opacity: ".9"}}>Submit</Button>
                 </Col>
             </Row>
         </div>
