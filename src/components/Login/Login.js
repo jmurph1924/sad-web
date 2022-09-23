@@ -15,24 +15,52 @@ const Login = () => {
         navigate('/forgotPassword')
     }
 
+    const [registerEmail, setRegisterEmail] = React.useState("");
+    const [registerPassword, setRegisterPassword] = React.useState("");
+    const [loginEmail, setLoginEmail] = React.useState("");
+    const [loginPassword, setLoginPassword] = React.useState("");
+
+    const [user, setUser] = React.useState({});
+
+    //   const login = async () => {
+    //     try {
+    //       const user = await signInWithEmailAndPassword(
+    //         auth,
+    //         loginEmail,
+    //         loginPassword
+    //       );
+    //       console.log(user);
+    //     } catch (error) {
+    //       console.log(error.message);
+    //     }
+    //   };
+    
+    //   const logout = async () => {
+    //     await signOut(auth);
+    //   };
+
     return (
         <div className="loginContainer">
-            <Row style={{justifyContent: "center"}}>
+            <Row className="rowStuff">
                 <Col>
-                    <Typography.Title className="TypographyTitle" style={{color: "white", opacity: ".9"}}>Login</Typography.Title>
+                    <Typography.Title className="TypographyTitle" style={{color: "white", opacity: ".9"}} >Login</Typography.Title>
                 </Col>
             </Row>
-            <Row style={{justifyContent: "center"}}>
+            <Row className="rowStuff">
                 <Col>
-                    <Input className="Input" size="large" placeholder="User Id" prefix={<UserOutlined />}/>
+                    <Input className="Input" size="large" placeholder="Email" prefix={<UserOutlined />} onChange={(event) => {
+                        setRegisterEmail(event.target.value);
+                    }}/>
                 </Col>
             </Row>
-            <Row style={{justifyContent: "center"}}>
+            <Row className="rowStuff">
                 <Col>
-                    <Input.Password className="Input" size="large" placeholder="Password" prefix={<LockOutlined />}/>
+                    <Input.Password className="Input" size="large" placeholder="Password" prefix={<LockOutlined />}  onChange={(event) => {
+                        setRegisterPassword(event.target.value);
+                    }}/>
                 </Col>
             </Row>
-            <Row style={{justifyContent: "center"}} >
+            <Row className="rowStuff" >
                 <Col>
                     <Button size="large" className="buttonStyle">Login</Button>
                 </Col>
@@ -40,7 +68,7 @@ const Login = () => {
                     <Button size="large" className="buttonStyle" onClick={forgotPassword}>Forgot Password</Button>
                 </Col>
             </Row>
-            <Row style={{justifyContent: "center"}} >
+            <Row className="rowStuff" >
                 <Col>
                     <Button size="large" className="buttonStyle" onClick={createUser}>Create New User</Button>
                 </Col>

@@ -1,17 +1,32 @@
 import * as React from "react";
+import * as _ from "lodash";
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeftOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, SmileFilled, FrownTwoTone } from '@ant-design/icons';
 import { Row, Col, Button, Typography, Input, Select} from "antd"
 import "./CreateUser.css"
 
 
 const CreateUser = () => {
+
+    const [passWord, setPassword] = React.useState("");
+
     const navigate = useNavigate();
 
     const back = () => {
         navigate('/')
     }
-    
+        
+    const containsLetters = (letter) => {
+        return /[a-zA-Z]/.test(letter);
+    }
+    const containsSpecialCharacters = (character) => {
+        return /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/.test(character);
+    }
+    const containsNumber = (number) => {
+        return /\d/.test(number);
+    }
+
+    const isAbleToSubmit = (_.isNil(passWord) === true ? false : !(containsLetters(passWord) && containsSpecialCharacters(passWord) && containsNumber(passWord)))
 
     return (
         <div className="loginContainer">
@@ -34,6 +49,30 @@ const CreateUser = () => {
                 <Col span={6}>
                 <Typography.Text className="stylingColor">Last Name</Typography.Text>
                     <Input placeholder="Last Name" style={{ opacity: ".9"}}/>
+                </Col>
+            </Row>
+            <Row style={{justifyContent: "center", marginTop: "20px"}} gutter={[8,8]}>
+                <Col span={6}>
+                    <Typography.Text className="stylingColor">Email</Typography.Text>
+                    <Input placeholder="Email" style={{ opacity: ".9"}}/>
+                </Col>
+                <Col span={6}>
+                <Typography.Text className="stylingColor">Password</Typography.Text>
+                    <Input placeholder="Password" style={{ opacity: ".9"}} onChange={(e) => setPassword(e.target.value)}/>
+                </Col>
+            </Row>
+            <Row style={{justifyContent: "center", marginTop: "10px", marginLeft: "55px"}}>
+                <Col style={{paddingRight: "65px"}}>
+                    {(passWord?.length >= 8) === true ? <SmileFilled style={{color: "#ECB365", fontSize: "20px"}}/> : <FrownTwoTone style={{fontSize: "20px"}}/>}
+                    <Typography.Text style={{color: "white"}}>{" "}Password Must Be Longer Than 8 Characters</Typography.Text>
+                </Col>
+                <Col span={4}>
+                    {(containsLetters(passWord)) === true  ? <SmileFilled style={{color: "#ECB365", fontSize: "20px"}}/> : <FrownTwoTone style={{fontSize: "20px"}}/>}
+                    <Typography.Text style={{color: "white"}}>{" "}Password Must Start With a Letter</Typography.Text>
+                </Col>
+                <Col>
+                    {(containsSpecialCharacters(passWord) && containsNumber(passWord)) === true ? <SmileFilled style={{color: "#ECB365", fontSize: "20px"}}/> : <FrownTwoTone style={{fontSize: "20px"}}/>}
+                    <Typography.Text style={{color: "white"}}>{" "}Password Must Contain a Number and a Special Character</Typography.Text>
                 </Col>
             </Row>
             <Row style={{justifyContent: "center", marginTop: "20px"}} gutter={[8,8]} >
@@ -73,7 +112,7 @@ const CreateUser = () => {
                 </Col>
             </Row>
             <Row style={{justifyContent: "center", marginTop: "30px"}} gutter={[8,8]}>
-                <Button style={{width: "400px", opacity: ".9"}}>Submit</Button>
+                <Button style={{width: "400px", opacity: ".9"}} disabled={isAbleToSubmit}>Submit</Button>
             </Row>
         </div>
     );
