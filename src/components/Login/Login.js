@@ -1,11 +1,18 @@
 import * as React from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate } from 'react-router-dom';
+import { loginUser } from "../../features/user";
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { Row, Col, Button, Typography, Input} from "antd";
 import "./Login.css"
-
+import { auth } from "../../firebase-config";
+import {
+    signInWithEmailAndPassword,
+  } from "firebase/auth";
+  
 
 const Login = () => {
+    const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const createUser = () => {
@@ -15,29 +22,23 @@ const Login = () => {
         navigate('/forgotPassword')
     }
 
-    const [registerEmail, setRegisterEmail] = React.useState("");
-    const [registerPassword, setRegisterPassword] = React.useState("");
     const [loginEmail, setLoginEmail] = React.useState("");
     const [loginPassword, setLoginPassword] = React.useState("");
 
-    const [user, setUser] = React.useState({});
-
-    //   const login = async () => {
-    //     try {
-    //       const user = await signInWithEmailAndPassword(
-    //         auth,
-    //         loginEmail,
-    //         loginPassword
-    //       );
-    //       console.log(user);
-    //     } catch (error) {
-    //       console.log(error.message);
-    //     }
-    //   };
-    
-    //   const logout = async () => {
-    //     await signOut(auth);
-    //   };
+      const login = async () => {
+        try {
+          const user = await signInWithEmailAndPassword(
+            auth,
+            loginEmail,
+            loginPassword
+          );
+          dispatch(loginUser(user));
+          console.log(user);
+        } catch (error) {
+          console.log(error.message);
+        }
+        
+      };
 
     return (
         <div className="loginContainer">
@@ -49,20 +50,20 @@ const Login = () => {
             <Row className="rowStuff">
                 <Col>
                     <Input className="Input" size="large" placeholder="Email" prefix={<UserOutlined />} onChange={(event) => {
-                        setRegisterEmail(event.target.value);
+                        setLoginEmail(event.target.value);
                     }}/>
                 </Col>
             </Row>
             <Row className="rowStuff">
                 <Col>
                     <Input.Password className="Input" size="large" placeholder="Password" prefix={<LockOutlined />}  onChange={(event) => {
-                        setRegisterPassword(event.target.value);
+                        setLoginPassword(event.target.value);
                     }}/>
                 </Col>
             </Row>
             <Row className="rowStuff" >
                 <Col>
-                    <Button size="large" className="buttonStyle">Login</Button>
+                    <Button size="large" className="buttonStyle" onClick={() => login}>Login</Button>
                 </Col>
                 <Col>
                     <Button size="large" className="buttonStyle" onClick={forgotPassword}>Forgot Password</Button>

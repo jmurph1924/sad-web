@@ -1,6 +1,13 @@
 import "antd/dist/antd.min.css"
+import * as React from "react"
+import { useDispatch, useSelector } from "react-redux";
+import { logoutUser } from "./features/user";
 import { BrowserRouter, Route, Routes, Link} from 'react-router-dom'
-import { Layout, Menu, Row, Col, Typography } from 'antd'
+import { Layout, Menu, Row, Col, Typography, Button } from 'antd'
+import {
+  signOut,
+} from "firebase/auth";
+import { auth } from "./firebase-config";
 
 import Login from './components/Login/Login'
 import Homepage from './components/Homepage/Homepage';
@@ -11,7 +18,14 @@ import CreateUser from "./components/CreateUser/CreateUser";
 const { Header, Footer, Content } = Layout;
 
 function App() {
+  const user = useSelector((state) => state.user.value);
+  const dispatch = useDispatch();
   const loggedIn = true;
+
+  const logout = async () => {
+    dispatch(logoutUser());
+    await signOut(auth);
+  };
 
   return (
       
@@ -47,6 +61,12 @@ function App() {
                   </Menu.Item>
                   <Menu.Item key="journals">
                     Journals
+                  </Menu.Item>
+                  <Menu.Item style={{marginLeft: "760px"}}>
+                    {user?.email}
+                  </Menu.Item>
+                  <Menu.Item >
+                      <Button onClick={() => logout()}>Logout</Button>
                   </Menu.Item>
                 </Menu>
               </Col>

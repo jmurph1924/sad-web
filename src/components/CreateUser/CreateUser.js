@@ -1,5 +1,11 @@
 import * as React from "react";
 import * as _ from "lodash";
+import { useDispatch } from "react-redux";
+import { loginUser } from "../../features/user";
+import { auth } from "../../firebase-config";
+import {
+    createUserWithEmailAndPassword,
+  } from "firebase/auth";
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeftOutlined, SmileFilled, FrownTwoTone } from '@ant-design/icons';
 import { Row, Col, Button, Typography, Input, Select} from "antd"
@@ -7,8 +13,23 @@ import "./CreateUser.css"
 
 
 const CreateUser = () => {
+    const dispatch = useDispatch();
+    const [registerEmail, setRegisterEmail] = React.useState("");
+    const [registerPassword, setRegisterPassword] = React.useState("");
 
-    const [passWord, setPassword] = React.useState("");
+    const register = async () => {
+        try {
+          const user = await createUserWithEmailAndPassword(
+            auth,
+            registerEmail,
+            registerPassword
+          );
+          dispatch(loginUser(user));
+          console.log(user);
+        } catch (error) {
+          console.log(error.message);
+        }
+      };
 
     const navigate = useNavigate();
 
@@ -26,7 +47,7 @@ const CreateUser = () => {
         return /\d/.test(number);
     }
 
-    const isAbleToSubmit = (_.isNil(passWord) === true ? false : !(containsLetters(passWord) && containsSpecialCharacters(passWord) && containsNumber(passWord)))
+    const isAbleToSubmit = (_.isNil(registerPassword) === true ? false : !(containsLetters(registerPassword) && containsSpecialCharacters(registerPassword) && containsNumber(registerPassword)))
 
     return (
         <div className="loginContainer">
@@ -54,24 +75,28 @@ const CreateUser = () => {
             <Row style={{justifyContent: "center", marginTop: "20px"}} gutter={[8,8]}>
                 <Col span={6}>
                     <Typography.Text className="stylingColor">Email</Typography.Text>
-                    <Input placeholder="Email" style={{ opacity: ".9"}}/>
+                    <Input placeholder="Email" style={{ opacity: ".9"}} onChange={(event) => {
+                        setRegisterEmail(event.target.value);
+                    }}/>
                 </Col>
                 <Col span={6}>
                 <Typography.Text className="stylingColor">Password</Typography.Text>
-                    <Input placeholder="Password" style={{ opacity: ".9"}} onChange={(e) => setPassword(e.target.value)}/>
+                    <Input placeholder="Password" style={{ opacity: ".9"}} onChange={(event) => {
+                        setRegisterPassword(event.target.value);
+                    }}/>
                 </Col>
             </Row>
             <Row style={{justifyContent: "center", marginTop: "10px", marginLeft: "55px"}}>
                 <Col style={{paddingRight: "65px"}}>
-                    {(passWord?.length >= 8) === true ? <SmileFilled style={{color: "#ECB365", fontSize: "20px"}}/> : <FrownTwoTone style={{fontSize: "20px"}}/>}
+                    {(registerPassword?.length >= 8) === true ? <SmileFilled style={{color: "#ECB365", fontSize: "20px"}}/> : <FrownTwoTone style={{fontSize: "20px"}}/>}
                     <Typography.Text style={{color: "white"}}>{" "}Password Must Be Longer Than 8 Characters</Typography.Text>
                 </Col>
                 <Col span={4}>
-                    {(containsLetters(passWord)) === true  ? <SmileFilled style={{color: "#ECB365", fontSize: "20px"}}/> : <FrownTwoTone style={{fontSize: "20px"}}/>}
+                    {(containsLetters(registerPassword)) === true  ? <SmileFilled style={{color: "#ECB365", fontSize: "20px"}}/> : <FrownTwoTone style={{fontSize: "20px"}}/>}
                     <Typography.Text style={{color: "white"}}>{" "}Password Must Start With a Letter</Typography.Text>
                 </Col>
                 <Col>
-                    {(containsSpecialCharacters(passWord) && containsNumber(passWord)) === true ? <SmileFilled style={{color: "#ECB365", fontSize: "20px"}}/> : <FrownTwoTone style={{fontSize: "20px"}}/>}
+                    {(containsSpecialCharacters(registerPassword) && containsNumber(registerPassword)) === true ? <SmileFilled style={{color: "#ECB365", fontSize: "20px"}}/> : <FrownTwoTone style={{fontSize: "20px"}}/>}
                     <Typography.Text style={{color: "white"}}>{" "}Password Must Contain a Number and a Special Character</Typography.Text>
                 </Col>
             </Row>
@@ -112,7 +137,7 @@ const CreateUser = () => {
                 </Col>
             </Row>
             <Row style={{justifyContent: "center", marginTop: "30px"}} gutter={[8,8]}>
-                <Button style={{width: "400px", opacity: ".9"}} disabled={isAbleToSubmit}>Submit</Button>
+                <Button style={{width: "400px", opacity: ".9"}} disabled={isAbleToSubmit} onClick={register}>Submit</Button>
             </Row>
         </div>
     );
