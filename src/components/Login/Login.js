@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { Row, Col, Button, Typography, Input} from "antd";
 import "./Login.css"
-import { useState } from "react";
 
 
 const Login = () => {
