@@ -17,6 +17,7 @@ const ForgotPassword = () => {
         return /[a-zA-Z]/.test(letter);
     }
     const containsSpecialCharacters = (character) => {
+        //eslint-disable-next-line
         return /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/.test(character);
     }
     const containsNumber = (number) => {

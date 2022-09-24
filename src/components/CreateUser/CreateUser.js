@@ -21,7 +21,7 @@ const CreateUser = () => {
         if(currentUser) {
             navigate('/')
         }
-    }, [])
+    },)
 
     async function handleSubmit() {
         try {

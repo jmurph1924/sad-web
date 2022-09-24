@@ -11,7 +11,7 @@ const Login = () => {
     const passwordRef = useRef()
     const { login, currentUser } = useAuth()
     const navigate = useNavigate()
-
+    const [invalidIdentification, setInvalidIdentification] = useState(2);
     const [error, setError] = useState("")
     const [loading, setLoading] = useState(false)
 
@@ -19,7 +19,7 @@ const Login = () => {
         if(currentUser) {
             navigate('/')
         }
-    }, [])
+    })
     
     async function handleSubmit() {
 
@@ -27,10 +27,18 @@ const Login = () => {
             setError("")
             setLoading(true)
             await login(emailRef.current.input.value, passwordRef.current.input.value)
-            navigate("/homepage")
+            navigate("/administrator")
         } catch(e) {
             console.log(e)
-            setError("Failed to sign in")
+            if(invalidIdentification === 0){
+                setInvalidIdentification(invalidIdentification - 1)
+                setTimeout(function() {setInvalidIdentification(2)}, 300000)
+                setError(`Maximum number of tries reach, Please try again in 5 minutes`)
+            }
+            else{
+                setInvalidIdentification(invalidIdentification - 1)
+                setError(`Invalid Email/Password, ${invalidIdentification} attempts remaining`)
+            }
         }
 
         setLoading(false)
@@ -45,7 +53,11 @@ const Login = () => {
 
     return (
         <div className="loginContainer">
-            {error && <Alert variant="danger" style={{marginTop: "40px"}}>{error}</Alert>}
+            {error && 
+            <Row className="rowStuff">
+                <Alert type="error" closable showIcon message={error} style={{marginTop: "40px", width: "480px", height: "40px",justifyContent: "center"}}/>
+            </Row>
+            }
             <Row className="rowStuff">
                 <Col>
                     <Typography.Title className="TypographyTitle" style={{color: "white", opacity: ".9"}} >Login</Typography.Title>
@@ -63,7 +75,7 @@ const Login = () => {
             </Row>
             <Row className="rowStuff" >
                 <Col>
-                    <Button size="large" className="buttonStyle" disabled={loading} onClick={() => handleSubmit()}>Login</Button>
+                    <Button size="large" className="buttonStyle" disabled={loading || (invalidIdentification === -1) === true} onClick={() => handleSubmit()}>Login</Button>
                 </Col>
                 <Col>
                     <Button size="large" className="buttonStyle" onClick={forgotPassword}>Forgot Password</Button>

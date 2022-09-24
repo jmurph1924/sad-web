@@ -1,113 +1,33 @@
 import "antd/dist/antd.min.css"
 import * as React from "react"
-import { useDispatch, useSelector } from "react-redux";
-
 import { AuthProvider } from "./contexts/AuthContext"
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 
-import { logoutUser } from "./features/user";
-import { BrowserRouter, Route, Routes, Link} from 'react-router-dom'
-import { Layout, Menu, Row, Col, Typography, Button } from 'antd'
-import {
-  signOut,
-} from "firebase/auth";
-import { auth } from "./firebase-config";
-
-import Login from './components/Login/Login'
-import Homepage from './components/Homepage/Homepage';
-import Administrator from "./components/Administrator/Administrator";
-import ForgotPassword from "./components/ForgotPassword/ForgotPassword";
-import CreateUser from "./components/CreateUser/CreateUser";
-
-const { Header, Footer, Content } = Layout;
+import ProtectedRoute from "./components/ProtectedRoute";
+import LoginPage from './pages/Login'
+import HomepagePage from './pages/Homepage';
+import AdministratorPage from "./pages/Administrator";
+import ForgotPasswordPage from "./pages/ForgotPassword";
+import CreateUserPage from "./pages/Createuser";
 
 function App() {
-  const user = useSelector((state) => state.user.value);
-  const dispatch = useDispatch();
-  const loggedIn = true;
-
-  const logout = async () => {
-    dispatch(logoutUser());
-    await signOut(auth);
-  };
-
   return (
-        <Layout>
+    <div className="App">
           <BrowserRouter>
-          <Header style={{background: "white"}}>
-            {loggedIn === true ? 
-            <Row >
-              <Col span={4}>
-                <img src={require('./images/instacount.png')} style={{width: "274px", marginBottom: "10px", paddingLeft: "0px"}} alt="Instacount" className="logo"/>
-              </Col>
-              <Col span={20}>
-                <Menu
-                  theme="white"
-                  mode="horizontal"
-                  defaultSelectedKeys={['login']}
-                  selectedKeys={[]}
-                >
-                  <Menu.Item key="homepage">
-                    <Link to="/homepage">
-                      Homepage
-                    </Link>
-                  </Menu.Item>
-                  <Menu.Item key="administrator">
-                    <Link to="/administrator">
-                      Administrator
-                    </Link>
-                  </Menu.Item>
-                  <Menu.Item key="chartsofaccounts">
-                    <Link to="/">
-                      Charts of Accounts
-                    </Link>
-                  </Menu.Item>
-                  <Menu.Item key="journals">
-                    Journals
-                  </Menu.Item>
-                  <Menu.Item style={{marginLeft: "760px"}}>
-                    {user?.email}
-                  </Menu.Item>
-                  <Menu.Item >
-                      <Button onClick={() => logout()}>Logout</Button>
-                  </Menu.Item>
-                </Menu>
-              </Col>
-            </Row>
-            :
-            <>
-             <Row >
-              <Col span={4}>
-                <img src={require('./images/instacount.png')} style={{width: "274px", marginBottom: "10px", paddingLeft: "0px"}} alt="Instacount" className="logo"/>
-              </Col>
-             </Row>
-            </>  
-          }
-          </Header>
-          <Content style={{ background: "#041C32", height: "850px" }}>
             <AuthProvider>
               <Routes>
-                <Route path="/" element={<Login />} />
-                <Route path="/homepage" element={<Homepage />} />
-                <Route path="/administrator" element={<Administrator />} />
-                <Route path="/forgotPassword" element={<ForgotPassword />} />
-                <Route path="/createUser" element={<CreateUser />} />
+              <Route element={<ProtectedRoute />}>
+                <Route path="/" element={<LoginPage />} />
+                <Route path="/homepage" element={<HomepagePage />} />
+                <Route path="/administrator" element={<AdministratorPage />} />
+              </Route>
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/forgotPassword" element={<ForgotPasswordPage />} />
+                <Route path="/createUser" element={<CreateUserPage />} />
               </Routes>
             </AuthProvider>
-          </Content>
-          <Footer style={{ textAlign: 'center'}}>
-            <Row style={{color: "white" }}>
-                <Col span={4}>
-                  <img src={require('./images/instacount.png')} style={{width: "274px", alignContent: "left"}} alt="Instacount" className="logo"/>
-                </Col>
-                <Col span={16}>
-                  <Typography.Text style={{opacity: ".6"}}>
-                    This website is brought to you by Jonathan Murphree, Bray Torres, Julianny Pinott, and Cliff Herr 
-                  </Typography.Text>
-                </Col>
-            </Row>
-          </Footer>
          </BrowserRouter> 
-        </Layout>
+      </div>
       
   )
 }
