@@ -1,6 +1,9 @@
 import "antd/dist/antd.min.css"
 import * as React from "react"
 import { useDispatch, useSelector } from "react-redux";
+
+import { AuthProvider } from "./contexts/AuthContext"
+
 import { logoutUser } from "./features/user";
 import { BrowserRouter, Route, Routes, Link} from 'react-router-dom'
 import { Layout, Menu, Row, Col, Typography, Button } from 'antd'
@@ -28,7 +31,6 @@ function App() {
   };
 
   return (
-      
         <Layout>
           <BrowserRouter>
           <Header style={{background: "white"}}>
@@ -82,13 +84,15 @@ function App() {
           }
           </Header>
           <Content style={{ background: "#041C32", height: "850px" }}>
-            <Routes>
-              <Route path="/" element={<Login />} />
-              <Route path="/homepage" element={<Homepage />} />
-              <Route path="/administrator" element={<Administrator />} />
-              <Route path="/forgotPassword" element={<ForgotPassword />} />
-              <Route path="/createUser" element={<CreateUser />} />
-            </Routes>
+            <AuthProvider>
+              <Routes>
+                <Route path="/" element={<Login />} />
+                <Route path="/homepage" element={<Homepage />} />
+                <Route path="/administrator" element={<Administrator />} />
+                <Route path="/forgotPassword" element={<ForgotPassword />} />
+                <Route path="/createUser" element={<CreateUser />} />
+              </Routes>
+            </AuthProvider>
           </Content>
           <Footer style={{ textAlign: 'center'}}>
             <Row style={{color: "white" }}>

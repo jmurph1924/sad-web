@@ -1,37 +1,40 @@
-import * as React from "react";
+import React, { useRef, useState, useEffect } from 'react'
 import * as _ from "lodash";
-import { useDispatch } from "react-redux";
-import { loginUser } from "../../features/user";
-import { auth } from "../../firebase-config";
-import {
-    createUserWithEmailAndPassword,
-  } from "firebase/auth";
+import { useAuth } from "../../contexts/AuthContext"
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeftOutlined, SmileFilled, FrownTwoTone } from '@ant-design/icons';
-import { Row, Col, Button, Typography, Input, Select} from "antd"
+import { Row, Col, Button, Typography, Input, Select, Alert} from "antd"
 import "./CreateUser.css"
 
 
 const CreateUser = () => {
-    const dispatch = useDispatch();
-    const [registerEmail, setRegisterEmail] = React.useState("");
+    const emailRef = useRef(null)
+    const passwordRef = useRef(null)
+    const { signup, currentUser } = useAuth()
     const [registerPassword, setRegisterPassword] = React.useState("");
+    const navigate = useNavigate()
 
-    const register = async () => {
-        try {
-          const user = await createUserWithEmailAndPassword(
-            auth,
-            registerEmail,
-            registerPassword
-          );
-          dispatch(loginUser(user));
-          console.log(user);
-        } catch (error) {
-          console.log(error.message);
+    const [error, setError] = useState("")
+    const [loading, setLoading] = useState(false)
+
+    useEffect(() => {
+        if(currentUser) {
+            navigate('/')
         }
-      };
+    }, [])
 
-    const navigate = useNavigate();
+    async function handleSubmit() {
+        try {
+            setError("")
+            setLoading(true)
+            await signup(emailRef.current.input.value, passwordRef.current.input.value)
+            navigate("/")
+        } catch(e) {
+            setError("Failed to create an account")
+        }
+
+        setLoading(false)
+    }
 
     const back = () => {
         navigate('/')
@@ -41,22 +44,25 @@ const CreateUser = () => {
         return /[a-zA-Z]/.test(letter);
     }
     const containsSpecialCharacters = (character) => {
+        //eslint-disable-next-line
         return /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/.test(character);
     }
     const containsNumber = (number) => {
         return /\d/.test(number);
     }
 
-    const isAbleToSubmit = (_.isNil(registerPassword) === true ? false : !(containsLetters(registerPassword) && containsSpecialCharacters(registerPassword) && containsNumber(registerPassword)))
+    const isAbleToSubmit = (_.isNil(registerPassword) === true ? false : !(containsLetters(registerPassword) && containsSpecialCharacters(registerPassword) && containsNumber(registerPassword) && registerPassword.length > 7))
 
     return (
         <div className="loginContainer">
+            
             <Row>
                 <Button style={{marginTop: "20px", border: "none", boxShadow: "none", background: "#041C32"}} onClick={back}>
                     <ArrowLeftOutlined className="stylingColor"/>
                     <Typography.Text className="stylingColor">Back</Typography.Text>
                 </Button>
             </Row>
+            {error && <Alert type="danger">{error}</Alert>}
             <Row style={{justifyContent: "center", marginTop: "40px"}} gutter={[8,8]}>
                 <Typography.Title style={{color: "white", opacity: ".9"}}>
                     Create a New User
@@ -75,13 +81,11 @@ const CreateUser = () => {
             <Row style={{justifyContent: "center", marginTop: "20px"}} gutter={[8,8]}>
                 <Col span={6}>
                     <Typography.Text className="stylingColor">Email</Typography.Text>
-                    <Input placeholder="Email" style={{ opacity: ".9"}} onChange={(event) => {
-                        setRegisterEmail(event.target.value);
-                    }}/>
+                    <Input placeholder="Email" style={{ opacity: ".9"}} ref={emailRef} />
                 </Col>
                 <Col span={6}>
                 <Typography.Text className="stylingColor">Password</Typography.Text>
-                    <Input placeholder="Password" style={{ opacity: ".9"}} onChange={(event) => {
+                    <Input.Password placeholder="Password" style={{ opacity: ".9"}} ref={passwordRef} onChange={(event) => {
                         setRegisterPassword(event.target.value);
                     }}/>
                 </Col>
@@ -137,7 +141,7 @@ const CreateUser = () => {
                 </Col>
             </Row>
             <Row style={{justifyContent: "center", marginTop: "30px"}} gutter={[8,8]}>
-                <Button style={{width: "400px", opacity: ".9"}} disabled={isAbleToSubmit} onClick={register}>Submit</Button>
+                <Button style={{width: "400px", opacity: ".9"}} disabled={isAbleToSubmit || loading} type="submit" onClick={() => handleSubmit()}>Submit</Button>
             </Row>
         </div>
     );
