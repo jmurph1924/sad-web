@@ -1,8 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react'
+import * as _ from "lodash"
+import { collection, getDocs } from "firebase/firestore"
+import { db } from "../../firebase-config"
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../contexts/AuthContext'
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
-import { Row, Col, Button, Typography, Input, Alert} from "antd";
+import { Row, Col, Button, Typography, Input, Alert, message} from "antd";
 import "./Login.css"
   
 
@@ -14,9 +17,26 @@ const Login = () => {
     const [invalidIdentification, setInvalidIdentification] = useState(2);
     const [error, setError] = useState("")
     const [loading, setLoading] = useState(false)
+    const [users, setUsers] = useState([]);
+
+    useEffect(() => {
+        getUsers()
+    }, [])
+
+    const getUsers = () => {
+        const usersCollectionRef = collection(db, 'users')
+        getDocs(usersCollectionRef).then(response => {
+            const usrs = response.docs.map(doc => ({
+                data: doc.data(), 
+                id: doc.id,
+            }))
+            setUsers(usrs);
+        }).catch (error => console.log(error.message))
+      }
+
 
     async function handleSubmit() {
-
+        if(users?.some((e) => _.isEqual(e.data.email, emailRef.current.input.defaultValue) && _.isEqual(e.data.disabled, false))){
         try {
             setError("")
             setLoading(true)
@@ -34,7 +54,9 @@ const Login = () => {
                 setError(`Invalid Email/Password, ${invalidIdentification} attempts remaining`)
             }
         }
-
+    }  else{
+        message.error("User account has been disabled. Please contact an administrator for access")
+    }
         setLoading(false)
     }
 

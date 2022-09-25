@@ -1,7 +1,9 @@
-import React, { useRef, useState, useEffect } from 'react'
+import React, { useRef, useState} from 'react'
 import * as _ from "lodash";
 import { useAuth } from "../../contexts/AuthContext"
 import { useNavigate } from 'react-router-dom';
+import { collection, addDoc } from "firebase/firestore"
+import { db } from "../../firebase-config"
 import { ArrowLeftOutlined, SmileFilled, FrownTwoTone } from '@ant-design/icons';
 import { Row, Col, Button, Typography, Input, Select, Alert} from "antd"
 import "./CreateUser.css"
@@ -16,18 +18,38 @@ const CreateUser = () => {
 
     const [error, setError] = useState("")
     const [loading, setLoading] = useState(false)
+    const [address, setAddress] = useState("")
+    const [state, setState] = useState("")
+    const [city, setCity] = useState("")
+    const [firstname, setFirstname] = useState("")
+    const [lastname, setLastName] = useState("")
+    const [email, setEmail] = useState("")
+    const [passwordQuestion, setPasswordQuestion] = useState("")
+    const [pswAnswer, setpswAnswer] = useState("")
+    const [zipcode, setZipcode] = useState("")
+    const [role, setRole] = useState("")
+    const [dateOfBirth, setDateOfBirth] = useState("")
 
     async function handleSubmit() {
-        try {
+        const usersCollectionRef = collection(db, 'users')
+        addDoc(usersCollectionRef, {active: false, address, city, dateOfBirth, disabled: true,
+             email, firstname, lastname, passwordQuestion: "Dont forget to add password question", 
+             pwQuestionAnswer: "Add Answer",  role, state, zipcode}).then(response => {
+                try {
             setError("")
             setLoading(true)
-            await signup(emailRef.current.input.value, passwordRef.current.input.value)
+            signup(emailRef.current.input.value, passwordRef.current.input.value)
             navigate("/")
-        } catch(e) {
-            setError("Failed to create an account")
-        }
+            } catch(e) {
+                setError("Failed to create an account")
+            }
 
-        setLoading(false)
+            setLoading(false)
+             }).catch(error => {
+                console.log(error.message)
+             }) 
+
+        
     }
 
     const back = () => {
@@ -65,17 +87,17 @@ const CreateUser = () => {
             <Row style={{justifyContent: "center", marginTop: "20px"}} gutter={[8,8]}>
                 <Col span={6}>
                     <Typography.Text className="stylingColor">First Name</Typography.Text>
-                    <Input placeholder="First Name" style={{ opacity: ".9"}}/>
+                    <Input placeholder="First Name" style={{ opacity: ".9"}} onChange={e => setFirstname(e.target.value)}/>
                 </Col>
                 <Col span={6}>
                 <Typography.Text className="stylingColor">Last Name</Typography.Text>
-                    <Input placeholder="Last Name" style={{ opacity: ".9"}}/>
+                    <Input placeholder="Last Name" style={{ opacity: ".9"}} onChange={e => setLastName(e.target.value)}/>
                 </Col>
             </Row>
             <Row style={{justifyContent: "center", marginTop: "20px"}} gutter={[8,8]}>
                 <Col span={6}>
                     <Typography.Text className="stylingColor">Email</Typography.Text>
-                    <Input placeholder="Email" style={{ opacity: ".9"}} ref={emailRef} />
+                    <Input placeholder="Email" style={{ opacity: ".9"}} ref={emailRef} onChange={e => setEmail(e.target.value)}/>
                 </Col>
                 <Col span={6}>
                 <Typography.Text className="stylingColor">Password</Typography.Text>
@@ -101,32 +123,32 @@ const CreateUser = () => {
             <Row style={{justifyContent: "center", marginTop: "20px"}} gutter={[8,8]} >
                 <Col span={3}>
                     <Typography.Text className="stylingColor">Address</Typography.Text>
-                    <Input placeholder="Address" style={{ opacity: ".9"}}/>
+                    <Input placeholder="Address" style={{ opacity: ".9"}} onChange={e => setAddress(e.target.value)}/>
                 </Col>
                 <Col span={3}>
                     <Typography.Text className="stylingColor">City</Typography.Text>
-                    <Input placeholder="City" style={{ opacity: ".9"}}/>
+                    <Input placeholder="City" style={{ opacity: ".9"}} onChange={e => setCity(e.target.value)}/>
                 </Col >
                 <Col span={3}>
                     <Typography.Text className="stylingColor">State</Typography.Text>
-                    <Input placeholder="State" style={{ opacity: ".9"}}/>
+                    <Input placeholder="State" style={{ opacity: ".9"}} onChange={e => setState(e.target.value)}/>
                 </Col>
                 <Col span={3}>
                     <Typography.Text className="stylingColor">Zipcode</Typography.Text>
-                    <Input placeholder="Zipcode" style={{ opacity: ".9"}}/>
+                    <Input placeholder="Zipcode" style={{ opacity: ".9"}} onChange={e => setZipcode(e.target.value)}/>
                 </Col>
             </Row>
             <Row style={{justifyContent: "center", marginTop: "20px"}} gutter={[8,8]}>
                 <Col span={6}>
                     <Typography.Text className="stylingColor">Date of Birth</Typography.Text>
-                    <Input placeholder="Date of Birth" style={{ opacity: ".9"}}/>
+                    <Input placeholder="Date of Birth" style={{ opacity: ".9"}} onChange={e => setDateOfBirth(e.target.value)}/>
                 </Col>
                 <Col span={6}>
                     <Col>
                         <Typography.Text className="stylingColor">Role</Typography.Text>
                     </Col>
                     <Col>
-                        <Select placeholder="Select a Role" style={{width: "425px", opacity: ".9"}}>
+                        <Select placeholder="Select a Role" style={{width: "425px", opacity: ".9"}} onSelect={e => setRole(e)}>
                             <Select.Option value="Administrator">Administrator</Select.Option>
                             <Select.Option value="Manager">Manager</Select.Option>
                             <Select.Option value="User">User</Select.Option>

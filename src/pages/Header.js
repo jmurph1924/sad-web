@@ -19,6 +19,10 @@ const MenuItemizer = () => {
         getUsers()
     }, [])
 
+    useEffect(() => {
+      console.log(currentUser)
+  })
+
     async function handleLogout() {
         try {
             await logout()

@@ -15,7 +15,7 @@ const AdministratorPage = () => {
         <Header style={{background: "white"}}>
             <MenuItemizer />
         </Header>
-        <Content style={{ background: "#041C32", height: "850px" }}>
+        <Content style={{ background: "#041C32", height: "2000px" }}>
             <Administrator />
         </Content>
         <Footer style={{ textAlign: 'center'}}>
