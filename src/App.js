@@ -1,7 +1,7 @@
 import "antd/dist/antd.min.css"
 import * as React from "react"
 import * as _ from "lodash"
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import { useAuth } from '../src/contexts/AuthContext'
 
 import ProtectedRoute from "./components/ProtectedRoute";
