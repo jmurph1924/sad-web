@@ -1,30 +1,58 @@
-import * as React from "react";
+import React, { useState, useEffect } from "react";
 import * as _ from "lodash"
+import { collection, getDocs } from "firebase/firestore"
+import { db } from "../../firebase-config"
 import { useNavigate } from 'react-router-dom';
-import { UserOutlined, MailOutlined, ArrowLeftOutlined, FrownTwoTone, SmileFilled } from '@ant-design/icons';
-import { Row, Col, Button, Typography, Input} from "antd"
+import {  MailOutlined, ArrowLeftOutlined } from '@ant-design/icons';
+import { Row, Col, Button, Typography, Input, message} from "antd"
+import { useAuth } from '../../contexts/AuthContext'
 import "./ForgotPassword.css"
 
 const ForgotPassword = () => {
     const navigate = useNavigate();
-    const [passWord, setPassword] = React.useState("");
-    
+    const [users, setUsers] = useState([]);
+    const [ user, setUser ] = useState(null);
+    const [ email, setEmail ] = useState("");
+    const [ passwordAnswer, setPasswordAnswer ] = useState("");
+    const { forgetPassword } = useAuth()
+
+    useEffect(() => {
+        getUsers()
+    }, [])
+
     const back = () => {
         navigate('/')
     }
-    
-    const containsLetters = (letter) => {
-        return /[a-zA-Z]/.test(letter);
-    }
-    const containsSpecialCharacters = (character) => {
-        //eslint-disable-next-line
-        return /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/.test(character);
-    }
-    const containsNumber = (number) => {
-        return /\d/.test(number);
+
+    const onSubmit = () => {
+        if(users?.some((e) => _.isEqual(e.data.email, email))){
+            setUser(users?.filter(e => _.isEqual(e.data.email, email)))
+        } else{
+            message.error("Email not valid, Please try again")
+        }
     }
 
-    const isAbleToSubmit = (_.isNil(passWord) === true ? false : !(containsLetters(passWord) && containsSpecialCharacters(passWord) && containsNumber(passWord)))
+    const passwordChange = () => {
+        if(_.isEqual(user[0].data.pwQuestionAnswer, passwordAnswer) ){
+            forgetPassword(email).then(response => {
+                console.log(response)
+                navigate('/')
+            }).catch(e => console.log(e))
+        }else{
+            message.error("Incorrect Security Question Answer")
+        }
+    }
+
+    const getUsers = () => {
+        const usersCollectionRef = collection(db, 'users')
+        getDocs(usersCollectionRef).then(response => {
+            const usrs = response.docs.map(doc => ({
+                data: doc.data(), 
+                id: doc.id,
+            }))
+            setUsers(usrs);
+        }).catch(error => console.log(error.message))
+      }
 
     return (
         <div className="loginContainer">
@@ -41,14 +69,16 @@ const ForgotPassword = () => {
             </Row>
             <Row style={{justifyContent: "center"}}>
                 <Col>
-                    <Input className="Input" size="large" placeholder="Email Address" prefix={<MailOutlined />}/>
+                    <Input className="Input" size="large" placeholder="Email Address" onChange={e => setEmail(e.target.value)} prefix={<MailOutlined />}/>
                 </Col>
             </Row>
-            <Row style={{justifyContent: "center"}}>
-                <Col>
-                    <Input.Password className="Input" size="large" placeholder="User Id" prefix={<UserOutlined />}/>
-                </Col>
+            <Row style={{justifyContent: "center"}} >
+                    <Col>
+                        <Button size="large" style={{width: "150px", margin: "10px", opacity: ".9"}} onClick={() => onSubmit()} >Submit</Button>
+                    </Col>
             </Row>
+            { !_.isNil(user) && 
+           <>
             <Row style={{justifyContent: "center"}}>
                 <Col>
                     <Typography.Title level={4} style={{color: "white", marginTop: "20px"}}>
@@ -57,53 +87,22 @@ const ForgotPassword = () => {
                 </Col>
             </Row>
             <Row style={{justifyContent: "center"}}>
-                <Col>
-                    <Typography.Text style={{color: "white"}}>
-                        What is the meaning of life?
-                    </Typography.Text>
-                </Col>
-            </Row>
-            <Row style={{justifyContent: "center", marginTop: "10px"}}>
-                <Input placeholder="Answer Security Question" className="Input"/>
-            </Row>
-            <Row style={{justifyContent: "center"}} >
-                <Col>
-                    <Button size="large" style={{width: "150px", margin: "10px", opacity: ".9"}}>Submit</Button>
-                </Col>
-            </Row>
-            <Row style={{justifyContent: "center"}}>
-                <Col>
-                    <Typography.Title level={4} style={{color: "white", marginTop: "20px"}}>
-                        Enter New Password
-                    </Typography.Title>
-                </Col>
-            </Row>
-            <Row style={{justifyContent: "center", marginTop: "10px"}}>
-                <Input placeholder="Enter New Password" className="Input" onChange={(e) => setPassword(e.target.value)}/>
-            </Row>
-            <Row style={{justifyContent: "center", marginTop: "10px"}}>
-                <Input placeholder="Re-Enter Password" className="Input"/>
-            </Row>
-            <Row style={{justifyContent: "center", marginTop: "10px", marginLeft: "55px"}}>
-                <Col style={{paddingRight: "65px"}}>
-                    {(passWord?.length >= 8) === true ? <SmileFilled style={{color: "#ECB365", fontSize: "20px"}}/> : <FrownTwoTone style={{fontSize: "20px"}}/>}
-                    <Typography.Text style={{color: "white"}}>{" "}Password Must Be Longer Than 8 Characters</Typography.Text>
-                </Col>
-                <Col span={4}>
-                    {(containsLetters(passWord)) === true  ? <SmileFilled style={{color: "#ECB365", fontSize: "20px"}}/> : <FrownTwoTone style={{fontSize: "20px"}}/>}
-                    <Typography.Text style={{color: "white"}}>{" "}Password Must Start With a Letter</Typography.Text>
-                </Col>
-                <Col>
-                    {(containsSpecialCharacters(passWord) && containsNumber(passWord)) === true ? <SmileFilled style={{color: "#ECB365", fontSize: "20px"}}/> : <FrownTwoTone style={{fontSize: "20px"}}/>}
-                    <Typography.Text style={{color: "white"}}>{" "}Password Must Contain a Number and a Special Character</Typography.Text>
-                </Col>
-            </Row>
-            
-            <Row style={{justifyContent: "center"}} >
-                <Col>
-                    <Button size="large" disabled={isAbleToSubmit} style={{width: "150px", margin: "15px", opacity: ".9"}}>Submit</Button>
-                </Col>
-            </Row>
+                    <Col>
+                        <Typography.Text style={{color: "white"}}>
+                            {user[0].data.passwordQuestion}
+                        </Typography.Text>
+                    </Col>
+                </Row>
+                <Row style={{justifyContent: "center", marginTop: "10px"}}>
+                    <Input placeholder="Answer Security Question" className="Input" onChange={(e) => setPasswordAnswer(e.target.value)}/>
+                </Row>
+                <Row style={{justifyContent: "center"}} >
+                    <Col>
+                        <Button size="large" style={{width: "150px", margin: "10px", opacity: ".9"}} onClick={() => passwordChange()}>Submit</Button>
+                    </Col>
+                </Row>
+            </>
+            }
         </div>
     );
 }

@@ -12,7 +12,7 @@ import "./Login.css"
 const Login = () => {
     const emailRef = useRef()
     const passwordRef = useRef()
-    const { login, currentUser } = useAuth()
+    const { login } = useAuth()
     const navigate = useNavigate()
     const [invalidIdentification, setInvalidIdentification] = useState(2);
     const [error, setError] = useState("")

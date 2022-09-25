@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
 import { auth, methods } from "../firebase-config"
+import { sendPasswordResetEmail } from "firebase/auth"
+import { message } from 'antd'
 
 const AuthContext = createContext()
 
@@ -24,6 +26,12 @@ export function AuthProvider({ children }) {
         return methods.signOut(auth)
     }
 
+    function forgetPassword(email) {
+        return sendPasswordResetEmail(auth, email).then((a) => {
+            message.info("Password reset email sent")
+        });
+    }
+
     useEffect(() => {
         const unsubscribe = methods.onAuthStateChanged(auth, (user) => {
             setCurrentUser(user)
@@ -37,7 +45,8 @@ export function AuthProvider({ children }) {
         currentUser,
         signup,
         login,
-        logout
+        logout,
+        forgetPassword,
     }
 
     return (

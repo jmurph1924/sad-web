@@ -25,7 +25,7 @@ const CreateUser = () => {
     const [lastname, setLastName] = useState("")
     const [email, setEmail] = useState("")
     const [passwordQuestion, setPasswordQuestion] = useState("")
-    const [pswAnswer, setpswAnswer] = useState("")
+    const [pwQuestionAnswer, setPwQuestionAnswer] = useState("")
     const [zipcode, setZipcode] = useState("")
     const [role, setRole] = useState("")
     const [dateOfBirth, setDateOfBirth] = useState("")
@@ -33,8 +33,8 @@ const CreateUser = () => {
     async function handleSubmit() {
         const usersCollectionRef = collection(db, 'users')
         addDoc(usersCollectionRef, {active: false, address, city, dateOfBirth, disabled: true,
-             email, firstname, lastname, passwordQuestion: "Dont forget to add password question", 
-             pwQuestionAnswer: "Add Answer",  role, state, zipcode}).then(response => {
+             email, firstname, lastname, passwordQuestion, 
+             pwQuestionAnswer,  role, state, zipcode}).then(response => {
                 try {
             setError("")
             setLoading(true)
@@ -151,9 +151,19 @@ const CreateUser = () => {
                         <Select placeholder="Select a Role" style={{width: "425px", opacity: ".9"}} onSelect={e => setRole(e)}>
                             <Select.Option value="Administrator">Administrator</Select.Option>
                             <Select.Option value="Manager">Manager</Select.Option>
-                            <Select.Option value="User">User</Select.Option>
+                            <Select.Option value="Accountant">Accountant</Select.Option>
                         </Select>
                     </Col>
+                </Col>
+            </Row>
+            <Row style={{justifyContent: "center", marginTop: "20px"}} gutter={[8,8]}>
+                <Col span={6}>
+                    <Typography.Text className="stylingColor">Security Question</Typography.Text>
+                    <Input placeholder="Security Question" style={{ opacity: ".9"}} onChange={e => setPasswordQuestion(e.target.value)}/>
+                </Col>
+                <Col span={6}>
+                <Typography.Text className="stylingColor">Security Question Answer</Typography.Text>
+                    <Input placeholder="Security Question Answer" style={{ opacity: ".9"}} onChange={e => setPwQuestionAnswer(e.target.value)}/>
                 </Col>
             </Row>
             <Row style={{justifyContent: "center", marginTop: "30px"}} gutter={[8,8]}>

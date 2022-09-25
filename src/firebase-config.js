@@ -19,7 +19,7 @@ export const methods = {
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
     onAuthStateChanged,
-    signOut
+    signOut,
 }
 
 export const db = getFirestore(app);

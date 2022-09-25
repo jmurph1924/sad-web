@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
-import * as _ from "lodash"
 import { collection, getDocs, doc, updateDoc } from "firebase/firestore"
 import { db } from "../../firebase-config"
 import { ApiOutlined, CoffeeOutlined } from '@ant-design/icons';
-import { Row, Collapse, Table, Button} from "antd"
+import { Row, Collapse, Table, Button, Select, message} from "antd"
 import "./Administrator.css"
 
 
@@ -43,7 +42,11 @@ const Administrator = () => {
           render: item => {
             return (
             <>
-                {item?.data.role}
+              <Select defaultValue={item?.data.role} style={{width: "425px", opacity: ".9"}} onSelect={e => handleRoleChange(item.id, e)}>
+                <Select.Option value="Administrator">Administrator</Select.Option>
+                <Select.Option value="Manager">Manager</Select.Option>
+                <Select.Option value="Accountant">Accountant</Select.Option>
+              </Select>
             </>
             )
           }
@@ -139,6 +142,14 @@ const Administrator = () => {
       const handleActivate = (id) => {
         const docRef = doc(db, 'users', id)
         updateDoc(docRef, {disabled: false, active: true}).then(response => {
+          getUsers()
+        }).catch(error => console.log(error.message))
+      }
+
+      const handleRoleChange = (id, role) => {
+        const docRef = doc(db, 'users', id)
+        updateDoc(docRef, {role}).then(() => {
+          message.info("Successfully Updated Role")
           getUsers()
         }).catch(error => console.log(error.message))
       }
