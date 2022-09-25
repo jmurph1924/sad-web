@@ -1,6 +1,8 @@
 import { initializeApp } from 'firebase/app'
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth'
 
+import { getFirestore } from "firebase/firestore"
+
 const app = initializeApp({
   apiKey: "AIzaSyCang0sSGGRqpieYCuiwdtLeaMIZe79VyA",
   authDomain: "instacount-app-domain.firebaseapp.com",
@@ -19,4 +21,7 @@ export const methods = {
     onAuthStateChanged,
     signOut
 }
+
+export const db = getFirestore(app);
+
 export default app

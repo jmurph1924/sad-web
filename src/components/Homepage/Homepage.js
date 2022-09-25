@@ -1,17 +1,13 @@
 import * as React from "react";
-import { Row, Col, Button } from "antd"
+import { Row, Col } from "antd"
 
 const Homepage = () => {
 
-    const buttonClick = (e) => {
-
-    }
-
     return (
-        <div>
-            <Row>
+        <div className="homeContainer">
+            <Row className="rowStuff">
                 <Col>
-                    <Button onClick={(e) => buttonClick(e)}> Homepage </Button>
+                    <img src={require('../../images/instacount.png')} style={{width: "700px", marginTop: "100px", paddingLeft: "0px"}} alt="Instacount" className="logo"/>
                 </Col>
             </Row>
         </div>
