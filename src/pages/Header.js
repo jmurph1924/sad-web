@@ -48,7 +48,7 @@ const MenuItemizer = () => {
             <Row >
               <Col span={4}>
                 <Link to="/homepage">
-                <img src={require('../images/instacount.png')} style={{width: "274px", marginBottom: "10px", paddingLeft: "0px"}} alt="Instacount" className="logo"/>
+                <img src={require('../images/instacount.png')} style={{width: "274px", paddingTop: "5px"}} alt="Instacount" className="logo"/>
                 </Link>
               </Col>
               <Col span={20}>
@@ -57,23 +57,24 @@ const MenuItemizer = () => {
                   mode="horizontal"
                   defaultSelectedKeys={['login']}
                   selectedKeys={[]}
+                  style={{height: "70px"}}
                 >
-                  <Menu.Item key="homepage">
+                  <Menu.Item key="homepage" style={{paddingTop: "13px"}}>
                     <Link to="/homepage">
                       Homepage
                     </Link>
                   </Menu.Item>
                   { users?.some((e) => _.isEqual(e.data.email, currentUser?.email) && _.isEqual(e.data.role, "Administrator")) &&
-                  <Menu.Item key="administrator">
+                  <Menu.Item key="administrator" style={{paddingTop: "13px"}}>
                     <Link to="/administrator">
                       Administrator
                     </Link>
                   </Menu.Item>
                   }
-                  <Menu.Item style={{marginLeft: 'auto'}}>
+                  <Menu.Item style={{marginLeft: 'auto', paddingTop: "13px"}}>
                     {currentUser?.email}
                   </Menu.Item>
-                  <Menu.Item >
+                  <Menu.Item style={{paddingTop: "13px"}}>
                       <Button onClick={() => handleLogout()}>Log Out</Button>
                   </Menu.Item>
                 </Menu>

@@ -103,7 +103,11 @@ const Administrator = () => {
           render: item => {
             return (
             <>
-                {item?.data.role}
+              <Select defaultValue={item?.data.role} style={{width: "425px", opacity: ".9"}} onSelect={e => handleRoleChange(item.id, e)}>
+                <Select.Option value="Administrator">Administrator</Select.Option>
+                <Select.Option value="Manager">Manager</Select.Option>
+                <Select.Option value="Accountant">Accountant</Select.Option>
+              </Select>
             </>
             )
           }
