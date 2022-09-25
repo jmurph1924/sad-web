@@ -7,7 +7,7 @@ const HeaderNoLogin = () => {
        <>
             <Row >
               <Col span={4}>
-                <img src={require('../images/instacount.png')} style={{width: "274px", marginBottom: "10px", paddingLeft: "0px"}} alt="Instacount" className="logo"/>
+                <img src={require('../images/instacount.png')} style={{width: "274px", paddingTop: "5px"}} alt="Instacount" className="logo"/>
               </Col>
               <Col span={20}>
                 <Menu
