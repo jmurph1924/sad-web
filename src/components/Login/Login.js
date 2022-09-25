@@ -15,12 +15,6 @@ const Login = () => {
     const [error, setError] = useState("")
     const [loading, setLoading] = useState(false)
 
-    useEffect(() => {
-        if(currentUser) {
-            navigate('/')
-        }
-    })
-    
     async function handleSubmit() {
 
         try {

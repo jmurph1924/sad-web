@@ -10,18 +10,12 @@ import "./CreateUser.css"
 const CreateUser = () => {
     const emailRef = useRef(null)
     const passwordRef = useRef(null)
-    const { signup, currentUser } = useAuth()
+    const { signup } = useAuth()
     const [registerPassword, setRegisterPassword] = React.useState("");
     const navigate = useNavigate()
 
     const [error, setError] = useState("")
     const [loading, setLoading] = useState(false)
-
-    useEffect(() => {
-        if(currentUser) {
-            navigate('/')
-        }
-    },)
 
     async function handleSubmit() {
         try {
