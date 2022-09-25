@@ -41,7 +41,7 @@ const Login = () => {
             setError("")
             setLoading(true)
             await login(emailRef.current.input.value, passwordRef.current.input.value)
-            navigate("/administrator")
+            navigate("/homepage")
         } catch(e) {
             console.log(e)
             if(invalidIdentification === 0){
