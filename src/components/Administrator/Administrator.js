@@ -14,6 +14,9 @@ const Administrator = () => {
     const [ email, setEmail ] = useState("");
     const [ fulladdress, setAddress ] = useState("");
     const [form] = Form.useForm();
+    const [ userEmail, setUserEmail ] = useState("");
+    const [ userSubject, setUserSubject ] = useState("");
+    const [ userContent, setUserContent ] = useState("");
 
     useEffect(() => {
         getUsers()
@@ -260,7 +263,7 @@ const Administrator = () => {
       }
 
       const onSubmit = () => {
-        console.log(form)
+        window.open(`mailto:${userEmail}?subject=${userSubject}&body=${userContent}`)
 
         form.resetFields();
       };
@@ -286,13 +289,13 @@ const Administrator = () => {
                         onFinish={() => onSubmit()}
                       >
                         <Form.Item name="userEmail" label="Email">
-                          <Input placeholder="Email" style={{ opacity: ".9", width: "300px"}}/>
+                          <Input placeholder="Email" style={{ opacity: ".9", width: "300px"}} onChange={(e) => setUserEmail(e.target.value)}/>
                         </Form.Item>
                         <Form.Item name="userSubject" label="Subject" >
-                          <Input style={{ opacity: ".9", width: "1000px"}}/>
+                          <Input placeholder="Subject" style={{ opacity: ".9", width: "1000px"}} onChange={(e) => setUserSubject(e.target.value)}/>
                         </Form.Item>
                         <Form.Item name="userContent" label="Content">
-                          <Input.TextArea rows={6} style={{ opacity: ".9", width: "1000px", marginBottom: "10px"}}/>
+                          <Input.TextArea rows={6} style={{ opacity: ".9", width: "1000px", marginBottom: "10px"}} onChange={(e) => setUserContent(e.target.value)}/>
                         </Form.Item>
                         <Form.Item>
                           <Button type="primary" htmlType="submit">Submit</Button>
