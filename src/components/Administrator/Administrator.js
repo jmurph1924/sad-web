@@ -5,6 +5,7 @@ import { db } from "../../firebase-config"
 import { ApiOutlined, CoffeeOutlined, EditOutlined, SaveOutlined } from '@ant-design/icons';
 import { Row, Typography, Collapse, Table, Button, Select, message, Input, Form} from "antd"
 import "./Administrator.css"
+import AdministratorNewUser from "./AdministratorNewUser";
 
 
 const Administrator = () => {
@@ -17,10 +18,16 @@ const Administrator = () => {
     const [ userEmail, setUserEmail ] = useState("");
     const [ userSubject, setUserSubject ] = useState("");
     const [ userContent, setUserContent ] = useState("");
+    const [ isNewUserVisible, setIsNewUserVisible ] = useState(false);
 
     useEffect(() => {
         getUsers()
     }, [])
+
+    const closeNewUser = (visible) => {
+      setIsNewUserVisible(visible);
+      getUsers()
+    }
 
     const columns = [
         {
@@ -268,18 +275,30 @@ const Administrator = () => {
         form.resetFields();
       };
 
+      let locale = {
+        emptyText: 'No New Users',
+      };
+      let locale2 = {
+        emptyText: 'No Disabled Users',
+      };
+      let locale3 = {
+        emptyText: 'No Current Users',
+      };
+
     return (
         <div className="loginContainer">
             <Row style={{justifyContent: "center"}}>
                 <Collapse defaultActiveKey={['1']} style={{width: "1400px", marginTop: "100px"}} >
                     <Collapse.Panel header="Users" key="1">
-                        <Table columns={columns} dataSource={users?.filter(e => e.data.disabled === false)} />
+                        <Table locale={locale3} columns={columns} dataSource={users?.filter(e => e.data.disabled === false)} />
                     </Collapse.Panel>
                     <Collapse.Panel header="New Users" key="2">
-                      <Table columns={columns2} dataSource={users?.filter(e => e.data.disabled === true && e.data.active === false)} />
+                      <Button style={{marginTop: "20px", marginBottom: "20px"}}onClick={() => setIsNewUserVisible(!isNewUserVisible)}>Create New User</Button>
+                      {isNewUserVisible === true && <AdministratorNewUser onUserSubmit={closeNewUser} />}
+                      <Table columns={columns2} locale={locale} dataSource={users?.filter(e => e.data.disabled === true && e.data.active === false)} />
                     </Collapse.Panel>
                     <Collapse.Panel header="Disabled Users" key="3">
-                      <Table columns={columns2} dataSource={users?.filter(e => e.data.disabled === true && e.data.active === true)} />
+                      <Table columns={columns2} locale={locale2} dataSource={users?.filter(e => e.data.disabled === true && e.data.active === true)} />
                     </Collapse.Panel>
                     <Collapse.Panel header="Email a User" key="4">
 
