@@ -3,7 +3,7 @@ import { Typography, Row, Col} from 'antd'
 
 const FooterItem = () => {
     return (
-        <Row style={{color: "white" }}>
+        <Row style={{color: "white", height: "100px"}}>
             <Col span={4}>
                 <img src={require('../images/instacount.png')} style={{width: "274px", alignContent: "left"}} alt="Instacount" className="logo"/>
             </Col>

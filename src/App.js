@@ -10,6 +10,7 @@ import HomepagePage from './pages/Homepage';
 import AdministratorPage from "./pages/Administrator";
 import ForgotPasswordPage from "./pages/ForgotPassword";
 import CreateUserPage from "./pages/Createuser";
+import { ConfigProvider } from "antd";
 import MenuItemizer from "./pages/Header";
 import HeaderNoLogin from "./pages/HeaderNoLogin";
 import FooterItem from "./pages/Footer";
@@ -18,6 +19,14 @@ function App() {
   const { currentUser } = useAuth()
 
   return (
+        <ConfigProvider
+          getPopupContainer={(node) => {
+            if (node) {
+              return node.parentNode;
+            }
+            return document.body;
+          }}
+        >
     <div className="App">
       {_.isNil(currentUser) ? <HeaderNoLogin/> : <MenuItemizer/>}
         <Routes>
@@ -32,7 +41,7 @@ function App() {
         </Routes>
       <FooterItem/>
     </div>
-      
+    </ConfigProvider>
   )
 }
 

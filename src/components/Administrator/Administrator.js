@@ -1,17 +1,26 @@
 import React, { useState, useEffect } from "react";
+import * as _ from "lodash";
 import { collection, getDocs, doc, updateDoc } from "firebase/firestore"
 import { db } from "../../firebase-config"
-import { ApiOutlined, CoffeeOutlined } from '@ant-design/icons';
-import { Row, Collapse, Table, Button, Select, message} from "antd"
+import { ApiOutlined, CoffeeOutlined, EditOutlined, SaveOutlined } from '@ant-design/icons';
+import { Row, Col, Typography, Collapse, Table, Button, Select, message, Input} from "antd"
 import "./Administrator.css"
 
 
 const Administrator = () => {
     const [users, setUsers] = useState([]);
+    const [isUserEditable, setIsUserEditable] = useState("");
+    const [ name, setName ] = useState("");
+    const [ email, setEmail ] = useState("");
+    const [ fulladdress, setAddress ] = useState("");
 
     useEffect(() => {
         getUsers()
     }, [])
+
+    const submitEmail = () => {
+        message.info("Succesfully Sent Email")
+    }
 
     const columns = [
         {
@@ -20,8 +29,12 @@ const Administrator = () => {
           render: item => {
             return (
                 <>
+                    {_.isEqual(isUserEditable, item?.id) === true ? <Input onChange={(e) => setName(e.target.value)}/> :
+                    <>
                     {item?.data.firstname} {" "} {item?.data.lastname}
-                </>
+                    </>
+                    }
+              </>
             )
           }
         },
@@ -31,7 +44,11 @@ const Administrator = () => {
           render: item => {
             return (
                 <>
+                  {_.isEqual(isUserEditable, item?.id) === true ? <Input onChange={(e) => setEmail(e.target.value)}/> :
+                    <>
                     {item?.data.email}
+                    </>
+                  }
                 </>
             )
           }
@@ -42,7 +59,7 @@ const Administrator = () => {
           render: item => {
             return (
             <>
-              <Select defaultValue={item?.data.role} style={{width: "425px", opacity: ".9"}} onSelect={e => handleRoleChange(item.id, e)}>
+              <Select defaultValue={item?.data.role} style={{width: "300px", opacity: ".9"}} onSelect={e => handleRoleChange(item.id, e)}>
                 <Select.Option value="Administrator">Administrator</Select.Option>
                 <Select.Option value="Manager">Manager</Select.Option>
                 <Select.Option value="Accountant">Accountant</Select.Option>
@@ -57,7 +74,11 @@ const Administrator = () => {
           render: item => {
             return (
             <>
+              {_.isEqual(isUserEditable, item?.id) === true ? <Input onChange={(e) => setAddress(e.target.value)}/> :
+              <>
                 {item?.data.address} {", "} {item?.data.city} {", "} {item?.data.state} {", "} {item?.data.zipcode}
+              </>
+              }
             </>
             )
           }
@@ -72,6 +93,21 @@ const Administrator = () => {
               </>
             )
           }
+        },
+        {
+          title: 'Edit User',
+          key: 'edit',
+          render: item => {
+            return (
+              <>
+                {_.isEqual(isUserEditable, item?.id) === true ? 
+                  <Button style={{marginLeft: "10px"}} onClick={() => handleUpdatedUser(item.id, item.data)} icon={<SaveOutlined />}/>
+                  :
+                  <Button style={{marginLeft: "10px"}} onClick={() => setIsUserEditable(item.id)} icon={<EditOutlined />}/>
+                }
+              </>
+            )
+          }
         }
       ];
       const columns2 = [
@@ -81,8 +117,12 @@ const Administrator = () => {
           render: item => {
             return (
                 <>
+                    {_.isEqual(isUserEditable, item?.id) === true ? <Input onChange={(e) => setName(e.target.value)}/> :
+                    <>
                     {item?.data.firstname} {" "} {item?.data.lastname}
-                </>
+                    </>
+                    }
+              </>
             )
           }
         },
@@ -92,7 +132,11 @@ const Administrator = () => {
           render: item => {
             return (
                 <>
+                  {_.isEqual(isUserEditable, item?.id) === true ? <Input onChange={(e) => setEmail(e.target.value)}/> :
+                    <>
                     {item?.data.email}
+                    </>
+                  }
                 </>
             )
           }
@@ -103,7 +147,7 @@ const Administrator = () => {
           render: item => {
             return (
             <>
-              <Select defaultValue={item?.data.role} style={{width: "425px", opacity: ".9"}} onSelect={e => handleRoleChange(item.id, e)}>
+              <Select defaultValue={item?.data.role} style={{width: "300px", opacity: ".9"}} onSelect={e => handleRoleChange(item.id, e)}>
                 <Select.Option value="Administrator">Administrator</Select.Option>
                 <Select.Option value="Manager">Manager</Select.Option>
                 <Select.Option value="Accountant">Accountant</Select.Option>
@@ -118,7 +162,11 @@ const Administrator = () => {
           render: item => {
             return (
             <>
+              {_.isEqual(isUserEditable, item?.id) === true ? <Input onChange={(e) => setAddress(e.target.value)}/> :
+              <>
                 {item?.data.address} {", "} {item?.data.city} {", "} {item?.data.state} {", "} {item?.data.zipcode}
+              </>
+              }
             </>
             )
           }
@@ -130,6 +178,21 @@ const Administrator = () => {
             return (
               <>
                 <Button style={{marginLeft: "25px"}} onClick={() => handleActivate(item.id)} icon={<CoffeeOutlined />}/>
+              </>
+            )
+          }
+        },
+        {
+          title: 'Edit User',
+          key: 'edit',
+          render: item => {
+            return (
+              <>
+                {_.isEqual(isUserEditable, item?.id) === true ? 
+                  <Button style={{marginLeft: "10px"}} onClick={() => handleUpdatedUser(item.id, item.data)} icon={<SaveOutlined />}/>
+                  :
+                  <Button style={{marginLeft: "10px"}} onClick={() => setIsUserEditable(item.id)} icon={<EditOutlined />}/>
+                }
               </>
             )
           }
@@ -146,6 +209,32 @@ const Administrator = () => {
       const handleActivate = (id) => {
         const docRef = doc(db, 'users', id)
         updateDoc(docRef, {disabled: false, active: true}).then(response => {
+          getUsers()
+        }).catch(error => console.log(error.message))
+      }
+
+      const handleUpdatedUser = (id, item) => {
+        setIsUserEditable("")
+        var firstNameReal = name.split(' ').slice(0, -1).join(' ');
+        var lastNameReal = name.split(' ').slice(-1).join(' ');
+        var addressArray = fulladdress.split(', ')
+
+        if(_.isEqual(name , "")){
+          firstNameReal = item.firstName;
+          lastNameReal = item.lastName;
+        } else if(_.isEqual(email , "")){
+          setEmail(item.email);
+        } else if(_.isEqual(fulladdress , "")){
+          addressArray[0] = item.address;
+          addressArray[1] = item.city;
+          addressArray[2] = item.state;
+          addressArray[3] = item.zipcode;
+        }
+
+
+        const docRef = doc(db, 'users', id)
+        updateDoc(docRef, {firstName: firstNameReal, lastName: lastNameReal, email, address: addressArray[0], city: addressArray[1], state: addressArray[2], zipcode: addressArray[3]}).then(() => {
+          message.info("Successfully Updated User")
           getUsers()
         }).catch(error => console.log(error.message))
       }
@@ -172,7 +261,7 @@ const Administrator = () => {
     return (
         <div className="loginContainer">
             <Row style={{justifyContent: "center"}}>
-                <Collapse defaultActiveKey={['1']} style={{width: "1200px", marginTop: "100px"}} >
+                <Collapse defaultActiveKey={['1']} style={{width: "1400px", marginTop: "100px"}} >
                     <Collapse.Panel header="Users" key="1">
                         <Table columns={columns} dataSource={users?.filter(e => e.data.disabled === false)} />
                     </Collapse.Panel>
@@ -182,7 +271,30 @@ const Administrator = () => {
                     <Collapse.Panel header="Disabled Users" key="3">
                       <Table columns={columns2} dataSource={users?.filter(e => e.data.disabled === true && e.data.active === true)} />
                     </Collapse.Panel>
-                    <Collapse.Panel header="Expired Passwords" key="4">
+                    <Collapse.Panel header="Email a User" key="4">
+                      <Row style={{justifyContent: "center"}}>
+                        <Col span={24} style={{justifyContent: "center"}}>
+                          <Typography.Text className="stylingColor">Email</Typography.Text>
+                        </Col>
+                        <Col span={24} style={{justifyContent: "center"}}>
+                          <Input placeholder="Email" style={{ opacity: ".9", width: "300px", marginBottom: "20px", marginTop: "10px"}}/>
+                        </Col>
+                        <Col span={24} style={{justifyContent: "center"}}>
+                          <Typography.Text className="stylingColor">Subject</Typography.Text>
+                        </Col>
+                        <Col span={24} style={{justifyContent: "center"}}>
+                          <Input placeholder="Subject" style={{ opacity: ".9", width: "1000px", marginBottom: "20px", marginTop: "10px"}}/>
+                        </Col>
+                        <Col span={24} style={{justifyContent: "center"}}>
+                          <Typography.Text className="stylingColor">Content</Typography.Text>
+                        </Col>
+                        <Col span={24} style={{justifyContent: "center"}}>
+                          <Input.TextArea rows={6} style={{ opacity: ".9", width: "1000px", marginBottom: "10px"}}/>
+                        </Col>
+                        <Col span={24}>
+                          <Button onClick={() => submitEmail()}>Submit</Button>
+                        </Col>
+                      </Row>
                     </Collapse.Panel>
                 </Collapse>
             </Row>
