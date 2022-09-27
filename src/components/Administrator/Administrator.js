@@ -3,7 +3,7 @@ import * as _ from "lodash";
 import { collection, getDocs, doc, updateDoc } from "firebase/firestore"
 import { db } from "../../firebase-config"
 import { ApiOutlined, CoffeeOutlined, EditOutlined, SaveOutlined } from '@ant-design/icons';
-import { Row, Col, Typography, Collapse, Table, Button, Select, message, Input} from "antd"
+import { Row, Typography, Collapse, Table, Button, Select, message, Input, Form} from "antd"
 import "./Administrator.css"
 
 
@@ -13,14 +13,11 @@ const Administrator = () => {
     const [ name, setName ] = useState("");
     const [ email, setEmail ] = useState("");
     const [ fulladdress, setAddress ] = useState("");
+    const [form] = Form.useForm();
 
     useEffect(() => {
         getUsers()
     }, [])
-
-    const submitEmail = () => {
-        message.info("Succesfully Sent Email")
-    }
 
     const columns = [
         {
@@ -46,7 +43,9 @@ const Administrator = () => {
                 <>
                   {_.isEqual(isUserEditable, item?.id) === true ? <Input onChange={(e) => setEmail(e.target.value)}/> :
                     <>
-                    {item?.data.email}
+                      <Typography.Link>
+                        {item?.data.email}
+                      </Typography.Link>
                     </>
                   }
                 </>
@@ -134,7 +133,9 @@ const Administrator = () => {
                 <>
                   {_.isEqual(isUserEditable, item?.id) === true ? <Input onChange={(e) => setEmail(e.target.value)}/> :
                     <>
-                    {item?.data.email}
+                      <Typography.Link>
+                        {item?.data.email}
+                      </Typography.Link>
                     </>
                   }
                 </>
@@ -258,6 +259,12 @@ const Administrator = () => {
         }).catch(error => console.log(error.message))
       }
 
+      const onSubmit = () => {
+        console.log(form)
+
+        form.resetFields();
+      };
+
     return (
         <div className="loginContainer">
             <Row style={{justifyContent: "center"}}>
@@ -272,29 +279,26 @@ const Administrator = () => {
                       <Table columns={columns2} dataSource={users?.filter(e => e.data.disabled === true && e.data.active === true)} />
                     </Collapse.Panel>
                     <Collapse.Panel header="Email a User" key="4">
-                      <Row style={{justifyContent: "center"}}>
-                        <Col span={24} style={{justifyContent: "center"}}>
-                          <Typography.Text className="stylingColor">Email</Typography.Text>
-                        </Col>
-                        <Col span={24} style={{justifyContent: "center"}}>
-                          <Input placeholder="Email" style={{ opacity: ".9", width: "300px", marginBottom: "20px", marginTop: "10px"}}/>
-                        </Col>
-                        <Col span={24} style={{justifyContent: "center"}}>
-                          <Typography.Text className="stylingColor">Subject</Typography.Text>
-                        </Col>
-                        <Col span={24} style={{justifyContent: "center"}}>
-                          <Input placeholder="Subject" style={{ opacity: ".9", width: "1000px", marginBottom: "20px", marginTop: "10px"}}/>
-                        </Col>
-                        <Col span={24} style={{justifyContent: "center"}}>
-                          <Typography.Text className="stylingColor">Content</Typography.Text>
-                        </Col>
-                        <Col span={24} style={{justifyContent: "center"}}>
+
+                      <Form
+                        form={form}
+                        layout="vertical"
+                        onFinish={() => onSubmit()}
+                      >
+                        <Form.Item name="userEmail" label="Email">
+                          <Input placeholder="Email" style={{ opacity: ".9", width: "300px"}}/>
+                        </Form.Item>
+                        <Form.Item name="userSubject" label="Subject" >
+                          <Input style={{ opacity: ".9", width: "1000px"}}/>
+                        </Form.Item>
+                        <Form.Item name="userContent" label="Content">
                           <Input.TextArea rows={6} style={{ opacity: ".9", width: "1000px", marginBottom: "10px"}}/>
-                        </Col>
-                        <Col span={24}>
-                          <Button onClick={() => submitEmail()}>Submit</Button>
-                        </Col>
-                      </Row>
+                        </Form.Item>
+                        <Form.Item>
+                          <Button type="primary" htmlType="submit">Submit</Button>
+                        </Form.Item>
+                      </Form>
+
                     </Collapse.Panel>
                 </Collapse>
             </Row>
