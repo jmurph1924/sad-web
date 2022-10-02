@@ -10,7 +10,7 @@ import { Link} from 'react-router-dom'
 import { Menu, Row, Col, Button } from 'antd'
 
 const MenuItemizer = () => {        
-
+    // Navigate allows you to go to a different page
     const navigate = useNavigate()
     const { currentUser, logout } = useAuth()
     const [users, setUsers] = useState([]);
@@ -19,10 +19,7 @@ const MenuItemizer = () => {
         getUsers()
     }, [])
 
-    useEffect(() => {
-      console.log(currentUser)
-  })
-
+  // Logs out user
     async function handleLogout() {
         try {
             await logout()
@@ -31,7 +28,8 @@ const MenuItemizer = () => {
             console.error(e)
         }
     }
-        
+    
+    // Gets users from database
     const getUsers = () => {
       const usersCollectionRef = collection(db, 'users')
       getDocs(usersCollectionRef).then(response => {
@@ -64,6 +62,7 @@ const MenuItemizer = () => {
                       Homepage
                     </Link>
                   </Menu.Item>
+                  {/* Checks to see if the user is an administrator */}
                   { users?.some((e) => _.isEqual(e.data.email, currentUser?.email) && _.isEqual(e.data.role, "Administrator")) &&
                   <Menu.Item key="administrator" style={{paddingTop: "13px"}}>
                     <Link to="/administrator">

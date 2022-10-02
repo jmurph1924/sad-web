@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import * as _ from "lodash";
 import { collection, getDocs, doc, updateDoc } from "firebase/firestore"
 import { db } from "../../firebase-config"
+import { Excel } from "antd-table-saveas-excel";
 import { ApiOutlined, CoffeeOutlined, EditOutlined, SaveOutlined } from '@ant-design/icons';
-import { Row, Typography, Collapse, Table, Button, Select, message, Input, Form} from "antd"
+import { Row, Col, Typography, Collapse, Table, Button, Select, message, Input, Form} from "antd"
 import "./Administrator.css"
 import AdministratorNewUser from "./AdministratorNewUser";
 
@@ -285,9 +286,79 @@ const Administrator = () => {
         emptyText: 'No Current Users',
       };
 
+      const columns4 = [
+        {
+          title: "Name",
+          dataIndex: "Name",
+          key: "Name"
+        },
+        {
+          title: "Email",
+          dataIndex: "Email",
+          key: "Email"
+        },
+        {
+          title: "Date of Birth",
+          dataIndex: "DateofBirth",
+          key: "DateofBirth"
+        },
+        {
+          title: "Role",
+          dataIndex: "Role",
+          key: "Role"
+        },
+        {
+          title: "Account Disabled",
+          dataIndex: "AccountDisabled",
+          key: "AccountDisabled"
+        },
+        {
+          title: "New User",
+          dataIndex: "NewUser",
+          key: "NewUser"
+        },
+        {
+          title: "Address",
+          dataIndex: "Address",
+          key: "Address"
+        }
+      ];
+
+      const handleCSVClick = () => {
+
+        let userCsv = [];
+        let userObj = {};
+
+        for(let i = 0; i < users.length; i++){
+          userObj = {
+            Name: `${users[i].data.firstname} ${users[i].data.lastname}`,
+            Email: users[i].data.email,
+            DateofBirth: users[i].data.dateOfBirth,
+            Role: users[i].data.role,
+            AccountDisabled: users[i].data.disabled,
+            NewUser: !users[i].data.active,
+            Address: `${users[i].data.address},  ${users[i].data.city},  ${users[i].data.state}, ${users[i].data.zipcode}`
+          }
+
+          userCsv.push(userObj)
+        }
+
+        const excel = new Excel();
+        excel
+          .addSheet("test")
+          .addColumns(columns4)
+          .addDataSource(userCsv)
+          .saveAs("Users.xlsx");
+      };
+
     return (
         <div className="loginContainer">
             <Row style={{justifyContent: "center"}}>
+                <Col>
+                  <Button onClick={() => handleCSVClick()}>
+                    Export to CSV
+                  </Button>
+                </Col>
                 <Collapse defaultActiveKey={['1']} style={{width: "1400px", marginTop: "100px"}} >
                     <Collapse.Panel header="Users" key="1">
                         <Table locale={locale3} columns={columns} dataSource={users?.filter(e => e.data.disabled === false)} />

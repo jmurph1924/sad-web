@@ -12,7 +12,7 @@ import "./Login.css"
 const Login = () => {
     const emailRef = useRef()
     const passwordRef = useRef()
-    const { login } = useAuth()
+    const { login, logout } = useAuth()
     const navigate = useNavigate()
     const [invalidIdentification, setInvalidIdentification] = useState(2);
     const [error, setError] = useState("")
@@ -20,6 +20,11 @@ const Login = () => {
     const [users, setUsers] = useState([]);
 
     useEffect(() => {
+            try {
+                logout()
+            } catch (e) {
+                console.error(e)
+            }
         getUsers()
     }, [])
 
@@ -86,7 +91,7 @@ const Login = () => {
             </Row>
             <Row className="rowStuff">
                 <Col>
-                    <Input.Password className="Input" size="large" placeholder="Password" prefix={<LockOutlined />} ref={passwordRef}/>
+                    <Input.Password className="Input" size="large" placeholder="Password" prefix={<LockOutlined />} onPressEnter={() => handleSubmit()} ref={passwordRef}/>
                 </Col>
             </Row>
             <Row className="rowStuff" >
