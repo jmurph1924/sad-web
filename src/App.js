@@ -13,6 +13,7 @@ import CreateUserPage from "./pages/Createuser";
 import MenuItemizer from "./pages/Header";
 import HeaderNoLogin from "./pages/HeaderNoLogin";
 import FooterItem from "./pages/Footer";
+import ChartsAccountPage from "./pages/ChartsOfAccounts"
 
 function App() {
   const { currentUser } = useAuth()
@@ -24,6 +25,7 @@ function App() {
         <Route element={<ProtectedRoute />}>
           <Route path="/" element={<LoginPage />} />
           <Route path="/homepage" element={<HomepagePage />} />
+          <Route path="/ChartsOfAccounts" element={<ChartsAccountPage />} />
           <Route path="/administrator" element={<AdministratorPage />} />
         </Route>
           <Route path="/login" element={<LoginPage />} />
