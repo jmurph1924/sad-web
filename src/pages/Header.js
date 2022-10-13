@@ -62,6 +62,11 @@ const MenuItemizer = () => {
                       Homepage
                     </Link>
                   </Menu.Item>
+                  <Menu.Item jey="ChartsOfAccounts" style={{paddingTop: "13px"}}>
+                    <Link to="/ChartsOfAccounts">
+                      Charts of Accounts
+                    </Link>
+                  </Menu.Item>
                   {/* Checks to see if the user is an administrator */}
                   { users?.some((e) => _.isEqual(e.data.email, currentUser?.email) && _.isEqual(e.data.role, "Administrator")) &&
                   <Menu.Item key="administrator" style={{paddingTop: "13px"}}>
