@@ -15,6 +15,7 @@ import { ConfigProvider } from "antd";
 import MenuItemizer from "./pages/Header";
 import HeaderNoLogin from "./pages/HeaderNoLogin";
 import FooterItem from "./pages/Footer";
+import ChartsAccountPage from "./pages/ChartsOfAccounts"
 
 function App() {
   // Brings in whether the current user is logged in or not
@@ -36,6 +37,7 @@ function App() {
           {/* Pages that are only visible when logged in */}
           <Route path="/" element={<LoginPage />} />
           <Route path="/homepage" element={<HomepagePage />} />
+          <Route path="/ChartsOfAccounts" element={<ChartsAccountPage />} />
           <Route path="/administrator" element={<AdministratorPage />} />
         </Route>
         {/* Pages that are visible without login */}
