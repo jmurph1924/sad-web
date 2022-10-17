@@ -16,6 +16,7 @@ import MenuItemizer from "./pages/Header";
 import HeaderNoLogin from "./pages/HeaderNoLogin";
 import FooterItem from "./pages/Footer";
 import ChartsAccountPage from "./pages/ChartsOfAccounts"
+import LedgersPage from "./pages/Ledgers"
 
 function App() {
   // Brings in whether the current user is logged in or not
@@ -39,6 +40,7 @@ function App() {
           <Route path="/homepage" element={<HomepagePage />} />
           <Route path="/ChartsOfAccounts" element={<ChartsAccountPage />} />
           <Route path="/administrator" element={<AdministratorPage />} />
+          <Route path="/ledgers" element={<LedgersPage />}/>
         </Route>
         {/* Pages that are visible without login */}
           <Route path="/login" element={<LoginPage />} />
