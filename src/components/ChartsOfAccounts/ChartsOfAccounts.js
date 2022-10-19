@@ -1,52 +1,293 @@
-import { Divider } from "antd";
-import * as React from "react";
+import React, { useState, useEffect } from "react";
+import * as _ from "lodash";
+import { collection, getDocs, doc, updateDoc } from "firebase/firestore"
+import { db } from "../../firebase-config"
+import { ApiOutlined, CoffeeOutlined, EditOutlined, SaveOutlined } from '@ant-design/icons';
+import { Typography, Table, Button, Select, Input, Row, Collapse } from "antd"
 import "./ChartsOfAccounts.css";
-import { Space, Table, Tag } from 'antd';
 const { Column, ColumnGroup } = Table;
 
 
 const ChartsAccountpage = () => {
+    const [chartsOfAccounts, setChartsOfAccounts] = useState([]);
+    const isChartEditable = true;
 
-    const data = [
+    useEffect(() => {
+        getChartsOfAccounts()
+    }, [])
+
+    const getChartsOfAccounts = () => {
+        // Specifies database collection you are using
+        const usersCollectionRef = collection(db, 'chartsOfAccounts')
+
+        // Gets all the documents from that collection
+        getDocs(usersCollectionRef).then(response => {
+            // maps documents to an array
+            const charts = response.docs.map(doc => ({
+                data: doc.data(), 
+                id: doc.id,
+            }))
+            //Adds that array to state
+            setChartsOfAccounts(charts);
+        }).catch(error => console.log(error.message))
+      }
+
+      const columns = [
         {
-          key: '1',
-          firstName: 'John',
-          lastName: 'Brown',
-          age: 32,
-          address: 'New York No. 1 Lake Park',
-          tags: ['nice', 'developer'],
+          title: 'Account Number',
+          key: 'accountNumber',
+          render: item => {
+            return (
+                <>
+                    {item?.data.accountNumber}
+                </>
+            )
+          }
         },
         {
-          key: '2',
-          firstName: 'Jim',
-          lastName: 'Green',
-          age: 42,
-          address: 'London No. 1 Lake Park',
-          tags: ['loser'],
+          title: 'Account Name',
+          key: 'accountName',
+          render: item => {
+            return (
+                <>
+                    {_.isEqual(isChartEditable, item?.id) === true ? <Input /> :
+                    <>
+                        {item?.data.accountName}
+                    </>
+                    }
+              </>
+            )
+          }
         },
         {
-          key: '3',
-          firstName: 'Joe',
-          lastName: 'Black',
-          age: 32,
-          address: 'Sidney No. 1 Lake Park',
-          tags: ['cool', 'teacher'],
+          title: 'Account Description',
+          key: 'accountDescription',
+          render: item => {
+            return (
+                <>
+                    {_.isEqual(isChartEditable, item?.id) === true ? <Input /> :
+                    <>
+                        {item?.data.accountDescription}
+                    </>
+                    }
+              </>
+            )
+          }
         },
+        {
+          title: 'Normal Side',
+          key: 'normalSide',
+          render: item => {
+            return (
+                <>
+                    {_.isEqual(isChartEditable, item?.id) === true ? <Input /> :
+                    <>
+                        {item?.data.normalSide}
+                    </>
+                    }
+              </>
+            )
+          }
+        },
+        {
+          title: 'Account Category',
+          key: 'accountCategory',
+          render: item => {
+            return (
+                <>
+                    {_.isEqual(isChartEditable, item?.id) === true ? <Input /> :
+                    <>
+                        {item?.data.accountCategory}
+                    </>
+                    }
+              </>
+            )
+          }
+        },
+        {
+          title: 'Account Subcategory',
+          key: 'accountSubCategory',
+          render: item => {
+            return (
+                <>
+                    {_.isEqual(isChartEditable, item?.id) === true ? <Input /> :
+                    <>
+                        {item?.data.accountSubCategory}
+                    </>
+                    }
+              </>
+            )
+          }
+        },
+        {
+          title: 'Initial Balance',
+          key: 'initialBalance',
+          render: item => {
+            return (
+                <>
+                    {_.isEqual(isChartEditable, item?.id) === true ? <Input /> :
+                    <>
+                        {item?.data.initialBalance}
+                    </>
+                    }
+              </>
+            )
+          }
+        },
+        {
+          title: 'Debit',
+          key: 'debit',
+          render: item => {
+            return (
+                <>
+                    {_.isEqual(isChartEditable, item?.id) === true ? <Input /> :
+                    <>
+                        {item?.data.debit}
+                    </>
+                    }
+              </>
+            )
+          }
+        },
+        {
+          title: 'Credit',
+          key: 'credit',
+          render: item => {
+            return (
+                <>
+                    {_.isEqual(isChartEditable, item?.id) === true ? <Input /> :
+                    <>
+                        {item?.data.credit}
+                    </>
+                    }
+              </>
+            )
+          }
+        },
+        {
+          title: 'Balance',
+          key: 'balance',
+          render: item => {
+            return (
+                <>
+                    {_.isEqual(isChartEditable, item?.id) === true ? <Input /> :
+                    <>
+                        {item?.data.balance}
+                    </>
+                    }
+              </>
+            )
+          }
+        },
+        {
+          title: 'Account Added',
+          key: 'accountAdded',
+          render: item => {
+            return (
+                <>
+                    {_.isEqual(isChartEditable, item?.id) === true ? <Input /> :
+                    <>
+                        {item?.data.accountAdded}
+                    </>
+                    }
+              </>
+            )
+          }
+        },
+        {
+          title: 'User',
+          key: 'user',
+          render: item => {
+            return (
+                <>
+                    {_.isEqual(isChartEditable, item?.id) === true ? <Input /> :
+                    <>
+                        {item?.data.userID}
+                    </>
+                    }
+              </>
+            )
+          }
+        },
+        {
+            title: 'Order',
+            key: 'order',
+            render: item => {
+              return (
+                  <>
+                      {_.isEqual(isChartEditable, item?.id) === true ? <Input /> :
+                      <>
+                          {item?.data.order}
+                      </>
+                      }
+                </>
+              )
+            }
+          },
+          {
+            title: 'Statement',
+            key: 'statement',
+            render: item => {
+              return (
+                  <>
+                      {_.isEqual(isChartEditable, item?.id) === true ? <Input /> :
+                      <>
+                          {item?.data.statement}
+                      </>
+                      }
+                </>
+              )
+            }
+          },
+          {
+            title: 'Comment',
+            key: 'comment',
+            render: item => {
+              return (
+                  <>
+                      {_.isEqual(isChartEditable, item?.id) === true ? <Input /> :
+                      <>
+                          {item?.data.comments}
+                      </>
+                      }
+                </>
+              )
+            }
+          },
+          {
+            title: 'Edit',
+            key: 'edit',
+            render: item => {
+              return (
+                <>
+                  {_.isEqual(isChartEditable, item?.id) === true ? 
+                    <Button style={{marginLeft: "10px"}} icon={<SaveOutlined />}/>
+                    :
+                    <Button style={{marginLeft: "10px"}} icon={<EditOutlined />}/>
+                  }
+                </>
+              )
+            }
+          }
       ];
+
+      let locale3 = {
+        emptyText: 'No Current Charts of Accounts',
+      };
+
       const ChartsOfAccountsTable = () => (
-        <Table dataSource={data}>
-          <ColumnGroup title="Charts of Accounts">
-            <Column title="Number" dataIndex="number" key="item-number" />
-            <Column title="Account Description" dataIndex="description" key="item-description" />
-            <Column title="Account Type" dataIndex="type" key="item-type" />
-          <Column title="Statement" dataIndex="statement" key="item-statement" />
-          </ColumnGroup>
-        </Table>
+        <Table locale={locale3} columns={columns} dataSource={chartsOfAccounts} />
       );
 
     return(
         <div className="ChartsOfAccounts-container">
-            <ChartsOfAccountsTable />
+            <Row style={{justifyContent: "center"}}>
+                <Collapse defaultActiveKey={['1']} style={{width: "2400px", marginTop: "50px"}} >
+                    <Collapse.Panel header="Charts of Accounts" key="1">
+                        <ChartsOfAccountsTable />
+                    </Collapse.Panel>
+                </Collapse>
+            </Row>
         </div>
     );
 }
