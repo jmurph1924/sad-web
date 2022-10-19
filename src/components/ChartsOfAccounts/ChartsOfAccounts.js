@@ -12,7 +12,6 @@ const ChartsAccountpage = () => {
     const [accountCategory, setAccountCategory] = useState("")
     const [ balance, setBalance ] = useState(null);
 
-    6
     const isChartEditable = true;
 
     useEffect(() => {
