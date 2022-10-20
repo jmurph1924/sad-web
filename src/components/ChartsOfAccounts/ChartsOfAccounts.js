@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import * as _ from "lodash";
-import { collection, getDocs, doc, updateDoc } from "firebase/firestore"
-import { db } from "../../firebase-config"
+import * as currencyFormatter from "currency-formatter";
+import { collection, getDocs, doc, updateDoc } from "firebase/firestore";
+import { db } from "../../firebase-config";
 import { ApiOutlined, CoffeeOutlined, EditOutlined, SaveOutlined } from '@ant-design/icons';
-import { Typography, Table, Button, Select, Input, Row, Collapse } from "antd"
+import { Typography, Table, Button, Select, Input, Row, Collapse, Tooltip } from "antd";
 import "./ChartsOfAccounts.css";
 
+const currencyFormatDecimal = { code: "USD", decimalDigits: 2, precision: 2};
 
 const ChartsAccountpage = () => {
     const [chartsOfAccounts, setChartsOfAccounts] = useState([]);
@@ -24,6 +26,10 @@ const ChartsAccountpage = () => {
     const [statement, setStatement] = useState("");
     const [userId, setUserId] = useState("");
     const isChartEditable = true;
+
+    const formatCurrencyChange = (amount) => {
+      return currencyFormatter.format(amount, currencyFormatDecimal)
+    }
 
     useEffect(() => {
         getChartsOfAccounts()
@@ -47,7 +53,15 @@ const ChartsAccountpage = () => {
 
       const columns = [
         {
-          title: 'Account Number',
+          title: () => {
+            return (
+              <>
+                <Tooltip title="This is the account numbers">
+                  <Typography.Text strong> Account Number </Typography.Text>
+                </Tooltip>
+              </>
+            )
+          },
           key: 'accountNumber',
           render: item => {
             return (
@@ -58,7 +72,15 @@ const ChartsAccountpage = () => {
           }
         },
         {
-          title: 'Account Name',
+          title: () => {
+            return (
+              <>
+                <Tooltip title="This is the Account Name">
+                  <Typography.Text strong> Account Name </Typography.Text>
+                </Tooltip>
+              </>
+            )
+          },
           key: 'accountName',
           render: item => {
             return (
@@ -73,7 +95,15 @@ const ChartsAccountpage = () => {
           }
         },
         {
-          title: 'Account Description',
+          title: () => {
+            return (
+              <>
+                <Tooltip title="This is the account numbers">
+                  <Typography.Text strong> Account Description </Typography.Text>
+                </Tooltip>
+              </>
+            )
+          },
           key: 'accountDescription',
           render: item => {
             return (
@@ -88,7 +118,15 @@ const ChartsAccountpage = () => {
           }
         },
         {
-          title: 'Normal Side',
+          title: () => {
+            return (
+              <>
+                <Tooltip title="This is the account numbers">
+                  <Typography.Text strong> Normal Side </Typography.Text>
+                </Tooltip>
+              </>
+            )
+          },
           key: 'normalSide',
           render: item => {
             return (
@@ -103,7 +141,15 @@ const ChartsAccountpage = () => {
           }
         },
         {
-          title: 'Account Category',
+          title: () => {
+            return (
+              <>
+                <Tooltip title="This is the account numbers">
+                  <Typography.Text strong> Account Category </Typography.Text>
+                </Tooltip>
+              </>
+            )
+          },
           key: 'accountCategory',
           render: item => {
             return (
@@ -118,7 +164,15 @@ const ChartsAccountpage = () => {
           }
         },
         {
-          title: 'Account Subcategory',
+          title: () => {
+            return (
+              <>
+                <Tooltip title="This is the account numbers">
+                  <Typography.Text strong> Account Subcategory </Typography.Text>
+                </Tooltip>
+              </>
+            )
+          },
           key: 'accountSubCategory',
           render: item => {
             return (
@@ -133,14 +187,22 @@ const ChartsAccountpage = () => {
           }
         },
         {
-          title: 'Initial Balance',
+          title: () => {
+            return (
+              <>
+                <Tooltip title="This is the account numbers">
+                  <Typography.Text strong> Initial Balance </Typography.Text>
+                </Tooltip>
+              </>
+            )
+          },
           key: 'initialBalance',
           render: item => {
             return (
                 <>
                     {_.isEqual(isChartEditable, item?.id) === true ? <Input /> :
                     <>
-                        {item?.data.initialBalance}
+                        {formatCurrencyChange(item?.data.initialBalance)}
                     </>
                     }
               </>
@@ -148,14 +210,22 @@ const ChartsAccountpage = () => {
           }
         },
         {
-          title: 'Debit',
+          title: () => {
+            return (
+              <>
+                <Tooltip title="This is the account numbers">
+                  <Typography.Text strong> Debit </Typography.Text>
+                </Tooltip>
+              </>
+            )
+          },
           key: 'debit',
           render: item => {
             return (
                 <>
                     {_.isEqual(isChartEditable, item?.id) === true ? <Input /> :
                     <>
-                        {item?.data.debit}
+                        {formatCurrencyChange(item?.data.debit)}
                     </>
                     }
               </>
@@ -163,14 +233,22 @@ const ChartsAccountpage = () => {
           }
         },
         {
-          title: 'Credit',
+          title: () => {
+            return (
+              <>
+                <Tooltip title="This is the account numbers">
+                  <Typography.Text strong> Credit </Typography.Text>
+                </Tooltip>
+              </>
+            )
+          },
           key: 'credit',
           render: item => {
             return (
                 <>
                     {_.isEqual(isChartEditable, item?.id) === true ? <Input /> :
                     <>
-                        {item?.data.credit}
+                        {formatCurrencyChange(item?.data.credit)}
                     </>
                     }
               </>
@@ -178,14 +256,22 @@ const ChartsAccountpage = () => {
           }
         },
         {
-          title: 'Balance',
+          title: () => {
+            return (
+              <>
+                <Tooltip title="This is the account numbers">
+                  <Typography.Text strong> Balance </Typography.Text>
+                </Tooltip>
+              </>
+            )
+          },
           key: 'balance',
           render: item => {
             return (
                 <>
                     {_.isEqual(isChartEditable, item?.id) === true ? <Input /> :
                     <>
-                        {item?.data.balance}
+                        {formatCurrencyChange(item?.data.balance)}
                     </>
                     }
               </>
@@ -193,7 +279,15 @@ const ChartsAccountpage = () => {
           }
         },
         {
-          title: 'Account Added',
+          title: () => {
+            return (
+              <>
+                <Tooltip title="This is the account numbers">
+                  <Typography.Text strong> Account Added </Typography.Text>
+                </Tooltip>
+              </>
+            )
+          },
           key: 'accountAdded',
           render: item => {
             return (
@@ -208,7 +302,15 @@ const ChartsAccountpage = () => {
           }
         },
         {
-          title: 'User',
+          title: () => {
+            return (
+              <>
+                <Tooltip title="This is the account numbers">
+                  <Typography.Text strong> User </Typography.Text>
+                </Tooltip>
+              </>
+            )
+          },
           key: 'user',
           render: item => {
             return (
@@ -223,7 +325,15 @@ const ChartsAccountpage = () => {
           }
         },
         {
-            title: 'Order',
+            title: () => {
+            return (
+              <>
+                <Tooltip title="This is the account numbers">
+                  <Typography.Text strong> Order </Typography.Text>
+                </Tooltip>
+              </>
+            )
+          },
             key: 'order',
             render: item => {
               return (
@@ -238,7 +348,15 @@ const ChartsAccountpage = () => {
             }
           },
           {
-            title: 'Statement',
+            title: () => {
+            return (
+              <>
+                <Tooltip title="This is the account numbers">
+                  <Typography.Text strong> Statement </Typography.Text>
+                </Tooltip>
+              </>
+            )
+          },
             key: 'statement',
             render: item => {
               return (
@@ -253,7 +371,15 @@ const ChartsAccountpage = () => {
             }
           },
           {
-            title: 'Comment',
+            title: () => {
+            return (
+              <>
+                <Tooltip title="This is the account numbers">
+                  <Typography.Text strong> Comment </Typography.Text>
+                </Tooltip>
+              </>
+            )
+          },
             key: 'comment',
             render: item => {
               return (
@@ -268,15 +394,27 @@ const ChartsAccountpage = () => {
             }
           },
           {
-            title: 'Edit',
+            title: () => {
+            return (
+              <>
+                <Tooltip title="This is the account numbers">
+                  <Typography.Text strong> Edit </Typography.Text>
+                </Tooltip>
+              </>
+            )
+          },
             key: 'edit',
             render: item => {
               return (
                 <>
                   {_.isEqual(isChartEditable, item?.id) === true ? 
-                    <Button style={{marginLeft: "10px"}} icon={<SaveOutlined />}/>
+                    <Tooltip title="Save Changes">
+                      <Button style={{marginLeft: "10px"}} icon={<SaveOutlined />}/>
+                    </Tooltip>
                     :
-                    <Button style={{marginLeft: "10px"}} icon={<EditOutlined />}/>
+                    <Tooltip title="Edit Account">
+                      <Button style={{marginLeft: "10px"}} icon={<EditOutlined />}/>
+                    </Tooltip>
                   }
                 </>
               )
@@ -294,8 +432,8 @@ const ChartsAccountpage = () => {
 
     return(
         <div className="ChartsOfAccounts-container">
-            <Row style={{justifyContent: "center"}}>
-                <Collapse defaultActiveKey={['1']} style={{width: "2400px", marginTop: "50px"}} >
+            <Row style={{justifyContent: "center", width: "2000px", marginLeft: "-360px"}}>
+                <Collapse defaultActiveKey={['1']} style={{width: "2000px", marginTop: "50px"}} >
                     <Collapse.Panel header="Charts of Accounts" key="1">
                         <ChartsOfAccountsTable />
                     </Collapse.Panel>
