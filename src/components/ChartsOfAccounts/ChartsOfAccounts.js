@@ -8,6 +8,8 @@ import { ApiOutlined, CoffeeOutlined, EditOutlined, SaveOutlined } from '@ant-de
 import { Typography, Table, Button, Input, Row, Collapse, Tooltip, Calendar, Modal, Col } from "antd";
 import "./ChartsOfAccounts.css";
 
+import HelpModal from "../HelpModal/HelpModal";
+
 const currencyFormatDecimal = { code: "USD", decimalDigits: 2, precision: 2};
 
 const ChartsAccountpage = () => {
@@ -28,6 +30,7 @@ const ChartsAccountpage = () => {
   const [userId, setUserId] = useState("");
   const [ calendar, setCalendar ] = useState(false);
   const [ inventorySeach, setInventorySeach ] = useState([]);
+  const [ helpModal, setHelpModal ] = useState(false);
   const isChartEditable = true;
   
   const inventorySeachFiltered = (type, value) => {
@@ -457,9 +460,10 @@ const ChartsAccountpage = () => {
                 <Button> Add an Account </Button>
               </Col>
               <Col style={{paddingLeft: "16px"}}>
-                <Button> Help </Button>
+                <Button onClick={() => setHelpModal(true)}> Help </Button>
               </Col>
             </Row>
+            <HelpModal isHelpModalVisible={helpModal} onModalChange={() => setHelpModal(false)}/>
             <Modal type="primary" style={{marginRight: "1760px"}} title="Calendar" width={350} visible={calendar} footer={[ <Button key="back" onClick={() => setCalendar(!calendar)}>Ok</Button>]} onCancel={() => setCalendar(!calendar)}>
               <Calendar fullscreen={false} className="site-calendar-demo-card" />
             </Modal>
