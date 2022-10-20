@@ -5,7 +5,7 @@ import moment from 'moment';
 import { collection, getDocs, doc, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase-config";
 import { ApiOutlined, CoffeeOutlined, EditOutlined, SaveOutlined } from '@ant-design/icons';
-import { Typography, Table, Button, Select, Input, Row, Collapse, Tooltip } from "antd";
+import { Typography, Table, Button, Input, Row, Collapse, Tooltip, Calendar, Modal, Col } from "antd";
 import "./ChartsOfAccounts.css";
 
 const currencyFormatDecimal = { code: "USD", decimalDigits: 2, precision: 2};
@@ -26,7 +26,23 @@ const ChartsAccountpage = () => {
     const [order, setOrder] = useState(null);
     const [statement, setStatement] = useState("");
     const [userId, setUserId] = useState("");
+    const [ calendar, setCalendar ] = useState(false);
+    const [ inventorySeach, setInventorySeach ] = useState([]);
     const isChartEditable = true;
+
+    const inventorySeachFiltered = (type, value) => {
+      if(_.isEqual(type, "Account Name")){
+
+      } else if(_.isEqual(type, "Account Number")){
+
+      } else if(_.isEqual(type, "Account Category")){
+
+      } else if(_.isEqual(type, "Account SubCategory")){
+        
+      }else {
+        setInventorySeach([]);
+      }
+    }
 
     const formatCurrencyChange = (amount) => {
       return currencyFormatter.format(amount, currencyFormatDecimal)
@@ -424,19 +440,88 @@ const ChartsAccountpage = () => {
       ];
 
       let locale3 = {
-        emptyText: 'No Current Charts of Accounts',
+        emptyText: 'No Current Accounts',
       };
 
-      const ChartsOfAccountsTable = () => (
-        <Table locale={locale3} columns={columns} dataSource={chartsOfAccounts} />
+      const ChartsOfAccountsTable = (data) => (
+        <Table style={{width: "2000px"}} locale={locale3} columns={columns} dataSource={data} />
       );
 
     return(
         <div className="ChartsOfAccounts-container">
+            <Row style={{width: "2000px", marginLeft: "-360px", marginTop: "-60px", marginBottom: "-30px"}}>
+              <Col>
+                <Button onClick={() => setCalendar(!calendar)}> Calendar </Button>
+              </Col>
+              <Col span={22} style={{paddingLeft: "10px"}}>
+                <Button> Add an Account </Button>
+              </Col>
+              <Col style={{paddingLeft: "16px"}}>
+                <Button> Help </Button>
+              </Col>
+            </Row>
+            <Modal type="primary" style={{marginRight: "1760px"}} title="Calendar" width={350} visible={calendar} footer={[ <Button key="back" onClick={() => setCalendar(!calendar)}>Ok</Button>]} onCancel={() => setCalendar(!calendar)}>
+              <Calendar fullscreen={false} className="site-calendar-demo-card" />
+            </Modal>
             <Row style={{justifyContent: "center", width: "2000px", marginLeft: "-360px"}}>
                 <Collapse defaultActiveKey={['1']} style={{width: "2000px", marginTop: "50px"}} >
-                    <Collapse.Panel header="Charts of Accounts" key="1">
-                        <ChartsOfAccountsTable />
+                    <Collapse.Panel header="Find an Account" key="1">
+                    <Row style={{marginBottom: "10px"}}>
+                      <Col span={3}>
+                        <Typography.Text strong> Search By Account Name </Typography.Text>
+                      </Col>
+                      <Col span={3}>
+                        <Typography.Text strong> Search By Account Number </Typography.Text>
+                      </Col>
+                      <Col span={3}>
+                        <Typography.Text strong> Search By Account Category </Typography.Text>
+                      </Col>
+                      <Col span={3}>
+                        <Typography.Text strong> Search By Account Subcategory </Typography.Text>
+                      </Col>
+                    </Row>
+                    <Row style={{marginBottom: "20px"}}>
+                      <Col span={3}>
+                        <Input.Search
+                          placeholder="Search By Account Name"
+                          style={{
+                            width: 200,
+                          }}
+                        />
+                      </Col>
+                      <Col span={3}>
+                        <Input.Search
+                          placeholder="Search By Account Number"
+                          style={{
+                            width: 200,
+                          }}
+                        />
+                      </Col>
+                      <Col span={3}>
+                        <Input.Search
+                          placeholder="Search By Account Category"
+                          style={{
+                            width: 200,
+                          }}
+                        />
+                      </Col>
+                      <Col span={3}>
+                        <Input.Search
+                          placeholder="Search By Account Subcategory"
+                          style={{
+                            width: 200,
+                          }}
+                        />
+                      </Col>
+                    </Row> 
+                    <Row>
+                      {ChartsOfAccountsTable(inventorySeach)}
+                    </Row>
+                    </Collapse.Panel>
+                    <Collapse.Panel header="Charts of Accounts" key="2">
+                        {ChartsOfAccountsTable(chartsOfAccounts)}
+                    </Collapse.Panel>
+                    <Collapse.Panel header="Event Log" key="3">
                     </Collapse.Panel>
                 </Collapse>
             </Row>
