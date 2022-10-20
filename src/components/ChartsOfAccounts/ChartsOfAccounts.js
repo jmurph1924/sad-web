@@ -9,9 +9,20 @@ import "./ChartsOfAccounts.css";
 
 const ChartsAccountpage = () => {
     const [chartsOfAccounts, setChartsOfAccounts] = useState([]);
-    const [accountCategory, setAccountCategory] = useState("")
-    const [ balance, setBalance ] = useState(null);
-
+    const [accountDescription, setAccountDescription] = useState("");
+    const [accountName, setAccountName] = useState("");
+    const [accountNumber, setAccountNumber] = useState(null);
+    const [accountSubcategory, setAccountSubCategory] = useState("");
+    const [balance, setBalance] = useState(null);
+    const [comments, setComments] = useState("");
+    const [credit, setCredit] = useState(null);
+    const [dateAccountAdded, setDateAccountAdded] = useState("");
+    const [debit, setDebit] = useState(null);
+    const [initialBalance, setInitialBalance] = useState(null);
+    const [normalSide, setNormalSide] = useState("");
+    const [order, setOrder] = useState(null);
+    const [statement, setStatement] = useState("");
+    const [userId, setUserId] = useState("");
     const isChartEditable = true;
 
     useEffect(() => {
