@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import * as _ from "lodash";
 import * as currencyFormatter from "currency-formatter";
+import moment from 'moment';
 import { collection, getDocs, doc, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase-config";
 import { ApiOutlined, CoffeeOutlined, EditOutlined, SaveOutlined } from '@ant-design/icons';
@@ -294,7 +295,7 @@ const ChartsAccountpage = () => {
                 <>
                     {_.isEqual(isChartEditable, item?.id) === true ? <Input /> :
                     <>
-                        {item?.data.accountAdded}
+                        {moment(item?.data.dateAccountAdded.toDate()).format('M/D/YYYY h:mma')}
                     </>
                     }
               </>
@@ -315,9 +316,9 @@ const ChartsAccountpage = () => {
           render: item => {
             return (
                 <>
-                    {_.isEqual(isChartEditable, item?.id) === true ? <Input /> :
+                    {_.isEqual(isChartEditable, item?.userId) === true ? <Input /> :
                     <>
-                        {item?.data.userID}
+                        {item?.data.userId}
                     </>
                     }
               </>
