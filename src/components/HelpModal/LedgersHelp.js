@@ -7,7 +7,7 @@ const LedgersHelp = () => {
 
     return(
         <>
-            <Typography.Title>
+            <Typography.Title level={2}>
                 Ledgers
             </Typography.Title>
             <Typography.Paragraph>There once was a page that could help the world understand finance. That is this page</Typography.Paragraph>

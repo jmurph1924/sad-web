@@ -71,14 +71,14 @@ const HelpModal = ({ isHelpModalVisible = false, onModalChange = _.noop }) => {
                         </Menu.Item>
                     </Menu>
                 </Col>
-                <Col style={{paddingLeft: "80px"}} span={16}>
+                <Col style={{paddingLeft: "40px"}} span={16}>
                     <Typography.Title>
                         Welcome to the Help Page
                     </Typography.Title>
                     <Typography.Paragraph>There once was a page that could help the world understand finance. That is this page</Typography.Paragraph>
                     <ChartsHelp />
-                    <LedgersHelp />
                     <JournalsHelp />
+                    <LedgersHelp />
                     <AccessibilityHelp />
                     <ContactUs />
                 </Col>
