@@ -3,7 +3,7 @@ import ChartsAccountpage from '../components/ChartsOfAccounts/ChartsOfAccounts';
 
 const ChartsAccountPage = () => {
     return(
-        <div style={{ background: "#041C32", height: "850px" }}>
+        <div style={{ background: "#041C32", height: "920px" }}>
             <ChartsAccountpage />
         </div>
     );

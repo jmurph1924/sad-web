@@ -354,13 +354,11 @@ const Administrator = () => {
     return (
         <div className="loginContainer">
             <Row style={{justifyContent: "center"}}>
-                <Col>
-                  <Button onClick={() => handleCSVClick()}>
-                    Export to CSV
-                  </Button>
-                </Col>
-                <Collapse defaultActiveKey={['1']} style={{width: "1400px", marginTop: "100px"}} >
+                <Collapse defaultActiveKey={['1']} style={{width: "1400px", marginTop: "50px"}} >
                     <Collapse.Panel header="Users" key="1">
+                      <Button onClick={() => handleCSVClick()} style={{marginBottom: "20px"}}>
+                        Export to CSV
+                      </Button>
                         <Table locale={locale3} columns={columns} dataSource={users?.filter(e => e.data.disabled === false)} />
                     </Collapse.Panel>
                     <Collapse.Panel header="New Users" key="2">

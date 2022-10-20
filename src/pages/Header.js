@@ -62,9 +62,14 @@ const MenuItemizer = () => {
                       Homepage
                     </Link>
                   </Menu.Item>
-                  <Menu.Item jey="ChartsOfAccounts" style={{paddingTop: "13px"}}>
+                  <Menu.Item key="ChartsOfAccounts" style={{paddingTop: "13px"}}>
                     <Link to="/ChartsOfAccounts">
                       Charts of Accounts
+                    </Link>
+                  </Menu.Item>
+                  <Menu.Item key="Ledgers" style={{paddingTop: "13px"}}>
+                    <Link to="/ledgers">
+                      Ledgers
                     </Link>
                   </Menu.Item>
                   {/* Checks to see if the user is an administrator */}
