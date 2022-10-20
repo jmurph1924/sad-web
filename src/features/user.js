@@ -1,7 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
-
+//Setting Initial Value
 const initialStateValue = {};
 
+//Exporting and Creation of User V
 export const userSlice = createSlice({
   name: "user",
   initialState: { value: initialStateValue },

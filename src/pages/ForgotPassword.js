@@ -1,6 +1,7 @@
 import * as React from 'react'
 import ForgotPassword from "../components/ForgotPassword/ForgotPassword";
 
+//Creating Forgot Password Page
 const ForgotPasswordPage = () => {
 
     return (
@@ -9,5 +10,5 @@ const ForgotPasswordPage = () => {
         </div>
     )
 }
-
+//Exporting ForgotPasswordPage
 export default ForgotPasswordPage

@@ -8,22 +8,27 @@ import { Row, Col, Button, Typography, Input, message} from "antd"
 import { useAuth } from '../../contexts/AuthContext'
 import "./ForgotPassword.css"
 
+//Forgot Password Function
 const ForgotPassword = () => {
+
+    //Variable Creation for the Forget Password Function
     const navigate = useNavigate();
     const [users, setUsers] = useState([]);
     const [ user, setUser ] = useState(null);
     const [ email, setEmail ] = useState("");
     const [ passwordAnswer, setPasswordAnswer ] = useState("");
     const { forgetPassword } = useAuth()
-
+    
+    //Calling User Data on render
     useEffect(() => {
         getUsers()
     }, [])
 
+    // Back Variable Creation
     const back = () => {
         navigate('/')
     }
-
+    //Varible for submission of forgot password email
     const onSubmit = () => {
         if(users?.some((e) => _.isEqual(e.data.email, email))){
             setUser(users?.filter(e => _.isEqual(e.data.email, email)))
@@ -31,7 +36,7 @@ const ForgotPassword = () => {
             message.error("Email not valid, Please try again")
         }
     }
-
+    //Varible for submission of forgot password Security Question
     const passwordChange = () => {
         if(_.isEqual(user[0].data.pwQuestionAnswer, passwordAnswer) ){
             forgetPassword(email).then(response => {
@@ -42,7 +47,7 @@ const ForgotPassword = () => {
             message.error("Incorrect Security Question Answer")
         }
     }
-
+    //Variable for Collecting User Data
     const getUsers = () => {
         const usersCollectionRef = collection(db, 'users')
         getDocs(usersCollectionRef).then(response => {
@@ -53,7 +58,8 @@ const ForgotPassword = () => {
             setUsers(usrs);
         }).catch(error => console.log(error.message))
       }
-
+    
+    //Variable Return for Forgot Password Function
     return (
         <div className="loginContainer">
             <Row>
@@ -106,5 +112,5 @@ const ForgotPassword = () => {
         </div>
     );
 }
-
+//Data export for Forgot Password Function
 export default ForgotPassword;

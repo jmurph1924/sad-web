@@ -1,6 +1,7 @@
 import * as React from 'react'
 import Homepage from '../components/Homepage/Homepage';
 
+//Creating Homepage
 const HomepagePage = () => {
 
     return (
@@ -9,5 +10,5 @@ const HomepagePage = () => {
         </div>
     )
 }
-
+//Exporting Homepage
 export default HomepagePage

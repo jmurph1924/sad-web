@@ -1,6 +1,7 @@
 import * as React from 'react'
 import Ledgers from '../components/Ledgers/Ledgers';
 
+//Creating Ledgers Page
 const LedgersPage = () => {
     return(
         <div style={{ background: "#041C32", height: "auto" }}>
@@ -8,5 +9,5 @@ const LedgersPage = () => {
         </div>
     );
 }
-
-export default LedgersPage;
+//Exporting LedgersPage
+export default LedgersPage

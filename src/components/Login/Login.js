@@ -8,8 +8,10 @@ import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { Row, Col, Button, Typography, Input, Alert, message} from "antd";
 import "./Login.css"
   
-
+//Login Function
 const Login = () => {
+ 
+    // Login Varible Creation   
     const emailRef = useRef()
     const passwordRef = useRef()
     const { login, logout } = useAuth()
@@ -19,6 +21,7 @@ const Login = () => {
     const [loading, setLoading] = useState(false)
     const [users, setUsers] = useState([]);
 
+    //Logout function Calls on render
     useEffect(() => {
             try {
                 logout()
@@ -28,6 +31,7 @@ const Login = () => {
         getUsers()
     }, [])
 
+    //User Data fetch
     const getUsers = () => {
         const usersCollectionRef = collection(db, 'users')
         getDocs(usersCollectionRef).then(response => {
@@ -39,7 +43,7 @@ const Login = () => {
         }).catch (error => console.log(error.message))
       }
 
-
+    //Log in Function with Password attempt limiter 
     async function handleSubmit() {
         if(users?.some((e) => _.isEqual(e.data.email, emailRef.current.input.defaultValue) && _.isEqual(e.data.disabled, false))){
         try {
@@ -65,13 +69,17 @@ const Login = () => {
         setLoading(false)
     }
 
+    //Create User Function Call
     const createUser = () => {
         navigate('/createUser')
     }
+
+    //Forgot Password Function
     const forgotPassword = () => {
         navigate('/forgotPassword')
     }
 
+    //Return of Varibles and Functions for the Login page
     return (
         <div className="loginContainer">
             {error && 
@@ -111,4 +119,5 @@ const Login = () => {
     );
 }
 
+//Export Login Page Data
 export default Login;
