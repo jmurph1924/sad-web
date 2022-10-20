@@ -8,11 +8,42 @@ import "./ChartsOfAccounts.css";
 
 
 const ChartsAccountpage = () => {
-    const [chartsOfAccounts, setChartsOfAccounts] = useState([]);
-    const [accountCategory, setAccountCategory] = useState("")
-    const [ balance, setBalance ] = useState(null);
+  const [chartsOfAccounts, setChartsOfAccounts] = useState([]);
+  const [accountDescription, setAccountDescription] = useState("");
+  const [accountName, setAccountName] = useState("");
+  const [accountNumber, setAccountNumber] = useState(null);
+  const [accountSubcategory, setAccountSubCategory] = useState("");
+  const [balance, setBalance] = useState(null);
+  const [comments, setComments] = useState("");
+  const [credit, setCredit] = useState(null);
+  const [dateAccountAdded, setDateAccountAdded] = useState("");
+  const [debit, setDebit] = useState(null);
+  const [initialBalance, setInitialBalance] = useState(null);
+  const [normalSide, setNormalSide] = useState("");
+  const [order, setOrder] = useState(null);
+  const [statement, setStatement] = useState("");
+  const [userId, setUserId] = useState("");
+  const [ calendar, setCalendar ] = useState(false);
+  const [ inventorySeach, setInventorySeach ] = useState([]);
+  const isChartEditable = true;
+  
+  const inventorySeachFiltered = (type, value) => {
+    if(_.isEqual(type, "Account Name")){
 
-    const isChartEditable = true;
+    } else if(_.isEqual(type, "Account Number")){
+
+    } else if(_.isEqual(type, "Account Category")){
+
+    } else if(_.isEqual(type, "Account SubCategory")){
+      
+    }else {
+      setInventorySeach([]);
+    }
+  }
+
+  const formatCurrencyChange = (amount) => {
+    return currencyFormatter.format(amount, currencyFormatDecimal)
+  }
 
     useEffect(() => {
         getChartsOfAccounts()
@@ -33,7 +64,7 @@ const ChartsAccountpage = () => {
             setChartsOfAccounts(charts);
         }).catch(error => console.log(error.message))
       }
-
+    
       const columns = [
         {
           title: 'Account Number',
