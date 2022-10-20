@@ -1,6 +1,7 @@
 import * as React from 'react'
 import CreateUser from '../components/CreateUser/CreateUser'
 
+//Creating User Creation Page
 const CreateUserPage = () => {
 
     return (
@@ -9,5 +10,5 @@ const CreateUserPage = () => {
         </div>
     )
 }
-
+//Exporting CreateUserPage
 export default CreateUserPage

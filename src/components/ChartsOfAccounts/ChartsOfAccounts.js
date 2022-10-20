@@ -11,42 +11,42 @@ import "./ChartsOfAccounts.css";
 const currencyFormatDecimal = { code: "USD", decimalDigits: 2, precision: 2};
 
 const ChartsAccountpage = () => {
-    const [chartsOfAccounts, setChartsOfAccounts] = useState([]);
-    const [accountDescription, setAccountDescription] = useState("");
-    const [accountName, setAccountName] = useState("");
-    const [accountNumber, setAccountNumber] = useState(null);
-    const [accountSubcategory, setAccountSubCategory] = useState("");
-    const [balance, setBalance] = useState(null);
-    const [comments, setComments] = useState("");
-    const [credit, setCredit] = useState(null);
-    const [dateAccountAdded, setDateAccountAdded] = useState("");
-    const [debit, setDebit] = useState(null);
-    const [initialBalance, setInitialBalance] = useState(null);
-    const [normalSide, setNormalSide] = useState("");
-    const [order, setOrder] = useState(null);
-    const [statement, setStatement] = useState("");
-    const [userId, setUserId] = useState("");
-    const [ calendar, setCalendar ] = useState(false);
-    const [ inventorySeach, setInventorySeach ] = useState([]);
-    const isChartEditable = true;
+  const [chartsOfAccounts, setChartsOfAccounts] = useState([]);
+  const [accountDescription, setAccountDescription] = useState("");
+  const [accountName, setAccountName] = useState("");
+  const [accountNumber, setAccountNumber] = useState(null);
+  const [accountSubcategory, setAccountSubCategory] = useState("");
+  const [balance, setBalance] = useState(null);
+  const [comments, setComments] = useState("");
+  const [credit, setCredit] = useState(null);
+  const [dateAccountAdded, setDateAccountAdded] = useState("");
+  const [debit, setDebit] = useState(null);
+  const [initialBalance, setInitialBalance] = useState(null);
+  const [normalSide, setNormalSide] = useState("");
+  const [order, setOrder] = useState(null);
+  const [statement, setStatement] = useState("");
+  const [userId, setUserId] = useState("");
+  const [ calendar, setCalendar ] = useState(false);
+  const [ inventorySeach, setInventorySeach ] = useState([]);
+  const isChartEditable = true;
+  
+  const inventorySeachFiltered = (type, value) => {
+    if(_.isEqual(type, "Account Name")){
 
-    const inventorySeachFiltered = (type, value) => {
-      if(_.isEqual(type, "Account Name")){
+    } else if(_.isEqual(type, "Account Number")){
 
-      } else if(_.isEqual(type, "Account Number")){
+    } else if(_.isEqual(type, "Account Category")){
 
-      } else if(_.isEqual(type, "Account Category")){
-
-      } else if(_.isEqual(type, "Account SubCategory")){
-        
-      }else {
-        setInventorySeach([]);
-      }
+    } else if(_.isEqual(type, "Account SubCategory")){
+      
+    }else {
+      setInventorySeach([]);
     }
+  }
 
-    const formatCurrencyChange = (amount) => {
-      return currencyFormatter.format(amount, currencyFormatDecimal)
-    }
+  const formatCurrencyChange = (amount) => {
+    return currencyFormatter.format(amount, currencyFormatDecimal)
+  }
 
     useEffect(() => {
         getChartsOfAccounts()
@@ -67,7 +67,7 @@ const ChartsAccountpage = () => {
             setChartsOfAccounts(charts);
         }).catch(error => console.log(error.message))
       }
-
+    
       const columns = [
         {
           title: () => {
@@ -447,6 +447,173 @@ const ChartsAccountpage = () => {
         <Table style={{width: "2000px"}} locale={locale3} columns={columns} dataSource={data} />
       );
 
+    const columns = [
+        {
+          title: 'Account Name',
+          key: 'Account Name',
+          render: item => {
+            return (
+                <>
+         
+                </>
+            )
+          }
+        },
+        {
+          title: 'Account Number',
+          key: 'Account Number',
+          render: item => {
+            return (
+                <>
+      
+                </>
+            )
+          }
+        },
+        {
+          title: 'Account Description',
+          key: 'Account Description',
+          render: item => {
+            return (
+            <>
+              
+            </>
+            )
+          }
+        },
+        {
+          title: 'Normal Side',
+          key: 'Normal Side',
+          render: item => {
+            return (
+            <>
+              
+            </>
+            )
+          }
+        },
+        {
+          title: 'Account Category',
+          key: 'Account Category',
+          render: item => {
+            return (
+              <>
+                
+              </>
+            )
+          }
+        },
+        {
+          title: 'Account Subcategory',
+          key: 'Account Subcategory',
+          render: item => {
+            return (
+              <>
+             
+              </>
+            )
+          }
+        },
+        {
+            title: 'Initial Balance',
+            key: 'Initial Balance',
+            render: item => {
+              return (
+                <>
+               
+                </>
+              )
+            }
+        },
+        {
+            title: 'Debit',
+            key: 'Debit',
+            render: item => {
+              return (
+                <>
+               
+                </>
+              )
+            }
+        },
+        {
+            title: 'Credit',
+            key: 'Credit',
+            render: item => {
+              return (
+                <>
+               
+                </>
+              )
+            }
+        },
+        {
+            title: 'Balance',
+            key: 'Balance',
+            render: item => {
+              return (
+                <>
+               
+                </>
+              )
+            }
+        },
+        {
+            title: 'Date/Time Account Added',
+            key: 'Date/Time Account Added',
+            render: item => {
+              return (
+                <>
+               
+                </>
+              )
+            }
+        },
+        {
+            title: 'User id',
+            key: 'User id',
+            render: item => {
+              return (
+                <>
+               
+                </>
+              )
+            }
+        },
+        {
+            title: 'Order',
+            key: 'Order',
+            render: item => {
+              return (
+                <>
+               
+                </>
+              )
+            }
+        },
+        {
+            title: 'Statement',
+            key: 'Statement',
+            render: item => {
+              return (
+                <>
+               
+                </>
+              )
+            }
+        },
+        {
+            title: 'Comment',
+            key: 'Comment',
+            render: item => {
+              return (
+                <>
+               
+                </>
+              )
+            }
+        }
+    ]
     return(
         <div className="ChartsOfAccounts-container">
             <Row style={{width: "2000px", marginLeft: "-360px", marginTop: "-60px", marginBottom: "-30px"}}>

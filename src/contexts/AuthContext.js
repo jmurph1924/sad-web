@@ -8,7 +8,7 @@ const AuthContext = createContext()
 export function useAuth() {
     return useContext(AuthContext)
 }
-
+//Exporting User Functions
 export function AuthProvider({ children }) {
 
     const [currentUser, setCurrentUser] = useState()
@@ -40,7 +40,7 @@ export function AuthProvider({ children }) {
 
         return unsubscribe
     }, [])
-
+    //Setting Value equal to functions
     const value = {
         currentUser,
         signup,
@@ -48,7 +48,7 @@ export function AuthProvider({ children }) {
         logout,
         forgetPassword,
     }
-
+    //Returning L
     return (
         <AuthContext.Provider value={value}>
             {!loading && children}

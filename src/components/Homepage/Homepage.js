@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Row, Col } from "antd"
 
+//Homepage Creation and Layout
 const Homepage = () => {
 
     return (
@@ -13,5 +14,5 @@ const Homepage = () => {
         </div>
     );
 }
-
+//Exporting HomePage
 export default Homepage;
