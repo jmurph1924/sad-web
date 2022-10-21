@@ -9,30 +9,18 @@ import { Typography, Table, Button, Input, Row, Collapse, Tooltip, Calendar, Mod
 import "./ChartsOfAccounts.css";
 
 import HelpModal from "../HelpModal/HelpModal";
+import AddAnAccount from "./AddAnAccount";
 
 const currencyFormatDecimal = { code: "USD", decimalDigits: 2, precision: 2};
 
 const ChartsAccountpage = () => {
   const [chartsOfAccounts, setChartsOfAccounts] = useState([]);
-  const [accountDescription, setAccountDescription] = useState("");
-  const [accountName, setAccountName] = useState("");
-  const [accountNumber, setAccountNumber] = useState(null);
-  const [accountSubcategory, setAccountSubCategory] = useState("");
-  const [balance, setBalance] = useState(null);
-  const [comments, setComments] = useState("");
-  const [credit, setCredit] = useState(null);
-  const [dateAccountAdded, setDateAccountAdded] = useState("");
-  const [debit, setDebit] = useState(null);
-  const [initialBalance, setInitialBalance] = useState(null);
-  const [normalSide, setNormalSide] = useState("");
-  const [order, setOrder] = useState(null);
-  const [statement, setStatement] = useState("");
-  const [userId, setUserId] = useState("");
   const [ calendar, setCalendar ] = useState(false);
   const [ inventorySeach, setInventorySeach ] = useState([]);
   const [ helpModal, setHelpModal ] = useState(false);
+  const [ accountModal, setAccountModal ] = useState(false);
   const isChartEditable = true;
-  
+
   const inventorySeachFiltered = (type, value) => {
     if(_.isEqual(type, "Account Name")){
 
@@ -457,13 +445,14 @@ const ChartsAccountpage = () => {
                 <Button onClick={() => setCalendar(!calendar)}> Calendar </Button>
               </Col>
               <Col span={22} style={{paddingLeft: "10px"}}>
-                <Button> Add an Account </Button>
+                <Button onClick={() => setAccountModal(true)}> Add an Account </Button>
               </Col>
               <Col style={{paddingLeft: "16px"}}>
                 <Button onClick={() => setHelpModal(true)}> Help </Button>
               </Col>
             </Row>
             <HelpModal isHelpModalVisible={helpModal} onModalChange={() => setHelpModal(false)}/>
+            <AddAnAccount isAddAnAccountVisible={accountModal} onModalChange={() => setAccountModal(false)} />
             <Modal type="primary" style={{marginRight: "1760px"}} title="Calendar" width={350} visible={calendar} footer={[ <Button key="back" onClick={() => setCalendar(!calendar)}>Ok</Button>]} onCancel={() => setCalendar(!calendar)}>
               <Calendar fullscreen={false} className="site-calendar-demo-card" />
             </Modal>
