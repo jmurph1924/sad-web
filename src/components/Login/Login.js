@@ -24,6 +24,7 @@ const Login = () => {
     //Logout function Calls on render
     useEffect(() => {
             try {
+                //trying to make it deploy
                 logout()
             } catch (e) {
                 console.error(e)
