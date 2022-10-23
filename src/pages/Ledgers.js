@@ -4,7 +4,7 @@ import Ledgers from '../components/Ledgers/Ledgers';
 //Creating Ledgers Page
 const LedgersPage = () => {
     return(
-        <div style={{ background: "#041C32", height: "auto" }}>
+        <div style={{ background: "#041C32", height: "920px"}}>
             <Ledgers />
         </div>
     );

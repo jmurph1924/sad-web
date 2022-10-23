@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 import * as _ from "lodash";
 import * as currencyFormatter from "currency-formatter";
 import moment from 'moment';
+import { useNavigate, Link } from 'react-router-dom'
 import { collection, getDocs, doc, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase-config";
-import { ApiOutlined, CoffeeOutlined, EditOutlined, SaveOutlined } from '@ant-design/icons';
+import { EditOutlined, SaveOutlined } from '@ant-design/icons';
 import { Typography, Table, Button, Input, Row, Collapse, Tooltip, Calendar, Modal, Col } from "antd";
 import "./ChartsOfAccounts.css";
 
@@ -14,12 +15,25 @@ import AddAnAccount from "./AddAnAccount";
 const currencyFormatDecimal = { code: "USD", decimalDigits: 2, precision: 2};
 
 const ChartsAccountpage = () => {
+  const navigate = useNavigate();
+  const [ isEditVisible, setIsEditVisible ] = useState(false);
   const [chartsOfAccounts, setChartsOfAccounts] = useState([]);
   const [ calendar, setCalendar ] = useState(false);
   const [ inventorySeach, setInventorySeach ] = useState([]);
   const [ helpModal, setHelpModal ] = useState(false);
   const [ accountModal, setAccountModal ] = useState(false);
+  const [ search, setSearch ] = useState(null);
+  const [ isAccountSearch, setIsAccountSearch ] = useState(false);
   const isChartEditable = true;
+
+  const searchAccountName = (value) => {
+    setSearch(chartsOfAccounts.find(e => _.isEqual(e.data.accountName, value)))
+    setIsAccountSearch(true)
+  }
+  const searchAccountNumber = (value) => {
+    setSearch(chartsOfAccounts.find(e => _.isEqual(e.data.accountNumber, parseInt(value))))
+    setIsAccountSearch(true)
+  }
 
   const inventorySeachFiltered = (type, value) => {
     if(_.isEqual(type, "Account Name")){
@@ -95,7 +109,9 @@ const ChartsAccountpage = () => {
                 <>
                     {_.isEqual(isChartEditable, item?.id) === true ? <Input /> :
                     <>
+                      <Link to="/ledgers">
                         {item?.data.accountName}
+                      </Link>
                     </>
                     }
               </>
@@ -401,33 +417,6 @@ const ChartsAccountpage = () => {
               )
             }
           },
-          {
-            title: () => {
-            return (
-              <>
-                <Tooltip title="This is the account numbers">
-                  <Typography.Text strong> Edit </Typography.Text>
-                </Tooltip>
-              </>
-            )
-          },
-            key: 'edit',
-            render: item => {
-              return (
-                <>
-                  {_.isEqual(isChartEditable, item?.id) === true ? 
-                    <Tooltip title="Save Changes">
-                      <Button style={{marginLeft: "10px"}} icon={<SaveOutlined />}/>
-                    </Tooltip>
-                    :
-                    <Tooltip title="Edit Account">
-                      <Button style={{marginLeft: "10px"}} icon={<EditOutlined />}/>
-                    </Tooltip>
-                  }
-                </>
-              )
-            }
-          }
       ];
 
       let locale3 = {
@@ -437,6 +426,247 @@ const ChartsAccountpage = () => {
       const ChartsOfAccountsTable = (data) => (
         <Table style={{width: "2000px"}} locale={locale3} columns={columns} dataSource={data} />
       );
+
+      const individualAccountView = () => {
+
+        return (
+          <>
+            <Row gutter={[12,12]}>
+              <Col span={4}>
+                <Typography.Text strong>
+                  Account Number
+                </Typography.Text>
+              </Col>
+              <Col span={4}>
+                <Typography.Text strong>
+                  Account Name
+                </Typography.Text>
+              </Col>
+              <Col span={4}>
+                <Typography.Text strong>
+                  Credit
+                </Typography.Text>
+              </Col>
+              <Col span={4}>
+                <Typography.Text strong>
+                  Statement
+                </Typography.Text>
+              </Col>
+              <Col span={4}>
+                <Typography.Text strong>
+                  User
+                </Typography.Text>
+              </Col>
+            </Row>
+            {isEditVisible === true ?
+            <Row gutter={[12,12]}>
+              <Col span={4} style={{marginBottom: "10px"}}>
+                <Input style={{width: "95%"}}/>
+              </Col>
+              <Col span={4} style={{marginBottom: "10px"}}>
+                <Input style={{width: "95%"}}/>
+              </Col>
+              <Col span={4} style={{marginBottom: "10px"}}>
+                <Input style={{width: "95%"}}/>
+              </Col>
+              <Col span={4} style={{marginBottom: "10px"}}>
+                <Input style={{width: "95%"}}/>
+              </Col>
+              <Col span={4} style={{marginBottom: "10px"}}>
+                <Input style={{width: "95%"}}/>
+              </Col>
+            </Row>
+
+            :
+
+            <Row gutter={[12,12]}>
+              <Col span={4} style={{marginBottom: "10px"}}>
+                <Typography.Text>
+                  {search?.data.accountNumber}
+                </Typography.Text>
+              </Col>
+              <Col span={4} style={{marginBottom: "10px"}}>
+                <Link to="/ledgers">
+                  {search?.data.accountName}
+                </Link>
+              </Col>
+              <Col span={4} style={{marginBottom: "10px"}}>
+                <Typography.Text>
+                  {formatCurrencyChange(search?.data.credit)}
+                </Typography.Text>
+              </Col>
+              <Col span={4} style={{marginBottom: "10px"}}>
+                <Typography.Text>
+                  {search?.data.statement}
+                </Typography.Text>
+              </Col>
+              <Col span={4} style={{marginBottom: "10px"}}>
+                <Typography.Text>
+                  {search?.data.userId}
+                </Typography.Text>
+              </Col>
+            </Row>
+            }
+            <Row gutter={[12,12]}>
+              <Col span={4}>
+                <Typography.Text strong>
+                  Account Category
+                </Typography.Text>
+              </Col>
+              <Col span={4}>
+                <Typography.Text strong>
+                  Account Description
+                </Typography.Text>
+              </Col>
+              <Col span={4}>
+                <Typography.Text strong>
+                  Debit
+                </Typography.Text>
+              </Col>
+              <Col span={4}>
+                <Typography.Text strong>
+                  Normal Side
+                </Typography.Text>
+              </Col>
+              <Col span={4}>
+                <Typography.Text strong>
+                  Account Added
+                </Typography.Text>
+              </Col>
+            </Row>
+            {isEditVisible === true ?
+            <Row gutter={[12,12]}>
+              <Col span={4} style={{marginBottom: "10px"}}>
+                <Input style={{width: "95%"}}/>
+              </Col>
+              <Col span={4} style={{marginBottom: "10px"}}>
+                <Input style={{width: "95%"}}/>
+              </Col>
+              <Col span={4} style={{marginBottom: "10px"}}>
+                <Input style={{width: "95%"}}/>
+              </Col>
+              <Col span={4} style={{marginBottom: "10px"}}>
+                <Input style={{width: "95%"}}/>
+              </Col>
+              <Col span={4} style={{marginBottom: "10px"}}>
+                <Input style={{width: "95%"}}/>
+              </Col>
+            </Row>
+
+            :
+
+            <Row gutter={[12,12]}>
+              <Col span={4} style={{marginBottom: "10px"}}>
+                <Typography.Text>
+                  {search?.data.accountCategory}
+                </Typography.Text>
+              </Col>
+              <Col span={4} style={{marginBottom: "10px"}}>
+                <Typography.Text>
+                  {search?.data.accountDescription}
+                </Typography.Text>
+              </Col>
+              <Col span={4} style={{marginBottom: "10px"}}>
+                <Typography.Text>
+                  {formatCurrencyChange(search?.data.debit)}
+                </Typography.Text>
+              </Col>
+              <Col span={4} style={{marginBottom: "10px"}}>
+                <Typography.Text>
+                  {search?.data.normalSide}
+                </Typography.Text>
+              </Col>
+              <Col span={4} style={{marginBottom: "10px"}}>
+                <Typography.Text>
+                  {moment(search?.data.dateAccountAdded.toDate()).format('M/D/YYYY h:mma')}
+                </Typography.Text>
+              </Col>
+            </Row>
+            }
+            <Row gutter={[12,12]}>
+              <Col span={4}>
+                <Typography.Text strong>
+                  Account SubCategory
+                </Typography.Text>
+              </Col>
+              <Col span={4}>
+                <Typography.Text strong>
+                  Order
+                </Typography.Text>
+              </Col>
+              <Col span={4}>
+                <Typography.Text strong>
+                  Balance
+                </Typography.Text>
+              </Col>
+              <Col span={4}>
+                <Typography.Text strong>
+                  Initial Balance 
+                </Typography.Text>
+              </Col>
+              <Col span={4}>
+                <Typography.Text strong>
+                  Comment
+                </Typography.Text>
+              </Col>
+            </Row >
+            {isEditVisible === true ?
+            <Row gutter={[12,12]}>
+              <Col span={4} style={{marginBottom: "10px"}}>
+                <Input style={{width: "95%"}}/>
+              </Col>
+              <Col span={4} style={{marginBottom: "10px"}}>
+                <Input style={{width: "95%"}}/>
+              </Col>
+              <Col span={4} style={{marginBottom: "10px"}}>
+                <Input style={{width: "95%"}}/>
+              </Col>
+              <Col span={4} style={{marginBottom: "10px"}}>
+                <Input style={{width: "95%"}}/>
+              </Col>
+              <Col span={4} style={{marginBottom: "10px"}}>
+                <Input style={{width: "95%"}}/>
+              </Col>
+            </Row>
+
+            :
+
+            <Row gutter={[12,12]}>
+              <Col span={4} style={{marginBottom: "10px"}}>
+                <Typography.Text>
+                  {search?.data.accountSubCategory}
+                </Typography.Text>
+              </Col>
+              <Col span={4} style={{marginBottom: "10px"}}>
+                <Typography.Text>
+                  {search?.data.order}
+                </Typography.Text>
+              </Col>
+              <Col span={4} style={{marginBottom: "10px"}}>
+                <Typography.Text>
+                  {formatCurrencyChange(search?.data.balance)}
+                </Typography.Text>
+              </Col>
+              <Col span={4} style={{marginBottom: "10px"}}>
+                <Typography.Text>
+                  {formatCurrencyChange(search?.data.initialBalance)}
+                </Typography.Text>
+              </Col>
+              <Col span={4} style={{marginBottom: "10px"}}>
+                <Typography.Text>
+                  {search?.data.comments}
+                </Typography.Text>
+              </Col>
+            </Row>
+            }
+          </>
+        )
+      }  
+
+      const helpModalSetter = () => {
+        getChartsOfAccounts()
+        setHelpModal(false)
+      }
 
     return(
         <div className="ChartsOfAccounts-container">
@@ -451,8 +681,8 @@ const ChartsAccountpage = () => {
                 <Button onClick={() => setHelpModal(true)}> Help </Button>
               </Col>
             </Row>
-            <HelpModal isHelpModalVisible={helpModal} onModalChange={() => setHelpModal(false)}/>
-            <AddAnAccount isAddAnAccountVisible={accountModal} onModalChange={() => setAccountModal(false)} />
+            <HelpModal isHelpModalVisible={helpModal} onModalChange={() => helpModalSetter()}/>
+            <AddAnAccount isAddAnAccountVisible={accountModal} onModalChange={() => setAccountModal(false)} chartsOfAccountsInfo={chartsOfAccounts} />
             <Modal type="primary" style={{marginRight: "1760px"}} title="Calendar" width={350} visible={calendar} footer={[ <Button key="back" onClick={() => setCalendar(!calendar)}>Ok</Button>]} onCancel={() => setCalendar(!calendar)}>
               <Calendar fullscreen={false} className="site-calendar-demo-card" />
             </Modal>
@@ -463,14 +693,11 @@ const ChartsAccountpage = () => {
                       <Col span={3}>
                         <Typography.Text strong> Search By Account Name </Typography.Text>
                       </Col>
-                      <Col span={3}>
+                      <Col span={18}>
                         <Typography.Text strong> Search By Account Number </Typography.Text>
                       </Col>
-                      <Col span={3}>
-                        <Typography.Text strong> Search By Account Category </Typography.Text>
-                      </Col>
-                      <Col span={3}>
-                        <Typography.Text strong> Search By Account Subcategory </Typography.Text>
+                      <Col style={{paddingLeft: "16px"}}>
+                        <Typography.Text strong> Edit Account </Typography.Text>
                       </Col>
                     </Row>
                     <Row style={{marginBottom: "20px"}}>
@@ -480,36 +707,25 @@ const ChartsAccountpage = () => {
                           style={{
                             width: 200,
                           }}
+                          onSearch={(e) => searchAccountName(e)}
+                          onPressEnter={(e) => searchAccountName(e)}
                         />
                       </Col>
-                      <Col span={3}>
+                      <Col span={18}>
                         <Input.Search
                           placeholder="Search By Account Number"
                           style={{
                             width: 200,
                           }}
+                          onSearch={(e) => searchAccountNumber(e)}
+                          onPressEnter={(e) => searchAccountNumber(e)}
                         />
                       </Col>
-                      <Col span={3}>
-                        <Input.Search
-                          placeholder="Search By Account Category"
-                          style={{
-                            width: 200,
-                          }}
-                        />
-                      </Col>
-                      <Col span={3}>
-                        <Input.Search
-                          placeholder="Search By Account Subcategory"
-                          style={{
-                            width: 200,
-                          }}
-                        />
+                      <Col style={{paddingLeft: "16px"}}>
+                        <Button style={{width: "120px"}} onClick={() => setHelpModal(true)}> Edit </Button>
                       </Col>
                     </Row> 
-                    <Row>
-                      {ChartsOfAccountsTable(inventorySeach)}
-                    </Row>
+                    {isAccountSearch === true && individualAccountView()}
                     </Collapse.Panel>
                     <Collapse.Panel header="Charts of Accounts" key="2">
                         {ChartsOfAccountsTable(chartsOfAccounts)}
