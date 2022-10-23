@@ -759,9 +759,15 @@ const ChartsAccountpage = () => {
                       </Col>
                       {isAccountSearch === true &&
                       <>
-                        <Col style={{paddingLeft: "16px"}}>
-                          <Button style={{width: "120px"}} onClick={() => setHelpModal(true)}> Edit </Button>
-                        </Col>
+                        {isEditVisible === false ?
+                          <Col style={{paddingLeft: "16px"}}>
+                            <Button style={{width: "120px"}} onClick={() => setIsEditVisible(!isEditVisible)}> Edit </Button>
+                          </Col>
+                          :
+                          <Col style={{paddingLeft: "16px"}}>
+                            <Button style={{width: "120px"}} onClick={() => setIsEditVisible(!isEditVisible)}> Save </Button>
+                          </Col>
+                        }
                         {search.data.active === true ? 
                         <Col style={{paddingLeft: "10px"}}>
                           <Button style={{width: "120px"}} onClick={() => canDeactivate()}> Deactivate </Button>
