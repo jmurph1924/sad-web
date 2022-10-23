@@ -6,7 +6,7 @@ import { useNavigate, Link } from 'react-router-dom'
 import { collection, getDocs, doc, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase-config";
 import { EditOutlined, SaveOutlined } from '@ant-design/icons';
-import { Typography, Table, Button, Input, Row, Collapse, Tooltip, Calendar, Modal, Col } from "antd";
+import { Typography, Table, Button, Input, Row, Collapse, Tooltip, Calendar, Modal, Col, message } from "antd";
 import "./ChartsOfAccounts.css";
 
 import HelpModal from "../HelpModal/HelpModal";
@@ -33,6 +33,29 @@ const ChartsAccountpage = () => {
   const searchAccountNumber = (value) => {
     setSearch(chartsOfAccounts.find(e => _.isEqual(e.data.accountNumber, parseInt(value))))
     setIsAccountSearch(true)
+  }
+
+  const canDeactivate = () => {
+    if(search?.data.balance > 0 || search?.data.balance < 0){
+      message.error("Balance must be 0 to deactivate")
+    } else{
+      handleDisable(search.id)
+    }
+  }
+
+  //Disabling User's Handle
+  const handleDisable = (id) => {
+    const docRef = doc(db, 'chartsOfAccounts', id)
+    updateDoc(docRef, {active: false}).then(response => {
+      getChartsOfAccounts()
+    }).catch(error => console.log(error.message))
+  }
+  //Activating User's 
+  const handleActivate = (id) => {
+    const docRef = doc(db, 'chartsOfAccounts', id)
+    updateDoc(docRef, {active: true}).then(response => {
+      getChartsOfAccounts()
+    }).catch(error => console.log(error.message))
   }
 
   const inventorySeachFiltered = (type, value) => {
@@ -693,12 +716,25 @@ const ChartsAccountpage = () => {
                       <Col span={3}>
                         <Typography.Text strong> Search By Account Name </Typography.Text>
                       </Col>
-                      <Col span={18}>
+                      <Col span={16}>
                         <Typography.Text strong> Search By Account Number </Typography.Text>
                       </Col>
-                      <Col style={{paddingLeft: "16px"}}>
-                        <Typography.Text strong> Edit Account </Typography.Text>
-                      </Col>
+                      {isAccountSearch === true &&
+                        <>
+                          <Col style={{paddingLeft: "16px"}}>
+                            <Typography.Text strong> Edit Account </Typography.Text>
+                          </Col>
+                          {search.data.active === true ? 
+                          <Col style={{paddingLeft: "50px"}}>
+                            <Typography.Text strong> Deactivate Account </Typography.Text>
+                          </Col>
+                          : 
+                          <Col style={{paddingLeft: "50px"}}>
+                            <Typography.Text strong> Activate Account </Typography.Text>
+                          </Col>
+                          }
+                        </>
+                      }
                     </Row>
                     <Row style={{marginBottom: "20px"}}>
                       <Col span={3}>
@@ -711,7 +747,7 @@ const ChartsAccountpage = () => {
                           onPressEnter={(e) => searchAccountName(e)}
                         />
                       </Col>
-                      <Col span={18}>
+                      <Col span={16}>
                         <Input.Search
                           placeholder="Search By Account Number"
                           style={{
@@ -721,14 +757,27 @@ const ChartsAccountpage = () => {
                           onPressEnter={(e) => searchAccountNumber(e)}
                         />
                       </Col>
-                      <Col style={{paddingLeft: "16px"}}>
-                        <Button style={{width: "120px"}} onClick={() => setHelpModal(true)}> Edit </Button>
-                      </Col>
+                      {isAccountSearch === true &&
+                      <>
+                        <Col style={{paddingLeft: "16px"}}>
+                          <Button style={{width: "120px"}} onClick={() => setHelpModal(true)}> Edit </Button>
+                        </Col>
+                        {search.data.active === true ? 
+                        <Col style={{paddingLeft: "10px"}}>
+                          <Button style={{width: "120px"}} onClick={() => canDeactivate()}> Deactivate </Button>
+                        </Col>
+                        :
+                          <Col style={{paddingLeft: "10px"}}>
+                            <Button style={{width: "120px"}} onClick={() => handleActivate(search.id)}> Activate </Button>
+                          </Col>
+                        }
+                      </>
+                      }
                     </Row> 
                     {isAccountSearch === true && individualAccountView()}
                     </Collapse.Panel>
                     <Collapse.Panel header="Charts of Accounts" key="2">
-                        {ChartsOfAccountsTable(chartsOfAccounts)}
+                        {ChartsOfAccountsTable(chartsOfAccounts.filter(f => f.data.active === true))}
                     </Collapse.Panel>
                     <Collapse.Panel header="Event Log" key="3">
                     </Collapse.Panel>

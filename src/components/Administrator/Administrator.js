@@ -297,7 +297,7 @@ const Administrator = () => {
             setUsers(usrs);
         }).catch(error => console.log(error.message))
       }
-      //Submitting new data
+      //Opens Prefilled Email
       const onSubmit = () => {
         window.open(`mailto:${userEmail}?subject=${userSubject}&body=${userContent}`)
 
