@@ -8,6 +8,7 @@ import { db } from "../../firebase-config";
 import { EditOutlined, SaveOutlined } from '@ant-design/icons';
 import { Typography, Table, Button, Input, Row, Collapse, Tooltip, Calendar, Modal, Col, message } from "antd";
 import "./ChartsOfAccounts.css";
+import { useAuth } from '../../contexts/AuthContext'
 
 import HelpModal from "../HelpModal/HelpModal";
 import AddAnAccount from "./AddAnAccount";
@@ -24,7 +25,27 @@ const ChartsAccountpage = () => {
   const [ accountModal, setAccountModal ] = useState(false);
   const [ search, setSearch ] = useState(null);
   const [ isAccountSearch, setIsAccountSearch ] = useState(false);
+  const [users, setUsers] = useState([]);
   const isChartEditable = true;
+
+  const { currentUser } = useAuth()
+
+    //Calling getUsers function
+    useEffect(() => {
+      getUsers()
+    }, [])
+
+   // Gets users from database
+   const getUsers = () => {
+    const usersCollectionRef = collection(db, 'users')
+    getDocs(usersCollectionRef).then(response => {
+        const usrs = response.docs.map(doc => ({
+            data: doc.data(), 
+            id: doc.id,
+        }))
+        setUsers(usrs);
+    }).catch (error => console.log(error.message))
+  }
 
   const searchAccountName = (value) => {
     setSearch(chartsOfAccounts.find(e => _.isEqual(e.data.accountName, value)))
@@ -697,9 +718,11 @@ const ChartsAccountpage = () => {
               <Col>
                 <Button onClick={() => setCalendar(!calendar)}> Calendar </Button>
               </Col>
+              { users?.some((e) => _.isEqual(e.data.email, currentUser?.email) && _.isEqual(e.data.role, "Administrator")) &&
               <Col span={22} style={{paddingLeft: "10px"}}>
                 <Button onClick={() => setAccountModal(true)}> Add an Account </Button>
               </Col>
+              }
               <Col style={{paddingLeft: "16px"}}>
                 <Button onClick={() => setHelpModal(true)}> Help </Button>
               </Col>
@@ -719,7 +742,7 @@ const ChartsAccountpage = () => {
                       <Col span={16}>
                         <Typography.Text strong> Search By Account Number </Typography.Text>
                       </Col>
-                      {isAccountSearch === true &&
+                      {isAccountSearch === true && users?.some((e) => _.isEqual(e.data.email, currentUser?.email) && _.isEqual(e.data.role, "Administrator")) &&
                         <>
                           <Col style={{paddingLeft: "16px"}}>
                             <Typography.Text strong> Edit Account </Typography.Text>
@@ -744,7 +767,6 @@ const ChartsAccountpage = () => {
                             width: 200,
                           }}
                           onSearch={(e) => searchAccountName(e)}
-                          onPressEnter={(e) => searchAccountName(e)}
                         />
                       </Col>
                       <Col span={16}>
@@ -754,10 +776,9 @@ const ChartsAccountpage = () => {
                             width: 200,
                           }}
                           onSearch={(e) => searchAccountNumber(e)}
-                          onPressEnter={(e) => searchAccountNumber(e)}
                         />
                       </Col>
-                      {isAccountSearch === true &&
+                      {isAccountSearch === true && users?.some((e) => _.isEqual(e.data.email, currentUser?.email) && _.isEqual(e.data.role, "Administrator")) &&
                       <>
                         {isEditVisible === false ?
                           <Col style={{paddingLeft: "16px"}}>
