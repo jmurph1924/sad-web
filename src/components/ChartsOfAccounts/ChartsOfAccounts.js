@@ -20,7 +20,7 @@ const ChartsAccountpage = () => {
   const [ isEditVisible, setIsEditVisible ] = useState(false);
   const [chartsOfAccounts, setChartsOfAccounts] = useState([]);
   const [ calendar, setCalendar ] = useState(false);
-  const [ inventorySeach, setInventorySeach ] = useState([]);
+  const [ changeLog, setChangeLog ] = useState([]);
   const [ helpModal, setHelpModal ] = useState(false);
   const [ accountModal, setAccountModal ] = useState(false);
   const [ search, setSearch ] = useState(null);
@@ -64,6 +64,10 @@ const ChartsAccountpage = () => {
     }
   }
 
+  const editAccount = () => {
+    
+  }
+
   //Disabling User's Handle
   const handleDisable = (id) => {
     const docRef = doc(db, 'chartsOfAccounts', id)
@@ -79,26 +83,13 @@ const ChartsAccountpage = () => {
     }).catch(error => console.log(error.message))
   }
 
-  const inventorySeachFiltered = (type, value) => {
-    if(_.isEqual(type, "Account Name")){
-
-    } else if(_.isEqual(type, "Account Number")){
-
-    } else if(_.isEqual(type, "Account Category")){
-
-    } else if(_.isEqual(type, "Account SubCategory")){
-      
-    }else {
-      setInventorySeach([]);
-    }
-  }
-
   const formatCurrencyChange = (amount) => {
     return currencyFormatter.format(amount, currencyFormatDecimal)
   }
 
     useEffect(() => {
         getChartsOfAccounts()
+        getChangeLogs()
     }, [])
 
     const getChartsOfAccounts = () => {
@@ -116,7 +107,422 @@ const ChartsAccountpage = () => {
             setChartsOfAccounts(charts);
         }).catch(error => console.log(error.message))
       }
-    
+      const getChangeLogs = () => {
+        // Specifies database collection you are using
+        const usersCollectionRef = collection(db, 'changeLog')
+
+        // Gets all the documents from that collection
+        getDocs(usersCollectionRef).then(response => {
+            // maps documents to an array
+            const charts = response.docs.map(doc => ({
+                data: doc.data(), 
+                id: doc.id,
+            }))
+            //Adds that array to state
+            setChangeLog(charts);
+        }).catch(error => console.log(error.message))
+      }
+      const columns3 = [
+        {
+          title: () => {
+            return (
+              <>
+                <Tooltip title="This is the account numbers">
+                  <Typography.Text strong> Account Number </Typography.Text>
+                </Tooltip>
+              </>
+            )
+          },
+          key: 'accountNumber',
+          render: item => {
+            return (
+                <>
+                    {item?.data.accountNumber}
+                </>
+            )
+          }
+        },
+        {
+          title: () => {
+            return (
+              <>
+                <Tooltip title="This is the Account Name">
+                  <Typography.Text strong> Account Name </Typography.Text>
+                </Tooltip>
+              </>
+            )
+          },
+          key: 'accountName',
+          render: item => {
+            return (
+                <>
+                    <>
+                        {item?.data.accountName}
+                    </>
+              </>
+            )
+          }
+        },
+        {
+          title: () => {
+            return (
+              <>
+                <Tooltip title="This is the account numbers">
+                  <Typography.Text strong> Account Description </Typography.Text>
+                </Tooltip>
+              </>
+            )
+          },
+          key: 'accountDescription',
+          render: item => {
+            return (
+                <>
+                    <>
+                        {item?.data.accountDescription}
+                    </>
+              </>
+            )
+          }
+        },
+        {
+          title: () => {
+            return (
+              <>
+                <Tooltip title="This is the account numbers">
+                  <Typography.Text strong> Account Added </Typography.Text>
+                </Tooltip>
+              </>
+            )
+          },
+          key: 'accountAdded',
+          render: item => {
+            return (
+                <>
+                    <>
+                        {moment(item?.data.dateAccountAdded.toDate()).format('M/D/YYYY h:mma')}
+                    </>
+              </>
+            )
+          }
+        },
+      ]
+      const columns2 = [
+        {
+          title: () => {
+            return (
+              <>
+                <Tooltip title="This is the account numbers">
+                  <Typography.Text strong> Account Number </Typography.Text>
+                </Tooltip>
+              </>
+            )
+          },
+          key: 'accountNumber',
+          render: item => {
+            return (
+                <>
+                    {item?.data.accountNumber}
+                </>
+            )
+          }
+        },
+        {
+          title: () => {
+            return (
+              <>
+                <Tooltip title="This is the Account Name">
+                  <Typography.Text strong> Account Name </Typography.Text>
+                </Tooltip>
+              </>
+            )
+          },
+          key: 'accountName',
+          render: item => {
+            return (
+                <>
+                    <Typography.Text style={_.isEqual(chartsOfAccounts.find(f => _.isEqual(f.data.accountNumber, item.data.accountNumber)).data.accountName, item.data.accountName) === true ? {color: "black"} : {color: "red"}}>
+                        {item?.data.accountName}
+                    </Typography.Text>
+              </>
+            )
+          }
+        },
+        {
+          title: () => {
+            return (
+              <>
+                <Tooltip title="This is the account numbers">
+                  <Typography.Text strong> Account Description </Typography.Text>
+                </Tooltip>
+              </>
+            )
+          },
+          key: 'accountDescription',
+          render: item => {
+            return (
+                <>
+                    <Typography.Text style={_.isEqual(chartsOfAccounts.find(f => _.isEqual(f.data.accountNumber, item.data.accountNumber)).data.accountDescription, item.data.accountDescription) === true ? {color: "black"} : {color: "red"}}>
+                        {item?.data.accountDescription}
+                    </Typography.Text>
+              </>
+            )
+          }
+        },
+        {
+          title: () => {
+            return (
+              <>
+                <Tooltip title="This is the account numbers">
+                  <Typography.Text strong> Normal Side </Typography.Text>
+                </Tooltip>
+              </>
+            )
+          },
+          key: 'normalSide',
+          render: item => {
+            return (
+                <>
+                    <Typography.Text style={_.isEqual(chartsOfAccounts.find(f => _.isEqual(f.data.accountNumber, item.data.accountNumber)).data.normalSide, item.data.normalSide) === true ? {color: "black"} : {color: "red"}}>
+                        {item?.data.normalSide}
+                    </Typography.Text>
+              </>
+            )
+          }
+        },
+        {
+          title: () => {
+            return (
+              <>
+                <Tooltip title="This is the account numbers">
+                  <Typography.Text strong> Account Category </Typography.Text>
+                </Tooltip>
+              </>
+            )
+          },
+          key: 'accountCategory',
+          render: item => {
+            return (
+                <>
+                    <Typography.Text style={_.isEqual(chartsOfAccounts.find(f => _.isEqual(f.data.accountNumber, item.data.accountNumber)).data.accountCategory, item.data.accountCategory) === true ? {color: "black"} : {color: "red"}}>
+                        {item?.data.accountCategory}
+                    </Typography.Text>
+              </>
+            )
+          }
+        },
+        {
+          title: () => {
+            return (
+              <>
+                <Tooltip title="This is the account numbers">
+                  <Typography.Text strong> Account Subcategory </Typography.Text>
+                </Tooltip>
+              </>
+            )
+          },
+          key: 'accountSubCategory',
+          render: item => {
+            return (
+                <>
+                    <Typography.Text style={_.isEqual(chartsOfAccounts.find(f => _.isEqual(f.data.accountNumber, item.data.accountNumber)).data.accountSubCategory, item.data.accountSubCategory) === true ? {color: "black"} : {color: "red"}}>
+                        {item?.data.accountSubCategory}
+                    </Typography.Text>
+              </>
+            )
+          }
+        },
+        {
+          title: () => {
+            return (
+              <>
+                <Tooltip title="This is the account numbers">
+                  <Typography.Text strong> Initial Balance </Typography.Text>
+                </Tooltip>
+              </>
+            )
+          },
+          key: 'initialBalance',
+          render: item => {
+            return (
+                <>
+                    <Typography.Text style={_.isEqual(chartsOfAccounts.find(f => _.isEqual(f.data.accountNumber, item.data.accountNumber)).data.initialBalance, item.data.initialBalance) === true ? {color: "black"} : {color: "red"}}>
+                        {formatCurrencyChange(item?.data.initialBalance)}
+                    </Typography.Text>
+              </>
+            )
+          }
+        },
+        {
+          title: () => {
+            return (
+              <>
+                <Tooltip title="This is the account numbers">
+                  <Typography.Text strong> Debit </Typography.Text>
+                </Tooltip>
+              </>
+            )
+          },
+          key: 'debit',
+          render: item => {
+            return (
+                <>
+                    <Typography.Text style={_.isEqual(chartsOfAccounts.find(f => _.isEqual(f.data.accountNumber, item.data.accountNumber)).data.debit, item.data.debit) === true ? {color: "black"} : {color: "red"}}>
+                        {formatCurrencyChange(item?.data.debit)}
+                    </Typography.Text>
+              </>
+            )
+          }
+        },
+        {
+          title: () => {
+            return (
+              <>
+                <Tooltip title="This is the account numbers">
+                  <Typography.Text strong> Credit </Typography.Text>
+                </Tooltip>
+              </>
+            )
+          },
+          key: 'credit',
+          render: item => {
+            return (
+                <>
+                    <Typography.Text style={_.isEqual(chartsOfAccounts.find(f => _.isEqual(f.data.accountNumber, item.data.accountNumber)).data.credit, item.data.credit) === true ? {color: "black"} : {color: "red"}}>
+                        {formatCurrencyChange(item?.data.credit)}
+                    </Typography.Text>
+              </>
+            )
+          }
+        },
+        {
+          title: () => {
+            return (
+              <>
+                <Tooltip title="This is the account numbers">
+                  <Typography.Text strong> Balance </Typography.Text>
+                </Tooltip>
+              </>
+            )
+          },
+          key: 'balance',
+          render: item => {
+            return (
+                <>
+                    <Typography.Text style={_.isEqual(chartsOfAccounts.find(f => _.isEqual(f.data.accountNumber, item.data.accountNumber)).data.balance, item.data.balance) === true ? {color: "black"} : {color: "red"}}>
+                        {formatCurrencyChange(item?.data.balance)}
+                    </Typography.Text>
+              </>
+            )
+          }
+        },
+        {
+          title: () => {
+            return (
+              <>
+                <Tooltip title="This is the account numbers">
+                  <Typography.Text strong> Account Updated Date </Typography.Text>
+                </Tooltip>
+              </>
+            )
+          },
+          key: 'accountAdded',
+          render: item => {
+            return (
+                <>
+                    <Typography.Text >
+                        {moment(item?.data.dateAccountAdded.toDate()).format('M/D/YYYY h:mma')}
+                    </Typography.Text>
+              </>
+            )
+          }
+        },
+        {
+          title: () => {
+            return (
+              <>
+                <Tooltip title="This is the account numbers">
+                  <Typography.Text strong> Update By User </Typography.Text>
+                </Tooltip>
+              </>
+            )
+          },
+          key: 'user',
+          render: item => {
+            return (
+                <>
+                    <Typography.Text>
+                        {item?.data.userId}
+                    </Typography.Text>
+              </>
+            )
+          }
+        },
+        {
+            title: () => {
+            return (
+              <>
+                <Tooltip title="This is the account numbers">
+                  <Typography.Text strong> Order </Typography.Text>
+                </Tooltip>
+              </>
+            )
+          },
+            key: 'order',
+            render: item => {
+              return (
+                  <>
+
+                      <Typography.Text style={_.isEqual(chartsOfAccounts.find(f => _.isEqual(f.data.accountNumber, item.data.accountNumber)).data.order, item.data.order) === true ? {color: "black"} : {color: "red"}}>
+                          {item?.data.order}
+                      </Typography.Text>
+                </>
+              )
+            }
+          },
+          {
+            title: () => {
+            return (
+              <>
+                <Tooltip title="This is the account numbers">
+                  <Typography.Text strong> Statement </Typography.Text>
+                </Tooltip>
+              </>
+            )
+          },
+            key: 'statement',
+            render: item => {
+              return (
+                  <>
+                      <Typography.Text style={_.isEqual(chartsOfAccounts.find(f => _.isEqual(f.data.accountNumber, item.data.accountNumber)).data.statement, item.data.statement) === true ? {color: "black"} : {color: "red"}}>
+                          {item?.data.statement}
+                      </Typography.Text>
+                </>
+              )
+            }
+          },
+          {
+            title: () => {
+            return (
+              <>
+                <Tooltip title="This is the account numbers">
+                  <Typography.Text strong> Comment </Typography.Text>
+                </Tooltip>
+              </>
+            )
+          },
+            key: 'comment',
+            render: item => {
+              return (
+                  <>
+                      <Typography.Text style={_.isEqual(chartsOfAccounts.find(f => _.isEqual(f.data.accountNumber, item.data.accountNumber)).data.comments, item.data.comments) === true ? {color: "black"} : {color: "red"}}>
+                          {item?.data.comments}
+                      </Typography.Text>
+                </>
+              )
+            }
+          },
+      ];
+
       const columns = [
         {
           title: () => {
@@ -151,13 +557,11 @@ const ChartsAccountpage = () => {
           render: item => {
             return (
                 <>
-                    {_.isEqual(isChartEditable, item?.id) === true ? <Input /> :
                     <>
                       <Link to="/ledgers">
                         {item?.data.accountName}
                       </Link>
                     </>
-                    }
               </>
             )
           }
@@ -176,11 +580,9 @@ const ChartsAccountpage = () => {
           render: item => {
             return (
                 <>
-                    {_.isEqual(isChartEditable, item?.id) === true ? <Input /> :
                     <>
                         {item?.data.accountDescription}
                     </>
-                    }
               </>
             )
           }
@@ -199,11 +601,9 @@ const ChartsAccountpage = () => {
           render: item => {
             return (
                 <>
-                    {_.isEqual(isChartEditable, item?.id) === true ? <Input /> :
                     <>
                         {item?.data.normalSide}
                     </>
-                    }
               </>
             )
           }
@@ -222,11 +622,9 @@ const ChartsAccountpage = () => {
           render: item => {
             return (
                 <>
-                    {_.isEqual(isChartEditable, item?.id) === true ? <Input /> :
                     <>
                         {item?.data.accountCategory}
                     </>
-                    }
               </>
             )
           }
@@ -245,11 +643,9 @@ const ChartsAccountpage = () => {
           render: item => {
             return (
                 <>
-                    {_.isEqual(isChartEditable, item?.id) === true ? <Input /> :
                     <>
                         {item?.data.accountSubCategory}
                     </>
-                    }
               </>
             )
           }
@@ -268,11 +664,9 @@ const ChartsAccountpage = () => {
           render: item => {
             return (
                 <>
-                    {_.isEqual(isChartEditable, item?.id) === true ? <Input /> :
                     <>
                         {formatCurrencyChange(item?.data.initialBalance)}
                     </>
-                    }
               </>
             )
           }
@@ -291,11 +685,9 @@ const ChartsAccountpage = () => {
           render: item => {
             return (
                 <>
-                    {_.isEqual(isChartEditable, item?.id) === true ? <Input /> :
                     <>
                         {formatCurrencyChange(item?.data.debit)}
                     </>
-                    }
               </>
             )
           }
@@ -314,11 +706,9 @@ const ChartsAccountpage = () => {
           render: item => {
             return (
                 <>
-                    {_.isEqual(isChartEditable, item?.id) === true ? <Input /> :
                     <>
                         {formatCurrencyChange(item?.data.credit)}
                     </>
-                    }
               </>
             )
           }
@@ -337,11 +727,9 @@ const ChartsAccountpage = () => {
           render: item => {
             return (
                 <>
-                    {_.isEqual(isChartEditable, item?.id) === true ? <Input /> :
                     <>
                         {formatCurrencyChange(item?.data.balance)}
                     </>
-                    }
               </>
             )
           }
@@ -360,11 +748,9 @@ const ChartsAccountpage = () => {
           render: item => {
             return (
                 <>
-                    {_.isEqual(isChartEditable, item?.id) === true ? <Input /> :
                     <>
                         {moment(item?.data.dateAccountAdded.toDate()).format('M/D/YYYY h:mma')}
                     </>
-                    }
               </>
             )
           }
@@ -383,11 +769,9 @@ const ChartsAccountpage = () => {
           render: item => {
             return (
                 <>
-                    {_.isEqual(isChartEditable, item?.userId) === true ? <Input /> :
                     <>
                         {item?.data.userId}
                     </>
-                    }
               </>
             )
           }
@@ -406,11 +790,10 @@ const ChartsAccountpage = () => {
             render: item => {
               return (
                   <>
-                      {_.isEqual(isChartEditable, item?.id) === true ? <Input /> :
+  
                       <>
                           {item?.data.order}
                       </>
-                      }
                 </>
               )
             }
@@ -429,11 +812,10 @@ const ChartsAccountpage = () => {
             render: item => {
               return (
                   <>
-                      {_.isEqual(isChartEditable, item?.id) === true ? <Input /> :
+  
                       <>
                           {item?.data.statement}
                       </>
-                      }
                 </>
               )
             }
@@ -452,11 +834,10 @@ const ChartsAccountpage = () => {
             render: item => {
               return (
                   <>
-                      {_.isEqual(isChartEditable, item?.id) === true ? <Input /> :
+  
                       <>
                           {item?.data.comments}
                       </>
-                      }
                 </>
               )
             }
@@ -807,6 +1188,17 @@ const ChartsAccountpage = () => {
                         {ChartsOfAccountsTable(chartsOfAccounts.filter(f => f.data.active === true))}
                     </Collapse.Panel>
                     <Collapse.Panel header="Event Log" key="3">
+                        <Table
+                          key={chartsOfAccounts.id}
+                          style={{width: "2000px"}}
+                          columns={columns3}
+                          expandable={{
+                            expandedRowRender: (record) => (
+                              <Table style={{width: "1900px"}} locale={locale3} columns={columns2} dataSource={changeLog.filter(f => _.isEqual(f.data.accountNumber, record?.data.accountNumber))} />
+                            ),
+                          }}
+                          dataSource={chartsOfAccounts}
+                        />
                     </Collapse.Panel>
                 </Collapse>
             </Row>
