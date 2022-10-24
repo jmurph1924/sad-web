@@ -3,7 +3,7 @@ import * as _ from "lodash";
 import * as currencyFormatter from "currency-formatter";
 import moment from 'moment';
 import { useNavigate, Link } from 'react-router-dom'
-import { collection, getDocs, doc, updateDoc } from "firebase/firestore";
+import { collection, getDocs, doc, updateDoc, Timestamp, addDoc } from "firebase/firestore";
 import { db } from "../../firebase-config";
 import { EditOutlined, SaveOutlined } from '@ant-design/icons';
 import { Typography, Table, Button, Input, Row, Collapse, Tooltip, Calendar, Modal, Col, message } from "antd";
@@ -17,6 +17,7 @@ const currencyFormatDecimal = { code: "USD", decimalDigits: 2, precision: 2};
 
 const ChartsAccountpage = () => {
   const navigate = useNavigate();
+  const { currentUser } = useAuth()
   const [ isEditVisible, setIsEditVisible ] = useState(false);
   const [chartsOfAccounts, setChartsOfAccounts] = useState([]);
   const [ calendar, setCalendar ] = useState(false);
@@ -26,9 +27,62 @@ const ChartsAccountpage = () => {
   const [ search, setSearch ] = useState(null);
   const [ isAccountSearch, setIsAccountSearch ] = useState(false);
   const [users, setUsers] = useState([]);
-  const isChartEditable = true;
 
-  const { currentUser } = useAuth()
+  const [error, setError] = useState("")
+  const [loading, setLoading] = useState(false)
+  const [accountDescription, setAccountDescription] = useState("");
+  const [accountCategory, setAccountCategory ] = useState("");
+  const [accountName, setAccountName] = useState("");
+  const [accountNumber, setAccountNumber] = useState(null);
+  const [accountSubCategory, setAccountSubCategory] = useState("");
+  const [balance, setBalance] = useState(null);
+  const [comments, setComments] = useState("");
+  const [credit, setCredit] = useState(null);
+  const dateAccountAdded = Timestamp.fromDate(new Date());
+  const [debit, setDebit] = useState(null);
+  const [initialBalance, setInitialBalance] = useState(null);
+  const [normalSide, setNormalSide] = useState("");
+  const [order, setOrder] = useState(null);
+  const [statement, setStatement] = useState("");
+  const userId = currentUser?.email
+  const active = true;
+
+  //Setting Updated User information
+  const handleUpdatedChartsofAccounts = (search) => {
+
+    setAccountNumber(search?.data.accountNumber);
+    setCredit(parseFloat(credit));
+    setDebit(parseFloat(debit));
+    setBalance(parseFloat(balance));
+    setInitialBalance(parseFloat(initialBalance));
+    setOrder(parseInt(order));
+
+    const usersCollectionRef = collection(db, 'changeLog')
+    addDoc(usersCollectionRef, { active, accountDescription, accountName, accountNumber, accountCategory, accountSubCategory, balance, comments, credit, dateAccountAdded, debit, initialBalance, normalSide, order, statement, userId }).then(response => {
+        try {
+    setError("")
+    setLoading(true)
+    } catch(e) {
+        setError("Failed to create an account")
+    }
+    setLoading(false)
+    }).catch(error => {
+      console.log(error.message)
+    })
+
+    setTimeout(() => {
+    const docRef = doc(db, 'chartsOfAccounts', search.id)
+    updateDoc(docRef, { active, accountDescription, accountName, accountCategory, accountSubCategory, balance, comments, credit, debit, initialBalance, normalSide, order, statement }).then(() => {
+      message.info("Successfully Updated Account")
+      getUsers()
+    }).catch(error => console.log(error.message))
+    getChartsOfAccounts();
+    getChangeLogs();
+    setIsEditVisible(false);
+    setIsAccountSearch(false);
+    setSearch([]);
+    }, 3000);
+  }
 
     //Calling getUsers function
     useEffect(() => {
@@ -48,12 +102,16 @@ const ChartsAccountpage = () => {
   }
 
   const searchAccountName = (value) => {
-    setSearch(chartsOfAccounts.find(e => _.isEqual(e.data.accountName, value)))
-    setIsAccountSearch(true)
+    if(!_.isNil(value)){
+      setSearch(chartsOfAccounts.find(e => _.isEqual(e?.data.accountName, value)))
+      setIsAccountSearch(true)  
+    }
   }
   const searchAccountNumber = (value) => {
-    setSearch(chartsOfAccounts.find(e => _.isEqual(e.data.accountNumber, parseInt(value))))
-    setIsAccountSearch(true)
+    if(!_.isNil(value)){
+      setSearch(chartsOfAccounts.find(e => _.isEqual(e?.data.accountNumber, parseInt(value))))
+      setIsAccountSearch(true)
+    }
   }
 
   const canDeactivate = () => {
@@ -74,6 +132,28 @@ const ChartsAccountpage = () => {
     updateDoc(docRef, {active: false}).then(response => {
       getChartsOfAccounts()
     }).catch(error => console.log(error.message))
+
+    setAccountNumber(search?.data.accountNumber);
+    setCredit(parseFloat(credit));
+    setDebit(parseFloat(debit));
+    setBalance(parseFloat(balance));
+    setInitialBalance(parseFloat(initialBalance));
+    setOrder(parseInt(order));
+
+    setTimeout(() => {
+    const usersCollectionRef = collection(db, 'changeLog')
+    addDoc(usersCollectionRef, { active, accountDescription: "Disabled", accountName, accountNumber, accountCategory, accountSubCategory, balance, comments, credit, dateAccountAdded, debit, initialBalance, normalSide, order, statement, userId }).then(response => {
+        try {
+    setError("")
+    setLoading(true)
+    } catch(e) {
+        setError("Failed to create an account")
+    }
+    setLoading(false)
+    }).catch(error => {
+      console.log(error.message)
+    })
+  }, 3000);
   }
   //Activating User's 
   const handleActivate = (id) => {
@@ -81,6 +161,28 @@ const ChartsAccountpage = () => {
     updateDoc(docRef, {active: true}).then(response => {
       getChartsOfAccounts()
     }).catch(error => console.log(error.message))
+
+    setAccountNumber(search?.data.accountNumber);
+    setCredit(parseFloat(credit));
+    setDebit(parseFloat(debit));
+    setBalance(parseFloat(balance));
+    setInitialBalance(parseFloat(initialBalance));
+
+    setOrder(parseInt(order));
+    setTimeout(() => {
+      const usersCollectionRef = collection(db, 'changeLog')
+      addDoc(usersCollectionRef, { active, accountDescription: "Enabled", accountName, accountNumber, accountCategory, accountSubCategory, balance, comments, credit, dateAccountAdded, debit, initialBalance, normalSide, order, statement, userId }).then(response => {
+          try {
+      setError("")
+      setLoading(true)
+      } catch(e) {
+          setError("Failed to create an account")
+      }
+      setLoading(false)
+      }).catch(error => {
+        console.log(error.message)
+      })
+    }, 3000);
   }
 
   const formatCurrencyChange = (amount) => {
@@ -886,19 +988,23 @@ const ChartsAccountpage = () => {
             {isEditVisible === true ?
             <Row gutter={[12,12]}>
               <Col span={4} style={{marginBottom: "10px"}}>
-                <Input style={{width: "95%"}}/>
+                <Typography.Text>
+                  {search?.data.accountNumber}
+                </Typography.Text>
               </Col>
               <Col span={4} style={{marginBottom: "10px"}}>
-                <Input style={{width: "95%"}}/>
+              <Input style={{width: "95%"}} onChange={(e) => setAccountName(e.target.value)}/>
               </Col>
               <Col span={4} style={{marginBottom: "10px"}}>
-                <Input style={{width: "95%"}}/>
+                <Input style={{width: "95%"}} onChange={(e) => setCredit(e.target.value)}/>
               </Col>
               <Col span={4} style={{marginBottom: "10px"}}>
-                <Input style={{width: "95%"}}/>
+                <Input style={{width: "95%"}} onChange={(e) => setStatement(e.target.value)}/>
               </Col>
               <Col span={4} style={{marginBottom: "10px"}}>
-                <Input style={{width: "95%"}}/>
+                <Typography.Text>
+                  {search?.data.userId}
+                </Typography.Text>
               </Col>
             </Row>
 
@@ -962,19 +1068,21 @@ const ChartsAccountpage = () => {
             {isEditVisible === true ?
             <Row gutter={[12,12]}>
               <Col span={4} style={{marginBottom: "10px"}}>
-                <Input style={{width: "95%"}}/>
+                <Input style={{width: "95%"}} onChange={(e) => setAccountCategory(e.target.value)}/>
               </Col>
               <Col span={4} style={{marginBottom: "10px"}}>
-                <Input style={{width: "95%"}}/>
+                <Input style={{width: "95%"}} onChange={(e) => setAccountDescription(e.target.value)}/>
               </Col>
               <Col span={4} style={{marginBottom: "10px"}}>
-                <Input style={{width: "95%"}}/>
+                <Input style={{width: "95%"}} onChange={(e) => setDebit(e.target.value)}/>
               </Col>
               <Col span={4} style={{marginBottom: "10px"}}>
-                <Input style={{width: "95%"}}/>
+                <Input style={{width: "95%"}} onChange={(e) => setNormalSide(e.target.value)}/>
               </Col>
               <Col span={4} style={{marginBottom: "10px"}}>
-                <Input style={{width: "95%"}}/>
+                <Typography.Text>
+                  {moment(search?.data.dateAccountAdded.toDate()).format('M/D/YYYY h:mma')}
+                </Typography.Text>
               </Col>
             </Row>
 
@@ -1038,19 +1146,19 @@ const ChartsAccountpage = () => {
             {isEditVisible === true ?
             <Row gutter={[12,12]}>
               <Col span={4} style={{marginBottom: "10px"}}>
-                <Input style={{width: "95%"}}/>
+                <Input style={{width: "95%"}} onChange={(e) => setAccountSubCategory(e.target.value)}/>
               </Col>
               <Col span={4} style={{marginBottom: "10px"}}>
-                <Input style={{width: "95%"}}/>
+                <Input style={{width: "95%"}} onChange={(e) => setOrder(e.target.value)}/>
               </Col>
               <Col span={4} style={{marginBottom: "10px"}}>
-                <Input style={{width: "95%"}}/>
+                <Input style={{width: "95%"}} onChange={(e) => setBalance(e.target.value)}/>
               </Col>
               <Col span={4} style={{marginBottom: "10px"}}>
-                <Input style={{width: "95%"}}/>
+                <Input style={{width: "95%"}} onChange={(e) => setInitialBalance(e.target.value)}/>
               </Col>
               <Col span={4} style={{marginBottom: "10px"}}>
-                <Input style={{width: "95%"}}/>
+              <Input style={{width: "95%"}} onChange={(e) => setComments(e.target.value)}/>
               </Col>
             </Row>
 
@@ -1167,7 +1275,7 @@ const ChartsAccountpage = () => {
                           </Col>
                           :
                           <Col style={{paddingLeft: "16px"}}>
-                            <Button style={{width: "120px"}} onClick={() => setIsEditVisible(!isEditVisible)}> Save </Button>
+                            <Button style={{width: "120px"}} onClick={() => handleUpdatedChartsofAccounts(search)}> Save </Button>
                           </Col>
                         }
                         {search.data.active === true ? 
@@ -1176,7 +1284,7 @@ const ChartsAccountpage = () => {
                         </Col>
                         :
                           <Col style={{paddingLeft: "10px"}}>
-                            <Button style={{width: "120px"}} onClick={() => handleActivate(search.id)}> Activate </Button>
+                            <Button style={{width: "120px"}} onClick={() => handleActivate(search)}> Activate </Button>
                           </Col>
                         }
                       </>

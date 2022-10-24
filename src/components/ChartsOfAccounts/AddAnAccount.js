@@ -39,6 +39,19 @@ const AddAnAccount = ({isAddAnAccountVisible = false, onModalChange = _.noop, ch
         setInitialBalance(parseFloat(initialBalance));
         setOrder(parseInt(order));
 
+        const userCollectionRef = collection(db, 'changeLog')
+        addDoc(userCollectionRef, { active, accountDescription, accountName, accountNumber, accountCategory, accountSubCategory, balance, comments, credit, dateAccountAdded, debit, initialBalance, normalSide, order, statement, userId }).then(response => {
+            try {
+        setError("")
+        setLoading(true)
+        } catch(e) {
+            setError("Failed to create an account")
+        }
+        setLoading(false)
+        }).catch(error => {
+        console.log(error.message)
+        })
+
         if(chartsOfAccountsInfo?.some(f => _.isEqual(f.data.accountNumber, accountNumber))){
             message.error("Account Number Already Exist")
         }else if(chartsOfAccountsInfo?.some(f => _.isEqual(f.data.accountName, accountName))){
