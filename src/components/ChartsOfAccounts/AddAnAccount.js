@@ -2,7 +2,7 @@ import React, { useRef, useState} from 'react'
 import * as _ from "lodash";
 import { collection, addDoc, Timestamp } from "firebase/firestore"
 import { db } from "../../firebase-config"
-import { Row, Col, Typography, Collapse, Table, Button, Select, message, Input, Form, Modal} from "antd"
+import { Row, Col, Typography, Button, message, Input, Modal, Tooltip} from "antd"
 import { useAuth } from '../../contexts/AuthContext'
 
 
@@ -32,7 +32,6 @@ const AddAnAccount = ({isAddAnAccountVisible = false, onModalChange = _.noop, ch
     async function handleSubmit() {
         const usersCollectionRef = collection(db, 'chartsOfAccounts')
 
-        setAccountNumber(parseInt(accountNumber));
         setCredit(parseFloat(credit));
         setDebit(parseFloat(debit));
         setBalance(parseFloat(balance));
@@ -40,7 +39,7 @@ const AddAnAccount = ({isAddAnAccountVisible = false, onModalChange = _.noop, ch
         setOrder(parseInt(order));
 
         const userCollectionRef = collection(db, 'changeLog')
-        addDoc(userCollectionRef, { active, accountDescription, accountName, accountNumber, accountCategory, accountSubCategory, balance, comments, credit, dateAccountAdded, debit, initialBalance, normalSide, order, statement, userId }).then(response => {
+        addDoc(userCollectionRef, { active, accountDescription, accountName, accountNumber: parseInt(accountNumber), accountCategory, accountSubCategory, balance, comments, credit, dateAccountAdded, debit, initialBalance, normalSide, order, statement, userId }).then(response => {
             try {
         setError("")
         setLoading(true)
@@ -77,7 +76,11 @@ const AddAnAccount = ({isAddAnAccountVisible = false, onModalChange = _.noop, ch
 
     return (
         <div style={{ background: "#041C32"}}>
-            <Modal type="primary" title="Add a New Account"  width={1800} visible={isAddAnAccountVisible} footer={[ <Button key="back" onClick={() => handleSubmit()}>Submit</Button>]} onCancel={onModalChange}>
+            <Modal type="primary" title="Add a New Account"  width={1800} visible={isAddAnAccountVisible} footer={[ 
+            <Tooltip title="Add a New Account">
+                <Button key="back" onClick={() => handleSubmit()}>Submit</Button>
+            </Tooltip>
+            ]} onCancel={onModalChange}>
                 <Row>
                     <Col span={16}>
                         <Row gutter={[12,12]}>

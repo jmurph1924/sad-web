@@ -6,7 +6,7 @@ import { db } from "../../firebase-config"
 import { ApiOutlined, EditOutlined, SaveOutlined } from '@ant-design/icons';
 
 // These are the components we are using for the styling. Go to https://ant.design/components/overview/ to see the list. Make sure to check the javascript and not typescript for the coomponents
-import { Row, Typography, Collapse, Table, Button, Select, message, Input} from "antd"
+import { Row, Typography, Collapse, Table, Button, Select, message, Input, Tooltip} from "antd"
 
 // Brings in the css for the page
 import "./Administrator.css"

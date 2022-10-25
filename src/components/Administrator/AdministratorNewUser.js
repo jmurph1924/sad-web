@@ -4,7 +4,7 @@ import { useAuth } from "../../contexts/AuthContext"
 import { collection, addDoc } from "firebase/firestore"
 import { db } from "../../firebase-config"
 import { SmileFilled, FrownTwoTone } from '@ant-design/icons';
-import { Row, Col, Button, Typography, Input, Select, Alert} from "antd"
+import { Row, Col, Button, Typography, Input, Select, Alert, Tooltip} from "antd"
 import "./Administrator.css"
 
 //New User Administrator Function

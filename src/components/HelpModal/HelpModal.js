@@ -1,7 +1,7 @@
 import * as React from 'react'
 import * as Scroll from 'react-scroll';
 import * as _ from "lodash"
-import { Modal, Menu, Button, Typography, Row, Col } from "antd"
+import { Modal, Menu, Button, Typography, Row, Col, Tooltip } from "antd"
 
 import ChartsHelp from './ChartsHelp';
 import JournalsHelp from './JournalsHelp';

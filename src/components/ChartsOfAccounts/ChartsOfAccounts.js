@@ -6,7 +6,7 @@ import { useNavigate, Link } from 'react-router-dom'
 import { collection, getDocs, doc, updateDoc, Timestamp, addDoc } from "firebase/firestore";
 import { db } from "../../firebase-config";
 import { EditOutlined, SaveOutlined } from '@ant-design/icons';
-import { Typography, Table, Button, Input, Row, Collapse, Tooltip, Calendar, Modal, Col, message } from "antd";
+import { Typography, Table, Button, Input, Row, Collapse, Calendar, Modal, Col, message, Tooltip } from "antd";
 import "./ChartsOfAccounts.css";
 import { useAuth } from '../../contexts/AuthContext'
 
@@ -58,7 +58,7 @@ const ChartsAccountpage = () => {
     setOrder(parseInt(order));
 
     const usersCollectionRef = collection(db, 'changeLog')
-    addDoc(usersCollectionRef, { active, accountDescription, accountName, accountNumber, accountCategory, accountSubCategory, balance, comments, credit, dateAccountAdded, debit, initialBalance, normalSide, order, statement, userId }).then(response => {
+    addDoc(usersCollectionRef, { active, accountDescription, accountName, accountNumber: parseInt(accountNumber), accountCategory, accountSubCategory, balance, comments, credit, dateAccountAdded, debit, initialBalance, normalSide, order, statement, userId }).then(response => {
         try {
     setError("")
     setLoading(true)
@@ -103,14 +103,22 @@ const ChartsAccountpage = () => {
 
   const searchAccountName = (value) => {
     if(!_.isNil(value)){
+      if(chartsOfAccounts.some(e => _.isEqual(e?.data.accountName, value))){
       setSearch(chartsOfAccounts.find(e => _.isEqual(e?.data.accountName, value)))
       setIsAccountSearch(true)  
+      } else {
+        message.error("Account Does Not Exist Please Try Again");
+      }
     }
   }
   const searchAccountNumber = (value) => {
     if(!_.isNil(value)){
-      setSearch(chartsOfAccounts.find(e => _.isEqual(e?.data.accountNumber, parseInt(value))))
-      setIsAccountSearch(true)
+      if(chartsOfAccounts.some(e => _.isEqual(e?.data.accountNumber, value))){
+        setSearch(chartsOfAccounts.find(e => _.isEqual(e?.data.accountNumber, parseInt(value))))
+        setIsAccountSearch(true)
+      } else {
+        message.error("Account Does Not Exist Please Try Again");
+      }
     }
   }
 

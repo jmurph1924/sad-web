@@ -4,7 +4,7 @@ import { collection, getDocs, doc, updateDoc } from "firebase/firestore"
 import { db } from "../../firebase-config"
 import { Excel } from "antd-table-saveas-excel";
 import { ApiOutlined, CoffeeOutlined, EditOutlined, SaveOutlined } from '@ant-design/icons';
-import { Row, Col, Typography, Collapse, Table, Button, Select, message, Input, Form} from "antd"
+import { Row, Typography, Collapse, Table, Button, Select, message, Input, Form, Tooltip} from "antd"
 import "./Administrator.css"
 import AdministratorNewUser from "./AdministratorNewUser";
 
