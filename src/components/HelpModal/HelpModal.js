@@ -75,7 +75,7 @@ const HelpModal = ({ isHelpModalVisible = false, onModalChange = _.noop }) => {
                     <Typography.Title>
                         Welcome to the Help Page
                     </Typography.Title>
-                    <Typography.Paragraph>There once was a page that could help the world understand finance. That is this page</Typography.Paragraph>
+                    <Typography.Paragraph>This page is meant to be a guide for Instacount.</Typography.Paragraph>
                     <ChartsHelp />
                     <JournalsHelp />
                     <LedgersHelp />

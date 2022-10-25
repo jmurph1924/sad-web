@@ -81,7 +81,7 @@ const ChartsAccountpage = () => {
     setIsEditVisible(false);
     setIsAccountSearch(false);
     setSearch([]);
-    }, 3000);
+    }, 1000);
   }
 
     //Calling getUsers function
@@ -153,7 +153,7 @@ const ChartsAccountpage = () => {
     }).catch(error => {
       console.log(error.message)
     })
-  }, 3000);
+  }, 1000);
   }
   //Activating User's 
   const handleActivate = (id) => {
@@ -182,7 +182,7 @@ const ChartsAccountpage = () => {
       }).catch(error => {
         console.log(error.message)
       })
-    }, 3000);
+    }, 1000);
   }
 
   const formatCurrencyChange = (amount) => {
@@ -1222,7 +1222,7 @@ const ChartsAccountpage = () => {
               <Calendar fullscreen={false} className="site-calendar-demo-card" />
             </Modal>
             <Row style={{justifyContent: "center", width: "2000px", marginLeft: "-360px"}}>
-                <Collapse defaultActiveKey={['1']} style={{width: "2000px", marginTop: "50px"}} >
+                <Collapse defaultActiveKey={['1']} style={{width: "2000px", marginTop: "50px", marginBottom: "50px"}} >
                     <Collapse.Panel header="Find an Account" key="1">
                     <Row style={{marginBottom: "10px"}}>
                       <Col span={3}>

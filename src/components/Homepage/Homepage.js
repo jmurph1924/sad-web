@@ -5,13 +5,14 @@ import { useAuth } from '../../contexts/AuthContext'
 import { collection, getDocs, doc, updateDoc } from "firebase/firestore"
 import { useNavigate } from 'react-router-dom'
 import { db } from "../../firebase-config"
-import { Row, Col, Alert, message } from "antd"
+import { Row, Col, Alert, message, Typography } from "antd"
 
 //Homepage Creation and Layout
 const Homepage = () => {
     const [ isPopupVisible, setIsPopupVisible ] = useState(false);
     const navigate = useNavigate()
     const [ user2, setUser2] = useState(null);
+    const [ daysLeft, setDaysLeft ] = useState("");
     const { currentUser, logout } = useAuth()
 
     //Calling getUsers function
@@ -40,10 +41,13 @@ const Homepage = () => {
             handleDisable(user.id);
             handleLogout();
         } else if(diffDays <= 3){
-            setIsPopupVisible(true);
+            setInfo(diffDays)
         }
+    }
 
-        
+    const setInfo = (diffDays) => {
+        setDaysLeft(diffDays.toString());
+        setIsPopupVisible(true);
     }
 
     async function handleLogout() {
@@ -78,7 +82,7 @@ const Homepage = () => {
         <div className="homeContainer">
             {isPopupVisible && <Alert
                 style={{width: "300px", marginLeft: "900px"}}
-                message="Your Password Expires in 3 Days"
+                message={<Typography>{`Your Password Expires in ${daysLeft} Days`}</Typography>}
                 type="warning"
                 closable
                 onClose={() => setIsPopupVisible(false)}
