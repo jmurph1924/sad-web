@@ -7,14 +7,16 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 
 import { Link} from 'react-router-dom'
-import { Menu, Row, Col, Button } from 'antd'
+import { Menu, Row, Col, Button, Tooltip } from 'antd'
 
+//Menu Function
 const MenuItemizer = () => {        
     // Navigate allows you to go to a different page
     const navigate = useNavigate()
     const { currentUser, logout } = useAuth()
     const [users, setUsers] = useState([]);
 
+    //Calling getUsers function
     useEffect(() => {
         getUsers()
     }, [])
@@ -40,7 +42,7 @@ const MenuItemizer = () => {
           setUsers(usrs);
       }).catch (error => console.log(error.message))
     }
-
+    //Returning Header Layout
     return (
        <>
             <Row >
@@ -92,5 +94,5 @@ const MenuItemizer = () => {
     </>
     )
 }
-
+//Exporting Menu Itemizer
 export default MenuItemizer

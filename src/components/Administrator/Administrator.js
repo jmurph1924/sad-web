@@ -4,12 +4,14 @@ import { collection, getDocs, doc, updateDoc } from "firebase/firestore"
 import { db } from "../../firebase-config"
 import { Excel } from "antd-table-saveas-excel";
 import { ApiOutlined, CoffeeOutlined, EditOutlined, SaveOutlined } from '@ant-design/icons';
-import { Row, Col, Typography, Collapse, Table, Button, Select, message, Input, Form} from "antd"
+import { Row, Typography, Collapse, Table, Button, Select, message, Input, Form, Tooltip} from "antd"
 import "./Administrator.css"
 import AdministratorNewUser from "./AdministratorNewUser";
 
-
+//Administrator Function
 const Administrator = () => {
+
+    //Administrator Variable Creation
     const [users, setUsers] = useState([]);
     const [isUserEditable, setIsUserEditable] = useState("");
     const [ name, setName ] = useState("");
@@ -21,6 +23,7 @@ const Administrator = () => {
     const [ userContent, setUserContent ] = useState("");
     const [ isNewUserVisible, setIsNewUserVisible ] = useState(false);
 
+    //Calls User Data  on render
     useEffect(() => {
         getUsers()
     }, [])
@@ -29,13 +32,15 @@ const Administrator = () => {
       setIsNewUserVisible(visible);
       getUsers()
     }
-
+    //Creation of Layout Columns
     const columns = [
         {
+          //Name Section
           title: 'Name',
           key: 'name',
           render: item => {
             return (
+              // Name Fetch from Firebase
                 <>
                     {_.isEqual(isUserEditable, item?.id) === true ? <Input onChange={(e) => setName(e.target.value)}/> :
                     <>
@@ -47,10 +52,12 @@ const Administrator = () => {
           }
         },
         {
+          //Email Section
           title: 'Email',
           key: 'email',
           render: item => {
             return (
+              //Email Fetch from Firebase
                 <>
                   {_.isEqual(isUserEditable, item?.id) === true ? <Input onChange={(e) => setEmail(e.target.value)}/> :
                     <>
@@ -64,10 +71,12 @@ const Administrator = () => {
           }
         },
         {
+          //Role Section 
           title: 'Role',
           key: 'role',
           render: item => {
             return (
+              //Role Drop-down menu Creation
             <>
               <Select defaultValue={item?.data.role} style={{width: "300px", opacity: ".9"}} onSelect={e => handleRoleChange(item.id, e)}>
                 <Select.Option value="Administrator">Administrator</Select.Option>
@@ -79,10 +88,12 @@ const Administrator = () => {
           }
         },
         {
+          //Address Section
           title: 'Address',
           key: 'address',
           render: item => {
             return (
+              //Address Fetch from Firebase
             <>
               {_.isEqual(isUserEditable, item?.id) === true ? <Input onChange={(e) => setAddress(e.target.value)}/> :
               <>
@@ -94,10 +105,12 @@ const Administrator = () => {
           }
         },
         {
+          //Disable Button 
           title: 'Disable User',
           key: 'disable',
           render: item => {
             return (
+              //Button Creation
               <>
                 <Button style={{marginLeft: "25px"}} onClick={() => handleDisable(item.id)} icon={<ApiOutlined />}/>
               </>
@@ -105,10 +118,12 @@ const Administrator = () => {
           }
         },
         {
+          //Edit User Section
           title: 'Edit User',
           key: 'edit',
           render: item => {
             return (
+              //Edit User Button Creation
               <>
                 {_.isEqual(isUserEditable, item?.id) === true ? 
                   <Button style={{marginLeft: "10px"}} onClick={() => handleUpdatedUser(item.id, item.data)} icon={<SaveOutlined />}/>
@@ -120,12 +135,15 @@ const Administrator = () => {
           }
         }
       ];
+      //Layout Column 2 Creation
       const columns2 = [
         {
+          //Name Section 
           title: 'Name',
           key: 'name',
           render: item => {
             return (
+              //Name Fetch from Firebase
                 <>
                     {_.isEqual(isUserEditable, item?.id) === true ? <Input onChange={(e) => setName(e.target.value)}/> :
                     <>
@@ -137,10 +155,12 @@ const Administrator = () => {
           }
         },
         {
+          //Email Section 
           title: 'Email',
           key: 'email',
           render: item => {
             return (
+              //Email Fetch from Firebase
                 <>
                   {_.isEqual(isUserEditable, item?.id) === true ? <Input onChange={(e) => setEmail(e.target.value)}/> :
                     <>
@@ -154,10 +174,12 @@ const Administrator = () => {
           }
         },
         {
+          //Role Section 
           title: 'Role',
           key: 'role',
           render: item => {
             return (
+              //Role Drop-down Creation
             <>
               <Select defaultValue={item?.data.role} style={{width: "300px", opacity: ".9"}} onSelect={e => handleRoleChange(item.id, e)}>
                 <Select.Option value="Administrator">Administrator</Select.Option>
@@ -169,10 +191,12 @@ const Administrator = () => {
           }
         },
         {
+          //Address Sectiom
           title: 'Address',
           key: 'address',
           render: item => {
             return (
+              //Address Fetch from Firebase
             <>
               {_.isEqual(isUserEditable, item?.id) === true ? <Input onChange={(e) => setAddress(e.target.value)}/> :
               <>
@@ -184,10 +208,12 @@ const Administrator = () => {
           }
         },
         {
+          //Enable user Section
           title: 'Enable User',
           key: 'disable',
           render: item => {
             return (
+              //Toggle button to activate accounts
               <>
                 <Button style={{marginLeft: "25px"}} onClick={() => handleActivate(item.id)} icon={<CoffeeOutlined />}/>
               </>
@@ -195,10 +221,12 @@ const Administrator = () => {
           }
         },
         {
+          //Edit User Section
           title: 'Edit User',
           key: 'edit',
           render: item => {
             return (
+              //Toggle Button that enable editing of User data
               <>
                 {_.isEqual(isUserEditable, item?.id) === true ? 
                   <Button style={{marginLeft: "10px"}} onClick={() => handleUpdatedUser(item.id, item.data)} icon={<SaveOutlined />}/>
@@ -210,21 +238,21 @@ const Administrator = () => {
           }
         }
       ];
-
+      //Disabling User's Handle
       const handleDisable = (id) => {
         const docRef = doc(db, 'users', id)
         updateDoc(docRef, {disabled: true}).then(response => {
           getUsers()
         }).catch(error => console.log(error.message))
       }
-
+      //Activating User's 
       const handleActivate = (id) => {
         const docRef = doc(db, 'users', id)
         updateDoc(docRef, {disabled: false, active: true}).then(response => {
           getUsers()
         }).catch(error => console.log(error.message))
       }
-
+      //Setting Updated User information
       const handleUpdatedUser = (id, item) => {
         setIsUserEditable("")
         var firstNameReal = name.split(' ').slice(0, -1).join(' ');
@@ -250,7 +278,7 @@ const Administrator = () => {
           getUsers()
         }).catch(error => console.log(error.message))
       }
-
+      //Setting Change of role action
       const handleRoleChange = (id, role) => {
         const docRef = doc(db, 'users', id)
         updateDoc(docRef, {role}).then(() => {
@@ -258,7 +286,7 @@ const Administrator = () => {
           getUsers()
         }).catch(error => console.log(error.message))
       }
-
+      //Collecting user data
       const getUsers = () => {
         const usersCollectionRef = collection(db, 'users')
         getDocs(usersCollectionRef).then(response => {
@@ -269,7 +297,7 @@ const Administrator = () => {
             setUsers(usrs);
         }).catch(error => console.log(error.message))
       }
-
+      //Opens Prefilled Email
       const onSubmit = () => {
         window.open(`mailto:${userEmail}?subject=${userSubject}&body=${userContent}`)
 
@@ -285,44 +313,69 @@ const Administrator = () => {
       let locale3 = {
         emptyText: 'No Current Users',
       };
-
+      //Creation of Layout Columns 
       const columns4 = [
         {
+          //Name Section Creation
           title: "Name",
           dataIndex: "Name",
           key: "Name"
         },
         {
+          //Email Section Creation
           title: "Email",
           dataIndex: "Email",
           key: "Email"
         },
         {
+          //Date of Birth Section Creation
           title: "Date of Birth",
           dataIndex: "DateofBirth",
           key: "DateofBirth"
         },
         {
+          //Role Section Creation
           title: "Role",
           dataIndex: "Role",
           key: "Role"
         },
         {
+          //Account Disabled Section Creation
           title: "Account Disabled",
           dataIndex: "AccountDisabled",
           key: "AccountDisabled"
         },
         {
+          //New User Section Creation
           title: "New User",
           dataIndex: "NewUser",
           key: "NewUser"
         },
         {
+          //Address Section Creation
           title: "Address",
           dataIndex: "Address",
           key: "Address"
         }
       ];
+      
+      const getNumberFromDate = (expirationDate) => {
+        var currentdate = new Date(); 
+        var expDate = new Date(expirationDate)
+
+        const currentDateTime = Math.abs(currentdate);
+        const expDateTime = Math.abs(expDate);
+
+        if(_.isNil(expirationDate)){
+          return true
+        }
+
+        if(expDateTime <= currentDateTime){
+          return true;
+        } else{
+          return false;
+        }
+    }
 
       const handleCSVClick = () => {
 
@@ -342,7 +395,7 @@ const Administrator = () => {
 
           userCsv.push(userObj)
         }
-
+        //Sheet Creation for data
         const excel = new Excel();
         excel
           .addSheet("test")
@@ -350,7 +403,7 @@ const Administrator = () => {
           .addDataSource(userCsv)
           .saveAs("Users.xlsx");
       };
-
+      //Return of Created columns and layouts for the Administrator page
     return (
         <div className="loginContainer">
             <Row style={{justifyContent: "center"}}>
@@ -369,7 +422,10 @@ const Administrator = () => {
                     <Collapse.Panel header="Disabled Users" key="3">
                       <Table columns={columns2} locale={locale2} dataSource={users?.filter(e => e.data.disabled === true && e.data.active === true)} />
                     </Collapse.Panel>
-                    <Collapse.Panel header="Email a User" key="4">
+                    <Collapse.Panel header="Expired Password Users" key="4">
+                      <Table columns={columns2} locale={locale2} dataSource={users?.filter(e => getNumberFromDate(e.data.passwordExpiration))} />
+                    </Collapse.Panel>
+                    <Collapse.Panel header="Email a User" key="5">
 
                       <Form
                         form={form}
@@ -396,5 +452,5 @@ const Administrator = () => {
         </div>
     );
 }
-
+//Exporting Administrator page 
 export default Administrator;

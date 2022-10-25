@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { Typography, Row, Col} from 'antd'
 
+//Creating Footer for all Pages
 const FooterItem = () => {
     return (
         <Row style={{color: "white", height: "100px"}}>
@@ -15,5 +16,5 @@ const FooterItem = () => {
         </Row>
     )
 }
-
+//Exporting FooterItem
 export default FooterItem

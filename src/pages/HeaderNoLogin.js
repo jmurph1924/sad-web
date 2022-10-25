@@ -1,8 +1,10 @@
 import * as React from 'react'
 import { Menu, Row, Col} from 'antd'
 
+//Header Before logging in Function 
 const HeaderNoLogin = () => {        
-        
+    
+    //Returning Head without login layout 
     return (
       <>
         <Row>
@@ -22,5 +24,5 @@ const HeaderNoLogin = () => {
       </>
     )
 }
-
+//Exporting HeaderNoLogin Page
 export default HeaderNoLogin

@@ -5,11 +5,13 @@ import { useNavigate } from 'react-router-dom';
 import { collection, addDoc } from "firebase/firestore"
 import { db } from "../../firebase-config"
 import { ArrowLeftOutlined, SmileFilled, FrownTwoTone } from '@ant-design/icons';
-import { Row, Col, Button, Typography, Input, Select, Alert} from "antd"
+import { Row, Col, Button, Typography, Input, Select, Alert, Tooltip} from "antd"
 import "./CreateUser.css"
 
-
+//Creating Users Function
 const CreateUser = () => {
+
+    // Creating Users Variable Creation
     const emailRef = useRef(null)
     const passwordRef = useRef(null)
     const { signup } = useAuth()
@@ -30,6 +32,7 @@ const CreateUser = () => {
     const [role, setRole] = useState("")
     const [dateOfBirth, setDateOfBirth] = useState("")
 
+    //Submit function for new user data
     async function handleSubmit() {
         const usersCollectionRef = collection(db, 'users')
         addDoc(usersCollectionRef, {active: false, address, city, dateOfBirth, disabled: true,
@@ -51,11 +54,11 @@ const CreateUser = () => {
 
         
     }
-
+    //
     const back = () => {
         navigate('/')
     }
-        
+    //Password input checks Variables
     const containsLetters = (letter) => {
         return /[a-zA-Z]/.test(letter);
     }
@@ -67,11 +70,13 @@ const CreateUser = () => {
         return /\d/.test(number);
     }
 
+    //Password rules check for new user inputed Passwords before submission into database
     const isAbleToSubmit = (_.isNil(registerPassword) === true ? false : 
     !(containsLetters(registerPassword) && containsSpecialCharacters(registerPassword) && containsNumber(registerPassword) && registerPassword.length > 7 
     && firstname.length > 0 && lastname.length > 0 && address.length > 0 && state.length > 0 && city.length > 0 && email.length > 0 && passwordQuestion.length > 0 
     && pwQuestionAnswer.length > 0 && zipcode.length > 0 && role.length > 0 && dateOfBirth.length > 0))
 
+    //Variable Return for New Users
     return (
         <div className="loginContainer">
             
@@ -176,4 +181,5 @@ const CreateUser = () => {
     );
 }
 
+//Data export for New Administrator Users
 export default CreateUser;
