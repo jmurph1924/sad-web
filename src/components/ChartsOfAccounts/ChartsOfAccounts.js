@@ -130,10 +130,6 @@ const ChartsAccountpage = () => {
     }
   }
 
-  const editAccount = () => {
-    
-  }
-
   //Disabling User's Handle
   const handleDisable = (id) => {
     const docRef = doc(db, 'chartsOfAccounts', id)
@@ -191,6 +187,8 @@ const ChartsAccountpage = () => {
         console.log(error.message)
       })
     }, 1000);
+
+    
   }
 
   const formatCurrencyChange = (amount) => {
@@ -1211,26 +1209,26 @@ const ChartsAccountpage = () => {
 
     return(
         <div className="ChartsOfAccounts-container">
-            <Row style={{width: "2000px", marginLeft: "-360px", marginTop: "-60px", marginBottom: "-30px"}}>
+            <Row style={{width: "1850px", marginLeft: "-360px", marginTop: "-60px", marginBottom: "-30px"}}>
               <Col>
                 <Button onClick={() => setCalendar(!calendar)}> Calendar </Button>
               </Col>
               { users?.some((e) => _.isEqual(e.data.email, currentUser?.email) && _.isEqual(e.data.role, "Administrator")) &&
-              <Col span={22} style={{paddingLeft: "10px"}}>
+              <Col span={21} style={{paddingLeft: "10px"}}>
                 <Button onClick={() => setAccountModal(true)}> Add an Account </Button>
               </Col>
               }
-              <Col style={{paddingLeft: "16px"}}>
+              <Col style={{paddingLeft: "76px"}}>
                 <Button onClick={() => setHelpModal(true)}> Help </Button>
               </Col>
             </Row>
             <HelpModal isHelpModalVisible={helpModal} onModalChange={() => helpModalSetter()}/>
             <AddAnAccount isAddAnAccountVisible={accountModal} onModalChange={() => setAccountModal(false)} chartsOfAccountsInfo={chartsOfAccounts} />
-            <Modal type="primary" style={{marginRight: "1760px"}} title="Calendar" width={350} visible={calendar} footer={[ <Button key="back" onClick={() => setCalendar(!calendar)}>Ok</Button>]} onCancel={() => setCalendar(!calendar)}>
+            <Modal type="primary" style={{marginRight: "1550px"}} title="Calendar" width={350} visible={calendar} footer={[ <Button key="back" onClick={() => setCalendar(!calendar)}>Ok</Button>]} onCancel={() => setCalendar(!calendar)}>
               <Calendar fullscreen={false} className="site-calendar-demo-card" />
             </Modal>
-            <Row style={{justifyContent: "center", width: "2000px", marginLeft: "-360px"}}>
-                <Collapse defaultActiveKey={['1']} style={{width: "2000px", marginTop: "50px", marginBottom: "50px"}} >
+            <Row style={{justifyContent: "center", width: "1850px", marginLeft: "-360px"}}>
+                <Collapse defaultActiveKey={['1']} style={{width: "1850px", marginTop: "50px", marginBottom: "50px"}} >
                     <Collapse.Panel header="Find an Account" key="1">
                     <Row style={{marginBottom: "10px"}}>
                       <Col span={3}>
@@ -1292,7 +1290,7 @@ const ChartsAccountpage = () => {
                         </Col>
                         :
                           <Col style={{paddingLeft: "10px"}}>
-                            <Button style={{width: "120px"}} onClick={() => handleActivate(search)}> Activate </Button>
+                            <Button style={{width: "120px"}} onClick={() => handleActivate(search.id)}> Activate </Button>
                           </Col>
                         }
                       </>
@@ -1310,7 +1308,7 @@ const ChartsAccountpage = () => {
                           columns={columns3}
                           expandable={{
                             expandedRowRender: (record) => (
-                              <Table style={{width: "1900px"}} locale={locale3} columns={columns2} dataSource={changeLog.filter(f => _.isEqual(f.data.accountNumber, record?.data.accountNumber))} />
+                              <Table style={{width: "1800px"}} locale={locale3} columns={columns2} dataSource={changeLog.filter(f => _.isEqual(f.data.accountNumber, record?.data.accountNumber))} />
                             ),
                           }}
                           dataSource={chartsOfAccounts}

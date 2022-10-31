@@ -7,7 +7,7 @@ const ChartsHelp = () => {
 
     return(
         <>
-            <Typography.Title level={2}>
+            <Typography.Title level={2} style={{marginTop: "80px"}}>
                 Charts of Accounts
             </Typography.Title>
             <ul>
