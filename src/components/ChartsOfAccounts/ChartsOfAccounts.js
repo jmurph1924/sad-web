@@ -5,7 +5,7 @@ import moment from 'moment';
 import { useNavigate, Link } from 'react-router-dom'
 import { collection, getDocs, doc, updateDoc, Timestamp, addDoc } from "firebase/firestore";
 import { db } from "../../firebase-config";
-import { Typography, Table, Button, Input, Row, Collapse, Calendar, Modal, Col, message, Tooltip, Form } from "antd";
+import { Typography, Table, Button, Input, Row, Collapse, Calendar, Modal, Col, message, Tooltip, Form, Select } from "antd";
 import "./ChartsOfAccounts.css";
 import { useAuth } from '../../contexts/AuthContext'
 
@@ -1330,6 +1330,13 @@ const ChartsAccountpage = () => {
                       >
                         <Form.Item name="userEmail" label="Email">
                           <Input placeholder="Email" style={{ opacity: ".9", width: "300px"}} onChange={(e) => setUserEmail(e.target.value)}/>
+                          <Select style={{width: "300px", paddingTop: "20px", paddingLeft: "20px"}}>
+                          {users.map(item => (
+                            <Select.Option key={item.lastname}>
+                              {item?.data.email}
+                            </Select.Option>
+                          ))}
+                          </Select>
                         </Form.Item>
                         <Form.Item name="userSubject" label="Subject" >
                           <Input placeholder="Subject" style={{ opacity: ".9", width: "1000px"}} onChange={(e) => setUserSubject(e.target.value)}/>
