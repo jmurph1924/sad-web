@@ -5,8 +5,7 @@ import moment from 'moment';
 import { useNavigate, Link } from 'react-router-dom'
 import { collection, getDocs, doc, updateDoc, Timestamp, addDoc } from "firebase/firestore";
 import { db } from "../../firebase-config";
-import { EditOutlined, SaveOutlined } from '@ant-design/icons';
-import { Typography, Table, Button, Input, Row, Collapse, Calendar, Modal, Col, message, Tooltip } from "antd";
+import { Typography, Table, Button, Input, Row, Collapse, Calendar, Modal, Col, message, Tooltip, Form } from "antd";
 import "./ChartsOfAccounts.css";
 import { useAuth } from '../../contexts/AuthContext'
 
@@ -27,7 +26,7 @@ const ChartsAccountpage = () => {
   const [ search, setSearch ] = useState(null);
   const [ isAccountSearch, setIsAccountSearch ] = useState(false);
   const [users, setUsers] = useState([]);
-
+  const [form] = Form.useForm();
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
   const [accountDescription, setAccountDescription] = useState("");
@@ -44,6 +43,9 @@ const ChartsAccountpage = () => {
   const [normalSide, setNormalSide] = useState("");
   const [order, setOrder] = useState(null);
   const [statement, setStatement] = useState("");
+  const [ userEmail, setUserEmail ] = useState("");
+  const [ userSubject, setUserSubject ] = useState("");
+  const [ userContent, setUserContent ] = useState("");
   const userId = currentUser?.email
   const active = true;
 
@@ -111,6 +113,12 @@ const ChartsAccountpage = () => {
       }
     }
   }
+   //Opens Prefilled Email
+   const onSubmit = () => {
+    window.open(`mailto:${userEmail}?subject=${userSubject}&body=${userContent}`)
+
+    form.resetFields();
+  };
   const searchAccountNumber = (value) => {
     if(!_.isNil(value)){
       if(chartsOfAccounts.some(e => _.isEqual(e?.data.accountNumber, value))){
@@ -1313,6 +1321,26 @@ const ChartsAccountpage = () => {
                           }}
                           dataSource={chartsOfAccounts}
                         />
+                    </Collapse.Panel>
+                    <Collapse.Panel header="Email a User" key="4">
+                      <Form
+                        form={form}
+                        layout="vertical"
+                        onFinish={() => onSubmit()}
+                      >
+                        <Form.Item name="userEmail" label="Email">
+                          <Input placeholder="Email" style={{ opacity: ".9", width: "300px"}} onChange={(e) => setUserEmail(e.target.value)}/>
+                        </Form.Item>
+                        <Form.Item name="userSubject" label="Subject" >
+                          <Input placeholder="Subject" style={{ opacity: ".9", width: "1000px"}} onChange={(e) => setUserSubject(e.target.value)}/>
+                        </Form.Item>
+                        <Form.Item name="userContent" label="Content">
+                          <Input.TextArea rows={6} style={{ opacity: ".9", width: "1000px", marginBottom: "10px"}} onChange={(e) => setUserContent(e.target.value)}/>
+                        </Form.Item>
+                        <Form.Item>
+                          <Button type="primary" htmlType="submit">Submit</Button>
+                        </Form.Item>
+                      </Form>
                     </Collapse.Panel>
                 </Collapse>
             </Row>
