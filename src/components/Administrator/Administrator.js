@@ -4,7 +4,7 @@ import { collection, getDocs, doc, updateDoc } from "firebase/firestore"
 import { db } from "../../firebase-config"
 import { Excel } from "antd-table-saveas-excel";
 import { ApiOutlined, CoffeeOutlined, EditOutlined, SaveOutlined } from '@ant-design/icons';
-import { Row, Col, Typography, Collapse, Table, Button, Select, message, Input, Form} from "antd"
+import { Row, Typography, Collapse, Table, Button, Select, message, Input, Form, Tooltip} from "antd"
 import "./Administrator.css"
 import AdministratorNewUser from "./AdministratorNewUser";
 
@@ -297,7 +297,7 @@ const Administrator = () => {
             setUsers(usrs);
         }).catch(error => console.log(error.message))
       }
-      //Submitting new data
+      //Opens Prefilled Email
       const onSubmit = () => {
         window.open(`mailto:${userEmail}?subject=${userSubject}&body=${userContent}`)
 
@@ -358,7 +358,25 @@ const Administrator = () => {
           key: "Address"
         }
       ];
-      //
+      
+      const getNumberFromDate = (expirationDate) => {
+        var currentdate = new Date(); 
+        var expDate = new Date(expirationDate)
+
+        const currentDateTime = Math.abs(currentdate);
+        const expDateTime = Math.abs(expDate);
+
+        if(_.isNil(expirationDate)){
+          return true
+        }
+
+        if(expDateTime <= currentDateTime){
+          return true;
+        } else{
+          return false;
+        }
+    }
+
       const handleCSVClick = () => {
 
         let userCsv = [];
@@ -404,7 +422,10 @@ const Administrator = () => {
                     <Collapse.Panel header="Disabled Users" key="3">
                       <Table columns={columns2} locale={locale2} dataSource={users?.filter(e => e.data.disabled === true && e.data.active === true)} />
                     </Collapse.Panel>
-                    <Collapse.Panel header="Email a User" key="4">
+                    <Collapse.Panel header="Expired Password Users" key="4">
+                      <Table columns={columns2} locale={locale2} dataSource={users?.filter(e => getNumberFromDate(e.data.passwordExpiration))} />
+                    </Collapse.Panel>
+                    <Collapse.Panel header="Email a User" key="5">
 
                       <Form
                         form={form}

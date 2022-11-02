@@ -4,7 +4,7 @@ import { collection, getDocs } from "firebase/firestore"
 import { db } from "../../firebase-config"
 import { useNavigate } from 'react-router-dom';
 import {  MailOutlined, ArrowLeftOutlined } from '@ant-design/icons';
-import { Row, Col, Button, Typography, Input, message} from "antd"
+import { Row, Col, Button, Typography, Input, message, Tooltip} from "antd"
 import { useAuth } from '../../contexts/AuthContext'
 import "./ForgotPassword.css"
 

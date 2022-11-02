@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 
 import { Link} from 'react-router-dom'
-import { Menu, Row, Col, Button } from 'antd'
+import { Menu, Row, Col, Button, Tooltip } from 'antd'
 
 //Menu Function
 const MenuItemizer = () => {        
@@ -72,6 +72,11 @@ const MenuItemizer = () => {
                   <Menu.Item key="Ledgers" style={{paddingTop: "13px"}}>
                     <Link to="/ledgers">
                       Ledgers
+                    </Link>
+                  </Menu.Item>
+                  <Menu.Item key="Journals" style={{paddingTop: "13px"}}>
+                    <Link to="/journals">
+                      Journal Entry
                     </Link>
                   </Menu.Item>
                   {/* Checks to see if the user is an administrator */}

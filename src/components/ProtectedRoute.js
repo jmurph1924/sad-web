@@ -6,8 +6,6 @@ const ProtectedRoute = () => {
 
     const { currentUser } = useAuth()
     const navigate = useNavigate()
-    console.log(!currentUser)
-
     useEffect(() => {
         if(!currentUser) {
             navigate('/login', {replace: true})
