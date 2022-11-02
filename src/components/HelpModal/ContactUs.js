@@ -7,10 +7,10 @@ const ContactUs = () => {
 
     return(
         <>
-        <Typography.Title level={2}>
+        <Typography.Title level={2} style={{marginTop: "80px"}}>
             Contact Us
         </Typography.Title>
-        <Typography.Paragraph>There once was a page that could help the world understand finance. That is this page</Typography.Paragraph>
+        <Typography.Paragraph>For any inquires please call 1-678-867-5309</Typography.Paragraph>
     </>
     );
 }

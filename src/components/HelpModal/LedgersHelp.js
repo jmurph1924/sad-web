@@ -7,10 +7,17 @@ const LedgersHelp = () => {
 
     return(
         <>
-            <Typography.Title level={2}>
+            <Typography.Title level={2} style={{marginTop: "80px"}}>
                 Ledgers
             </Typography.Title>
-            <Typography.Paragraph>There once was a page that could help the world understand finance. That is this page</Typography.Paragraph>
+            <ul>
+                <li>
+                    Collection of account transactions recorded.
+                </li>
+                <li>
+                This page displays all entries with the date of journal entry, description column, debit/credit/balance, and the balance after each transaction. You can also filter by date, account name, or amount.
+                </li>
+            </ul>
         </>
     );
 }
