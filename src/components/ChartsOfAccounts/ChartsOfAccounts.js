@@ -674,7 +674,7 @@ const ChartsAccountpage = () => {
             return (
                 <>
                     <>
-                      <Link to="/ledgers">
+                      <Link to="/ledgers" state={{ specificAccount: item?.data.accountNumber }}>
                         {item?.data.accountName}
                       </Link>
                     </>

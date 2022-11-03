@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
+import { useLocation } from 'react-router-dom'
 import * as _ from "lodash";
+import moment from 'moment';
 import { collection, getDocs, doc, updateDoc } from "firebase/firestore"
 import { db } from "../../firebase-config"
 import { ApiOutlined, CoffeeOutlined, EditOutlined, SaveOutlined } from '@ant-design/icons';
@@ -16,11 +18,33 @@ const Ledgers = () => {
     const [credit, setCredit] = useState(null);
     const [balance, setBalance] = useState(null);
     const isChartEditable = true;
+   
+    const location = useLocation()
+    const specificAccount = location.state;
+    const ledger2 = ledgers.filter(f => f.data.journal === specificAccount?.specificAccount);
+    console.log(specificAccount)
 
     // needs getLedgers()
-    // useEffect(() => {
-    //     getLedgers()
-    // }, [])
+    useEffect(() => {
+        getLedgers()
+    }, [])
+
+   // Gets users from database
+   const getLedgers = () => {
+    // Specifies database collection you are using
+    const usersCollectionRef = collection(db, 'ledgers')
+
+    // Gets all the documents from that collection
+    getDocs(usersCollectionRef).then(response => {
+        // maps documents to an array
+        const charts = response.docs.map(doc => ({
+            data: doc.data(), 
+            id: doc.id,
+        }))
+        //Adds that array to state
+        setLedgers(charts);
+    }).catch(error => console.log(error.message))
+  }
 
     const columns = [
         {
@@ -31,7 +55,7 @@ const Ledgers = () => {
                   <>
                       {_.isEqual(isChartEditable, item?.id) === true ? <Input /> :
                       <>
-                          {item?.data.date}
+                          {moment(item?.data.date.toDate()).format('M/D/YYYY h:mma')}
                       </>
                       }
                 </>
@@ -125,16 +149,21 @@ const Ledgers = () => {
         emptyText: 'No Current Ledgers',
       };
 
-    const LedgersTable = () => (
-        <Table locale={locale3} columns={columns} dataSource={ledgers} />
+    const LedgersTable = (ledgerCharts) => (
+        <Table locale={locale3} columns={columns} dataSource={ledgerCharts} />
       );
 
     return(
         <div className="Ledgers-container">
             <Row style={{justifyContent: "center"}}>
                 <Collapse defaultActiveKey={['1']} style={{width: "2400px", marginTop: "50px"}} >
-                    <Collapse.Panel header="Ledgers" key="1">
-                        <LedgersTable />
+                    {ledger2.length > 0 && 
+                        <Collapse.Panel header="Ledger from Account" key="1">
+                            {LedgersTable(ledger2)}
+                        </Collapse.Panel>
+                    }
+                    <Collapse.Panel header="Ledgers" key="2">
+                        {LedgersTable(ledgers)}
                     </Collapse.Panel>
                 </Collapse>
             </Row>
