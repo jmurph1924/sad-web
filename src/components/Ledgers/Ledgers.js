@@ -1,22 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from 'react-router-dom'
+import * as currencyFormatter from "currency-formatter";
+import { useLocation,  Link  } from 'react-router-dom'
 import * as _ from "lodash";
 import moment from 'moment';
 import { collection, getDocs, doc, updateDoc } from "firebase/firestore"
 import { db } from "../../firebase-config"
 import { ApiOutlined, CoffeeOutlined, EditOutlined, SaveOutlined } from '@ant-design/icons';
-import { Typography, Table, Button, Select, Input, Row, Collapse } from "antd"
+import { Typography, Table, Button, Select, Input, Row, Collapse, Col, DatePicker } from "antd"
 import "./Ledgers.css";
 const { Column, ColumnGroup } = Table;
 
+const currencyFormatDecimal = { code: "USD", decimalDigits: 2, precision: 2};
+
 const Ledgers = () => {
     const [ledgers, setLedgers] = useState([]);
-    const [date, setdate] = useState("");
-    const [description, setDescription] = useState("");
-    const [journalReference, setJournalReference] = useState("");
-    const [debit, setDebit] = useState(null);
-    const [credit, setCredit] = useState(null);
-    const [balance, setBalance] = useState(null);
+    const [searchedLedger, setSearchedLedgers] = useState(null);
     const isChartEditable = true;
    
     const location = useLocation()
@@ -24,6 +22,9 @@ const Ledgers = () => {
     const ledger2 = ledgers.filter(f => f.data.journal === specificAccount?.specificAccount);
     console.log(specificAccount)
 
+    const formatCurrencyChange = (amount) => {
+      return currencyFormatter.format(amount, currencyFormatDecimal)
+    }
     // needs getLedgers()
     useEffect(() => {
         getLedgers()
@@ -46,6 +47,28 @@ const Ledgers = () => {
     }).catch(error => console.log(error.message))
   }
 
+  const searchtheledger = (ledgerSearch) => {
+    setSearchedLedgers(ledgers.filter(f => f.data.name === ledgerSearch));
+  }
+
+  const searchtheBalance = (ledgerSearch) => {
+    setSearchedLedgers(ledgers.filter(f => f.data.balance.toString() === ledgerSearch));
+  }
+
+  const searchtheDate = (date) => {
+    if(_.isNil(date)){
+      setSearchedLedgers(null);
+    }
+    else{
+      setSearchedLedgers(ledgers.filter(f => moment(f?.data.date.toDate()).format('MM/DD/YYYY') === moment(date).format('MM/DD/YYYY')));
+    }
+  }
+
+
+  const resetSearch = () => {
+    setSearchedLedgers(null);
+  }
+
     const columns = [
         {
             title: 'Date',
@@ -61,6 +84,21 @@ const Ledgers = () => {
                 </>
               )
             }
+          },
+          {
+            title: 'Chart of Account',
+            key: 'chartofAccount',
+            render: item => {
+              return (
+                <>
+                  {_.isEqual(isChartEditable, item?.id) === true ? <Input /> :
+                      <>
+                          {item?.data.name}
+                      </>
+                      }
+                </>
+              )
+            },
           },
           {
             title: 'Description',
@@ -101,7 +139,7 @@ const Ledgers = () => {
                   <>
                       {_.isEqual(isChartEditable, item?.id) === true ? <Input /> :
                       <>
-                          {item?.data.debit}
+                          {formatCurrencyChange(item?.data.debit)}
                       </>
                       }
                 </>
@@ -116,7 +154,7 @@ const Ledgers = () => {
                   <>
                       {_.isEqual(isChartEditable, item?.id) === true ? <Input /> :
                       <>
-                          {item?.data.credit}
+                          {formatCurrencyChange(item?.data.credit)}
                       </>
                       }
                 </>
@@ -131,13 +169,26 @@ const Ledgers = () => {
                 <>
                   {_.isEqual(isChartEditable, item?.id) === true ?  <Input /> :
                     <>
-                    {item?.data.balance}
+                    {formatCurrencyChange(item?.data.balance)}
                 </>
                   }
                 </>
               )
             }
-          }
+          },
+          {
+            title: 'Post Reference',
+            key: 'pr',
+            render: () => {
+              return (
+                <>
+                  <Link to="/journals">
+                    PR
+                  </Link>
+                </>
+              )
+            }
+          },
     ]
     
     // ledger page must show the date of the journal  entry, a description, 
@@ -163,7 +214,55 @@ const Ledgers = () => {
                         </Collapse.Panel>
                     }
                     <Collapse.Panel header="Ledgers" key="2">
-                        {LedgersTable(ledgers)}
+                      <Row style={{marginBottom: "20px"}}>
+                        <Col span={5}>
+                          <Input.Search
+                            allowClear
+                            onChange={
+                              (e) => {
+                                if(e.target.value <= 0){
+                                  resetSearch()
+                                }
+                              }
+                            }
+                            placeholder="Search By Ledger"
+                            style={{
+                              width: 200,
+                            }}
+                            onSearch={(e) => searchtheledger(e)}
+                          />
+                        </Col>
+                        <Col span={5}>
+                          <Input.Search
+                            allowClear
+                            onChange={
+                              (e) => {
+                                if(e.target.value <= 0){
+                                  resetSearch()
+                                }
+                              }
+                            }
+                            placeholder="Search By Balance"
+                            style={{
+                              width: 200,
+                            }}
+                            onSearch={(e) => searchtheBalance(e)}
+                          />
+                        </Col>
+                        <Col span={4}>
+                          <DatePicker
+                            format={"MM/DD/YYYY"}
+                            onChange={(e) => {
+                              searchtheDate(e)
+                            }}
+                            allowClear={true}
+                          />
+                        </Col>
+                        <Col>
+                            <Button onClick={() => resetSearch()}> Reset Search </Button>
+                        </Col>
+                      </Row>
+                        {LedgersTable(!_.isNil(searchedLedger) ? searchedLedger : ledgers)}
                     </Collapse.Panel>
                 </Collapse>
             </Row>
