@@ -53,9 +53,11 @@ const Journals = () => {
   }
 
   const searchAccountName = (value) => {
+    const accountNumber = chartsOfAccounts.find(f => f.data.accountName === value)
+
     if(!_.isNil(value)){
-      if(journals.some(e => _.isEqual(e?.data.accountName, value))){
-      setSearch(journals.filter(e => _.isEqual(e?.data.accountName, value)))
+      if(accountNumber.data.accountName === value){
+      setSearch(journals.filter(e => _.isEqual(parseInt(e?.data.accountNumber), parseInt(accountNumber.data.accountNumber))))
       setIsAccountSearch(true)  
       } else {
         message.error("Account Does Not Exist Please Try Again");
@@ -447,22 +449,22 @@ const Journals = () => {
                 <Collapse defaultActiveKey={['1', '4']} style={{width: "1850px", marginTop: "50px", marginBottom: "50px"}} >
                     {journal2.length > 0 && 
                             <Collapse.Panel header="Journal from Ledger"  key="1">
-                                {JournalsTable(journal2)}
+                                {JournalsTable(journal2, columns2)}
                             </Collapse.Panel>
                     }
                     <Collapse.Panel header="Find an Journal" key="2">
                     <Row style={{marginBottom: "10px"}}>
                       <Col span={3}>
-                        <Typography.Text strong> Search By Journal Name </Typography.Text>
+                        <Typography.Text strong> Search By Account Name </Typography.Text>
                       </Col>
                       <Col span={16}>
-                        <Typography.Text strong> Search By Journal Number </Typography.Text>
+                        <Typography.Text strong> Search By Account Number </Typography.Text>
                       </Col>
                     </Row>
                     <Row style={{marginBottom: "20px"}}>
                       <Col span={3}>
                         <Input.Search
-                          placeholder="Search By Journal Name"
+                          placeholder="Search By Account Name"
                           style={{
                             width: 200,
                           }}
@@ -471,7 +473,7 @@ const Journals = () => {
                       </Col>
                       <Col span={16}>
                         <Input.Search
-                          placeholder="Search By Journal Number"
+                          placeholder="Search By Account Number"
                           style={{
                             width: 200,
                           }}

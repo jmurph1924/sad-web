@@ -22,14 +22,12 @@ const AddAnAccount = ({isAddAnAccountVisible = false, onModalChange = _.noop, ch
 
     async function handleSubmit() {
         const usersCollectionRef = collection(db, 'journals')
-
+        const accountNumb = accountNumber.data.accountNumber
         setCredit(parseFloat(credit));
         setDebit(parseFloat(debit));
     
-            if(chartsOfAccountsInfo?.some(f => _.isEqual(f.data.accountName, accountName))){
-                message.error("Journal Name Already Exist")
-            } else {
-                addDoc(usersCollectionRef, { accountDescription, accountName, accountNumber: parseInt(accountNumber?.data?.accountNumber), credit, dateAccountAdded, status}).then(response => {
+            if(accountName.length > 0 && accountNumb.length > 0 && accountDescription > 0 && credit.length > 0 && debit.length > 0 ){
+                addDoc(usersCollectionRef, { accountDescription, accountName, accountNumber: parseInt(accountNumb), credit, dateAccountAdded, status}).then(response => {
                         try {
                     setError("")
                     setLoading(true)
@@ -43,6 +41,8 @@ const AddAnAccount = ({isAddAnAccountVisible = false, onModalChange = _.noop, ch
                     }) 
     
                 onModalChange()
+            } else {
+                message.error("Please Fill Out All Information")
             }
         }
     
@@ -84,8 +84,8 @@ const AddAnAccount = ({isAddAnAccountVisible = false, onModalChange = _.noop, ch
                             </Row>
                             <Row gutter={[12,12]}>
                             <Col span={4} style={{marginBottom: "10px"}}>
-                                <Select style={{width: "95%"}} onChange={e => setAccountNumber(chartsOfAccountsInfo.filter(f => f.data.accountName === e))}>
-                                    {chartsOfAccountsInfo.map(item => (
+                                <Select style={{width: "95%"}} onChange={e => setAccountNumber(chartsOfAccountsInfo.find(f => f.data.accountName === e))}>
+                                    {chartsOfAccountsInfo.filter(f => f.data.active === true).map(item => (
                                         <Select.Option key={item?.data.accountName}>
                                         {item?.data.accountName}
                                         </Select.Option>
