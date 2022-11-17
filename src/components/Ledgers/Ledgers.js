@@ -179,10 +179,10 @@ const Ledgers = () => {
           {
             title: 'Post Reference',
             key: 'pr',
-            render: () => {
+            render: item => {
               return (
                 <>
-                  <Link to="/journals">
+                  <Link to="/Journals" state={{ specificAccount2: item?.data.journal }}>
                     PR
                   </Link>
                 </>
@@ -207,7 +207,7 @@ const Ledgers = () => {
     return(
         <div className="Ledgers-container">
             <Row style={{justifyContent: "center"}}>
-                <Collapse defaultActiveKey={['1']} style={{width: "2400px", marginTop: "50px"}} >
+                <Collapse defaultActiveKey={['1', '2']} style={{width: "2400px", marginTop: "50px"}} >
                     {ledger2.length > 0 && 
                         <Collapse.Panel header="Ledger from Account" key="1">
                             {LedgersTable(ledger2)}
