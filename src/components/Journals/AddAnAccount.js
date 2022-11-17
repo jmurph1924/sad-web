@@ -22,11 +22,11 @@ const AddAnAccount = ({isAddAnAccountVisible = false, onModalChange = _.noop, ch
 
     async function handleSubmit() {
         const usersCollectionRef = collection(db, 'journals')
-        const accountNumb = accountNumber.data.accountNumber
+        const accountNumb = accountNumber?.data?.accountNumber
         setCredit(parseFloat(credit));
         setDebit(parseFloat(debit));
     
-            if(accountName.length > 0 && accountNumb.length > 0 && accountDescription > 0 && credit.length > 0 && debit.length > 0 ){
+            if(accountName.length > 0 && (!_.isNil(accountNumb) && accountNumb.length) > 0 && accountDescription > 0 && credit.length > 0 && debit.length > 0 ){
                 addDoc(usersCollectionRef, { accountDescription, accountName, accountNumber: parseInt(accountNumb), credit, dateAccountAdded, status}).then(response => {
                         try {
                     setError("")
