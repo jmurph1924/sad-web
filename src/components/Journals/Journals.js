@@ -18,35 +18,13 @@ const Journals = () => {
 
   const navigate = useNavigate();
   const { currentUser } = useAuth()
-  const [ isEditVisible, setIsEditVisible ] = useState(false);
   const [journals, setJournals] = useState([]);
   const [ calendar, setCalendar ] = useState(false);
-  const [ changeLog, setChangeLog ] = useState([]);
   const [ helpModal, setHelpModal ] = useState(false);
   const [ accountModal, setAccountModal ] = useState(false);
-  const [ search, setSearch ] = useState(null);
+  const [ search, setSearch ] = useState([]);
   const [ isAccountSearch, setIsAccountSearch ] = useState(false);
   const [users, setUsers] = useState([]);
-  const [form] = Form.useForm();
-  const [error, setError] = useState("")
-  const [loading, setLoading] = useState(false)
-  const [accountDescription, setAccountDescription] = useState("");
-  const [accountCategory, setAccountCategory ] = useState("");
-  const [accountName, setAccountName] = useState("");
-  const [accountNumber, setAccountNumber] = useState(null);
-  const [accountSubCategory, setAccountSubCategory] = useState("");
-  const [balance, setBalance] = useState(null);
-  const [comments, setComments] = useState("");
-  const [credit, setCredit] = useState(null);
-  const dateAccountAdded = Timestamp.fromDate(new Date());
-  const [debit, setDebit] = useState(null);
-  const [initialBalance, setInitialBalance] = useState(null);
-  const [normalSide, setNormalSide] = useState("");
-  const [order, setOrder] = useState(null);
-  const [statement, setStatement] = useState("");
-  const [ userEmail, setUserEmail ] = useState("");
-  const [ userSubject, setUserSubject ] = useState("");
-  const [ userContent, setUserContent ] = useState("");
 
   const [chartsOfAccounts, setChartsOfAccounts] = useState([]);
   const [searchedJournal1, setSearchedJournals1] = useState(null);
@@ -56,45 +34,6 @@ const Journals = () => {
   const location = useLocation()
   const specificAccount2 = location.state;
   const journal2 = journals.filter(f => parseInt(f.data.accountNumber) === parseInt(specificAccount2?.specificAccount2));
-
-  const userId = currentUser?.email
-  const active = true;
-
-  //Setting Updated User information
-  const handleUpdatedChartsofAccounts = (search) => {
-
-    setAccountNumber(search?.data.accountNumber);
-    setCredit(parseFloat(credit));
-    setDebit(parseFloat(debit));
-    setBalance(parseFloat(balance));
-    setInitialBalance(parseFloat(initialBalance));
-    setOrder(parseInt(order));
-
-    const usersCollectionRef = collection(db, 'changeLog')
-    addDoc(usersCollectionRef, { active, accountDescription, accountName, accountNumber: parseInt(accountNumber), accountCategory, accountSubCategory, balance, comments, credit, dateAccountAdded, debit, initialBalance, normalSide, order, statement, userId }).then(response => {
-        try {
-    setError("")
-    setLoading(true)
-    } catch(e) {
-        setError("Failed to create an account")
-    }
-    setLoading(false)
-    }).catch(error => {
-      console.log(error.message)
-    })
-
-    setTimeout(() => {
-    const docRef = doc(db, 'journals', search.id)
-    updateDoc(docRef, { active, accountDescription, accountName, accountCategory, accountSubCategory, balance, comments, credit, debit, initialBalance, normalSide, order, statement }).then(() => {
-      message.info("Successfully Updated Account")
-      getUsers()
-    }).catch(error => console.log(error.message))
-    getJournals();
-    setIsEditVisible(false);
-    setIsAccountSearch(false);
-    setSearch([]);
-    }, 1000);
-  }
 
     //Calling getUsers function
     useEffect(() => {
@@ -116,97 +55,23 @@ const Journals = () => {
   const searchAccountName = (value) => {
     if(!_.isNil(value)){
       if(journals.some(e => _.isEqual(e?.data.accountName, value))){
-      setSearch(journals.find(e => _.isEqual(e?.data.accountName, value)))
+      setSearch(journals.filter(e => _.isEqual(e?.data.accountName, value)))
       setIsAccountSearch(true)  
       } else {
         message.error("Account Does Not Exist Please Try Again");
       }
     }
   }
-   //Opens Prefilled Email
-   const onSubmit = () => {
-    window.open(`mailto:${userEmail}?subject=${userSubject}&body=${userContent}`)
 
-    form.resetFields();
-  };
   const searchAccountNumber = (value) => {
     if(!_.isNil(value)){
-      if(journals.some(e => _.isEqual(e?.data.accountNumber, value))){
-        setSearch(journals.find(e => _.isEqual(e?.data.accountNumber, parseInt(value))))
+      if(journals.some(e => _.isEqual(parseInt(e?.data.accountNumber), parseInt(value)))){
+        setSearch(journals.filter(e => _.isEqual(parseInt(e?.data.accountNumber), parseInt(value))))
         setIsAccountSearch(true)
       } else {
         message.error("Account Does Not Exist Please Try Again");
       }
     }
-  }
-
-  const canDeactivate = () => {
-    if(search?.data.balance > 0 || search?.data.balance < 0){
-      message.error("Balance must be 0 to deactivate")
-    } else{
-      handleDisable(search.id)
-    }
-  }
-
-  //Disabling User's Handle
-  const handleDisable = (id) => {
-    const docRef = doc(db, 'journals', id)
-    updateDoc(docRef, {active: false}).then(response => {
-      getJournals()
-    }).catch(error => console.log(error.message))
-
-    setAccountNumber(search?.data.accountNumber);
-    setCredit(parseFloat(credit));
-    setDebit(parseFloat(debit));
-    setBalance(parseFloat(balance));
-    setInitialBalance(parseFloat(initialBalance));
-    setOrder(parseInt(order));
-
-    setTimeout(() => {
-    const usersCollectionRef = collection(db, 'changeLog')
-    addDoc(usersCollectionRef, { active, accountDescription: "Disabled", accountName, accountNumber, accountCategory, accountSubCategory, balance, comments, credit, dateAccountAdded, debit, initialBalance, normalSide, order, statement, userId }).then(response => {
-        try {
-    setError("")
-    setLoading(true)
-    } catch(e) {
-        setError("Failed to create an account")
-    }
-    setLoading(false)
-    }).catch(error => {
-      console.log(error.message)
-    })
-  }, 1000);
-  }
-  //Activating User's 
-  const handleActivate = (id) => {
-    const docRef = doc(db, 'journals', id)
-    updateDoc(docRef, {active: true}).then(response => {
-      getJournals()
-    }).catch(error => console.log(error.message))
-
-    setAccountNumber(search?.data.accountNumber);
-    setCredit(parseFloat(credit));
-    setDebit(parseFloat(debit));
-    setBalance(parseFloat(balance));
-    setInitialBalance(parseFloat(initialBalance));
-
-    setOrder(parseInt(order));
-    setTimeout(() => {
-      const usersCollectionRef = collection(db, 'changeLog')
-      addDoc(usersCollectionRef, { active, accountDescription: "Enabled", accountName, accountNumber, accountCategory, accountSubCategory, balance, comments, credit, dateAccountAdded, debit, initialBalance, normalSide, order, statement, userId }).then(response => {
-          try {
-      setError("")
-      setLoading(true)
-      } catch(e) {
-          setError("Failed to create an account")
-      }
-      setLoading(false)
-      }).catch(error => {
-        console.log(error.message)
-      })
-    }, 1000);
-
-    
   }
 
   const formatCurrencyChange = (amount) => {
@@ -554,249 +419,6 @@ const Journals = () => {
           setSearchedJournals3(journals.filter(f => moment(f?.data.dateAccountAdded.toDate()).format('MM/DD/YYYY') === moment(date).format('MM/DD/YYYY')));
         }
       }
-    
-
-      const individualAccountView = () => {
-
-        return (
-          <>
-            <Row gutter={[12,12]}>
-              <Col span={4}>
-                <Typography.Text strong>
-                  Account Number
-                </Typography.Text>
-              </Col>
-              <Col span={4}>
-                <Typography.Text strong>
-                  Account Name
-                </Typography.Text>
-              </Col>
-              <Col span={4}>
-                <Typography.Text strong>
-                  Credit
-                </Typography.Text>
-              </Col>
-              <Col span={4}>
-                <Typography.Text strong>
-                  Statement
-                </Typography.Text>
-              </Col>
-              <Col span={4}>
-                <Typography.Text strong>
-                  User
-                </Typography.Text>
-              </Col>
-            </Row>
-            {isEditVisible === true ?
-            <Row gutter={[12,12]}>
-              <Col span={4} style={{marginBottom: "10px"}}>
-                <Typography.Text>
-                  {search?.data.accountNumber}
-                </Typography.Text>
-              </Col>
-              <Col span={4} style={{marginBottom: "10px"}}>
-              <Input style={{width: "95%"}} onChange={(e) => setAccountName(e.target.value)}/>
-              </Col>
-              <Col span={4} style={{marginBottom: "10px"}}>
-                <Input style={{width: "95%"}} onChange={(e) => setCredit(e.target.value)}/>
-              </Col>
-              <Col span={4} style={{marginBottom: "10px"}}>
-                <Input style={{width: "95%"}} onChange={(e) => setStatement(e.target.value)}/>
-              </Col>
-              <Col span={4} style={{marginBottom: "10px"}}>
-                <Typography.Text>
-                  {search?.data.userId}
-                </Typography.Text>
-              </Col>
-            </Row>
-
-            :
-
-            <Row gutter={[12,12]}>
-              <Col span={4} style={{marginBottom: "10px"}}>
-                <Typography.Text>
-                  {search?.data.accountNumber}
-                </Typography.Text>
-              </Col>
-              <Col span={4} style={{marginBottom: "10px"}}>
-                <Link to="/Journals">
-                  {search?.data.accountName}
-                </Link>
-              </Col>
-              <Col span={4} style={{marginBottom: "10px"}}>
-                <Typography.Text>
-                  {formatCurrencyChange(search?.data.credit)}
-                </Typography.Text>
-              </Col>
-              <Col span={4} style={{marginBottom: "10px"}}>
-                <Typography.Text>
-                  {search?.data.statement}
-                </Typography.Text>
-              </Col>
-              <Col span={4} style={{marginBottom: "10px"}}>
-                <Typography.Text>
-                  {search?.data.userId}
-                </Typography.Text>
-              </Col>
-            </Row>
-            }
-            <Row gutter={[12,12]}>
-              <Col span={4}>
-                <Typography.Text strong>
-                  Account Category
-                </Typography.Text>
-              </Col>
-              <Col span={4}>
-                <Typography.Text strong>
-                  Account Description
-                </Typography.Text>
-              </Col>
-              <Col span={4}>
-                <Typography.Text strong>
-                  Debit
-                </Typography.Text>
-              </Col>
-              <Col span={4}>
-                <Typography.Text strong>
-                  Normal Side
-                </Typography.Text>
-              </Col>
-              <Col span={4}>
-                <Typography.Text strong>
-                  Account Added
-                </Typography.Text>
-              </Col>
-            </Row>
-            {isEditVisible === true ?
-            <Row gutter={[12,12]}>
-              <Col span={4} style={{marginBottom: "10px"}}>
-                <Input style={{width: "95%"}} onChange={(e) => setAccountCategory(e.target.value)}/>
-              </Col>
-              <Col span={4} style={{marginBottom: "10px"}}>
-                <Input style={{width: "95%"}} onChange={(e) => setAccountDescription(e.target.value)}/>
-              </Col>
-              <Col span={4} style={{marginBottom: "10px"}}>
-                <Input style={{width: "95%"}} onChange={(e) => setDebit(e.target.value)}/>
-              </Col>
-              <Col span={4} style={{marginBottom: "10px"}}>
-                <Input style={{width: "95%"}} onChange={(e) => setNormalSide(e.target.value)}/>
-              </Col>
-              <Col span={4} style={{marginBottom: "10px"}}>
-                <Typography.Text>
-                  {moment(search?.data.dateAccountAdded.toDate()).format('M/D/YYYY h:mma')}
-                </Typography.Text>
-              </Col>
-            </Row>
-
-            :
-
-            <Row gutter={[12,12]}>
-              <Col span={4} style={{marginBottom: "10px"}}>
-                <Typography.Text>
-                  {search?.data.accountCategory}
-                </Typography.Text>
-              </Col>
-              <Col span={4} style={{marginBottom: "10px"}}>
-                <Typography.Text>
-                  {search?.data.accountDescription}
-                </Typography.Text>
-              </Col>
-              <Col span={4} style={{marginBottom: "10px"}}>
-                <Typography.Text>
-                  {formatCurrencyChange(search?.data.debit)}
-                </Typography.Text>
-              </Col>
-              <Col span={4} style={{marginBottom: "10px"}}>
-                <Typography.Text>
-                  {search?.data.normalSide}
-                </Typography.Text>
-              </Col>
-              <Col span={4} style={{marginBottom: "10px"}}>
-                <Typography.Text>
-                  {moment(search?.data.dateAccountAdded.toDate()).format('M/D/YYYY h:mma')}
-                </Typography.Text>
-              </Col>
-            </Row>
-            }
-            <Row gutter={[12,12]}>
-              <Col span={4}>
-                <Typography.Text strong>
-                  Account SubCategory
-                </Typography.Text>
-              </Col>
-              <Col span={4}>
-                <Typography.Text strong>
-                  Order
-                </Typography.Text>
-              </Col>
-              <Col span={4}>
-                <Typography.Text strong>
-                  Balance
-                </Typography.Text>
-              </Col>
-              <Col span={4}>
-                <Typography.Text strong>
-                  Initial Balance 
-                </Typography.Text>
-              </Col>
-              <Col span={4}>
-                <Typography.Text strong>
-                  Comment
-                </Typography.Text>
-              </Col>
-            </Row >
-            {isEditVisible === true ?
-            <Row gutter={[12,12]}>
-              <Col span={4} style={{marginBottom: "10px"}}>
-                <Input style={{width: "95%"}} onChange={(e) => setAccountSubCategory(e.target.value)}/>
-              </Col>
-              <Col span={4} style={{marginBottom: "10px"}}>
-                <Input style={{width: "95%"}} onChange={(e) => setOrder(e.target.value)}/>
-              </Col>
-              <Col span={4} style={{marginBottom: "10px"}}>
-                <Input style={{width: "95%"}} onChange={(e) => setBalance(e.target.value)}/>
-              </Col>
-              <Col span={4} style={{marginBottom: "10px"}}>
-                <Input style={{width: "95%"}} onChange={(e) => setInitialBalance(e.target.value)}/>
-              </Col>
-              <Col span={4} style={{marginBottom: "10px"}}>
-              <Input style={{width: "95%"}} onChange={(e) => setComments(e.target.value)}/>
-              </Col>
-            </Row>
-
-            :
-
-            <Row gutter={[12,12]}>
-              <Col span={4} style={{marginBottom: "10px"}}>
-                <Typography.Text>
-                  {search?.data.accountSubCategory}
-                </Typography.Text>
-              </Col>
-              <Col span={4} style={{marginBottom: "10px"}}>
-                <Typography.Text>
-                  {search?.data.order}
-                </Typography.Text>
-              </Col>
-              <Col span={4} style={{marginBottom: "10px"}}>
-                <Typography.Text>
-                  {formatCurrencyChange(search?.data.balance)}
-                </Typography.Text>
-              </Col>
-              <Col span={4} style={{marginBottom: "10px"}}>
-                <Typography.Text>
-                  {formatCurrencyChange(search?.data.initialBalance)}
-                </Typography.Text>
-              </Col>
-              <Col span={4} style={{marginBottom: "10px"}}>
-                <Typography.Text>
-                  {search?.data.comments}
-                </Typography.Text>
-              </Col>
-            </Row>
-            }
-          </>
-        )
-      }  
 
       const helpModalSetter = () => {
         getJournals()
@@ -857,7 +479,8 @@ const Journals = () => {
                         />
                       </Col>
                     </Row> 
-                    {isAccountSearch === true && individualAccountView()}
+                    {isAccountSearch === true && 
+                    <Table style={{width: "2000px"}} locale={locale3} columns={columns2} dataSource={search} />}
                     </Collapse.Panel>
                     <Collapse.Panel header="Approved Journals" key="3">
                         <Col span={4} style={{paddingBottom: "10px"}}>
@@ -872,7 +495,7 @@ const Journals = () => {
                         { chartsOfAccounts.map(g => (
                           <>
                             <Typography.Text strong>{g.data.accountName}</Typography.Text>
-                          {JournalsTable(!_.isNil(searchedJournal1) ? searchedJournal1.filter(f => f.data.status === "approved" && parseInt(g.data.accountNumber) === f.data.accountNumber) : journals.filter(f => f.data.status === "approved" && parseInt(g.data.accountNumber) === f.data.accountNumber), columns2)}
+                          {JournalsTable(!_.isNil(searchedJournal1) ? searchedJournal1.filter(f => f.data.status === "approved" && parseInt(g.data.accountNumber) === parseInt(f.data.accountNumber)) : journals.filter(f => f.data.status === "approved" && parseInt(g.data.accountNumber) === parseInt(f.data.accountNumber)), columns2)}
                           </>
                         ))}
                     </Collapse.Panel>
@@ -889,7 +512,7 @@ const Journals = () => {
                         {chartsOfAccounts.map(g => (
                           <>
                             <Typography.Text strong>{g.data.accountName}</Typography.Text>
-                            {JournalsTable(!_.isNil(searchedJournal2) ? searchedJournal2.filter(f => f.data.status === "pending" && parseInt(g.data.accountNumber) === f.data.accountNumber) : journals.filter(f => f.data.status === "pending" && parseInt(g.data.accountNumber) === f.data.accountNumber), columns)}
+                            {JournalsTable(!_.isNil(searchedJournal2) ? searchedJournal2.filter(f => f.data.status === "pending" && parseInt(g.data.accountNumber) === parseInt(parseInt(f.data.accountNumber))) : journals.filter(f => f.data.status === "pending" && parseInt(g.data.accountNumber) === parseInt(f.data.accountNumber)), columns)}
                           </>
                         ))}
                     </Collapse.Panel>
@@ -906,7 +529,7 @@ const Journals = () => {
                         {chartsOfAccounts.map(g => (
                           <>
                             <Typography.Text strong>{g.data.accountName}</Typography.Text>
-                            {JournalsTable(!_.isNil(searchedJournal3) ? searchedJournal3.filter(f => f.data.status === "rejected" && parseInt(g.data.accountNumber) === f.data.accountNumber) : journals.filter(f => f.data.status === "rejected" && parseInt(g.data.accountNumber) === f.data.accountNumber), columns2)}
+                            {JournalsTable(!_.isNil(searchedJournal3) ? searchedJournal3.filter(f => f.data.status === "rejected" && parseInt(g.data.accountNumber) === parseInt(f.data.accountNumber)) : journals.filter(f => f.data.status === "rejected" && parseInt(g.data.accountNumber) === parseInt(f.data.accountNumber)), columns2)}
                           </>
                         ))}
                     </Collapse.Panel>
