@@ -3,17 +3,17 @@ import * as currencyFormatter from "currency-formatter";
 import { useLocation,  Link  } from 'react-router-dom'
 import * as _ from "lodash";
 import moment from 'moment';
-import { collection, getDocs, doc, updateDoc } from "firebase/firestore"
+import { collection, getDocs } from "firebase/firestore"
 import { db } from "../../firebase-config"
-import { ApiOutlined, CoffeeOutlined, EditOutlined, SaveOutlined } from '@ant-design/icons';
-import { Typography, Table, Button, Select, Input, Row, Collapse, Col, DatePicker } from "antd"
+import { Table, Button, Input, Row, Collapse, Col, DatePicker } from "antd"
 import "./Ledgers.css";
-const { Column, ColumnGroup } = Table;
 
 const currencyFormatDecimal = { code: "USD", decimalDigits: 2, precision: 2};
 
 const Ledgers = () => {
     const [ledgers, setLedgers] = useState([]);
+    const [adjustedJournals, setAdjustedJournals] = useState([]);
+    const [journals, setJournals] = useState([]);
     const [searchedLedger, setSearchedLedgers] = useState(null);
     const isChartEditable = true;
    
@@ -27,8 +27,42 @@ const Ledgers = () => {
     }
     // needs getLedgers()
     useEffect(() => {
-        getLedgers()
+      getJournals()
+      getAdjustedJournals()
+      getLedgers()
     }, [])
+
+    const getAdjustedJournals = () => {
+      // Specifies database collection you are using
+      const usersCollectionRef = collection(db, 'adjustedJournals')
+
+      // Gets all the documents from that collection
+      getDocs(usersCollectionRef).then(response => {
+          // maps documents to an array
+          const charts = response.docs.map(doc => ({
+              data: doc.data(), 
+              id: doc.id,
+          }))
+          //Adds that array to state
+          setAdjustedJournals(charts);
+      }).catch(error => console.log(error.message))
+    }
+
+    const getJournals = () => {
+      // Specifies database collection you are using
+      const usersCollectionRef = collection(db, 'journals')
+
+      // Gets all the documents from that collection
+      getDocs(usersCollectionRef).then(response => {
+          // maps documents to an array
+          const charts = response.docs.map(doc => ({
+              data: doc.data(), 
+              id: doc.id,
+          }))
+          //Adds that array to state
+          setJournals(charts);
+      }).catch(error => console.log(error.message))
+    }
 
    // Gets users from database
    const getLedgers = () => {
@@ -64,6 +98,27 @@ const Ledgers = () => {
     }
   }
 
+  const getTheBalance = (item, status) => {
+    if(status === "balance"){
+      if(adjustedJournals.some(f => parseInt(f.data.accountNumber) === parseInt(item.data.journal) && f.data.status === "approved")){
+        return helperTotal(adjustedJournals.filter(f => parseInt(f.data.accountNumber) === parseInt(item.data.journal && f.data.status === "approved")))
+      } else {
+        return helperTotal(journals.filter(f => parseInt(f.data.accountNumber) === parseInt(item.data.journal) && f.data.status === "approved"))
+      }
+    } else if (status === "credit"){
+      if(adjustedJournals.some(f => parseInt(f.data.accountNumber) === parseInt(item.data.journal) && f.data.status === "approved")){
+        return helperCredit(adjustedJournals.filter(f => parseInt(f.data.accountNumber) === parseInt(item.data.journal) && f.data.status === "approved"))
+      } else {
+        return helperCredit(journals.filter(f => parseInt(f.data.accountNumber) === parseInt(item.data.journal) && f.data.status === "approved"))
+      }
+    } else {
+      if(adjustedJournals.some(f => parseInt(f.data.accountNumber) === parseInt(item.data.journal) && f.data.status === "approved")){
+        return helperDebit(adjustedJournals.filter(f => parseInt(f.data.accountNumber) === parseInt(item.data.journal) && f.data.status === "approved"))
+      } else {
+        return helperDebit(journals.filter(f => parseInt(f.data.accountNumber) === parseInt(item.data.journal) && f.data.status === "approved"))
+      }
+    }
+  }
 
   const resetSearch = () => {
     setSearchedLedgers(null);
@@ -139,7 +194,7 @@ const Ledgers = () => {
                   <>
                       {_.isEqual(isChartEditable, item?.id) === true ? <Input /> :
                       <>
-                          {formatCurrencyChange(item?.data.debit)}
+                          {formatCurrencyChange(getTheBalance(item, "debit"))}
                       </>
                       }
                 </>
@@ -154,7 +209,7 @@ const Ledgers = () => {
                   <>
                       {_.isEqual(isChartEditable, item?.id) === true ? <Input /> :
                       <>
-                          {formatCurrencyChange(item?.data.credit)}
+                          {formatCurrencyChange(getTheBalance(item, "credit"))}
                       </>
                       }
                 </>
@@ -169,8 +224,8 @@ const Ledgers = () => {
                 <>
                   {_.isEqual(isChartEditable, item?.id) === true ?  <Input /> :
                     <>
-                    {formatCurrencyChange(item?.data.balance)}
-                </>
+                      {formatCurrencyChange(getTheBalance(item, "balance"))}
+                    </>
                   }
                 </>
               )
@@ -190,6 +245,42 @@ const Ledgers = () => {
             }
           },
     ]
+
+    const helperDebit = (chartsSorted) => {
+      const totalValue = chartsSorted.reduce((prev, current) => {
+        return prev + parseFloat(current.data.debit)
+      }, 0)
+
+      return totalValue;
+    }
+
+    const helperCredit = (chartsSorted) => {
+      const totalValue = chartsSorted.reduce((prev, current) => {
+        return prev + parseFloat(current.data.credit)
+      }, 0)
+
+      return totalValue;
+    }
+
+    const helperTotal = (chartsSorted) => {
+      const totalCredit = chartsSorted.reduce((prev, current) => {
+        return prev + parseFloat(current.data.credit)
+      }, 0)
+
+      const totalDebit = chartsSorted.reduce((prev, current) => {
+        return prev + parseFloat(current.data.debit)
+      }, 0)
+
+      let total = null;
+
+      if(totalCredit > totalDebit){
+        total = totalCredit - totalDebit
+      } else if (totalDebit > totalCredit){
+        total = totalDebit - totalCredit
+      }
+
+      return total;
+    }
     
     // ledger page must show the date of the journal  entry, a description, 
     // debit, credit, and balance column, also a clickable post reference tht leads to journal

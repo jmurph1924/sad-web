@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import * as _ from "lodash";
 import * as currencyFormatter from "currency-formatter";
 import moment from 'moment';
-import { useNavigate, useLocation, Link } from 'react-router-dom'
-import { collection, getDocs, doc, updateDoc, Timestamp, addDoc } from "firebase/firestore";
+import { useNavigate, useLocation } from 'react-router-dom'
+import { collection, getDocs, doc, updateDoc} from "firebase/firestore";
 import { db } from "../../firebase-config";
 import { Typography, Table, Button, Input, Row, Collapse, Calendar, Modal, Col, notification, message, Tooltip, DatePicker, Alert } from "antd";
 import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';

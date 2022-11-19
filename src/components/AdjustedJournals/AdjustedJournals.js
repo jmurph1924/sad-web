@@ -668,7 +668,7 @@ const AdjustedJournals = () => {
           return prev + parseFloat(current.data.debit)
         }, 0)
 
-        return formatCurrencyChange(totalValue);
+        return totalValue;
       }
 
       const helperCredit = (chartsSorted) => {
@@ -676,7 +676,7 @@ const AdjustedJournals = () => {
           return prev + parseFloat(current.data.credit)
         }, 0)
 
-        return formatCurrencyChange(totalValue);
+        return totalValue;
       }
 
       const helperTotal = (chartsSorted) => {
@@ -804,25 +804,25 @@ const AdjustedJournals = () => {
                             <Col span={3} style={{marginLeft: "-40px"}}>
                                 <Typography.Text strong>Total Debits: {" "}</Typography.Text>
                                 <Typography.Text>
-                                  {helperDebit(adjustedJournals.filter(f => f.data.status === "approved" && parseInt(g.data.accountNumber) === parseInt(f.data.accountNumber)), g)}
+                                  {formatCurrencyChange(helperDebit(adjustedJournals.filter(f => f.data.status === "approved" && parseInt(g.data.accountNumber) === parseInt(f.data.accountNumber))))}
                                 </Typography.Text>
                             </Col>
                             <Col span={3} style={{marginLeft: "-30px"}}>
                                 <Typography.Text strong>Total Credits: {" "}</Typography.Text>
                                 <Typography.Text>
-                                  {helperCredit(adjustedJournals.filter(f => f.data.status === "approved" && parseInt(g.data.accountNumber) === parseInt(f.data.accountNumber)), g)}
+                                  {formatCurrencyChange(helperCredit(adjustedJournals.filter(f => f.data.status === "approved" && parseInt(g.data.accountNumber) === parseInt(f.data.accountNumber))))}
                                 </Typography.Text>
                             </Col>
                             <Col span={2} style={{marginLeft: "-30px"}}>
                                 <Typography.Text strong>Total: {" "}</Typography.Text>
                                 <Typography.Text>
-                                  {formatCurrencyChange(helperTotal(adjustedJournals.filter(f => f.data.status === "approved" && parseInt(g.data.accountNumber) === parseInt(f.data.accountNumber)), g))}
+                                  {formatCurrencyChange(helperTotal(adjustedJournals.filter(f => f.data.status === "approved" && parseInt(g.data.accountNumber) === parseInt(f.data.accountNumber))))}
                                 </Typography.Text>
                             </Col>
                             <Col style={{paddingLeft: "700px"}}>
                               <Button 
                               onClick={() => finalizeJournal(adjustedJournals.filter(f => parseInt(g.data.accountNumber) === parseInt(f.data.accountNumber)), g)}
-                              disabled={helperTotal(adjustedJournals.filter(f => f.data.status === "approved" && parseInt(g.data.accountNumber) === parseInt(f.data.accountNumber)), g) > 0 
+                              disabled={helperTotal(adjustedJournals.filter(f => f.data.status === "approved" && parseInt(g.data.accountNumber) === parseInt(f.data.accountNumber))) > 0 
                               || g.data.finalized === true}>
                                 {g.data.finalized === true ? "Journal Finalized" : "Finalize Journal"}
                               </Button>
@@ -855,19 +855,19 @@ const AdjustedJournals = () => {
                               <Col span={3} style={{marginLeft: "-40px"}}>
                                   <Typography.Text strong>Total Debits: {" "}</Typography.Text>
                                   <Typography.Text>
-                                    {helperDebit(adjustedJournals.filter(f => (f.data.status === "approved" || f.data.status === "pending") && parseInt(g.data.accountNumber) === parseInt(f.data.accountNumber)), g)}
+                                    {formatCurrencyChange(helperDebit(adjustedJournals.filter(f => (f.data.status === "approved" || f.data.status === "pending") && parseInt(g.data.accountNumber) === parseInt(f.data.accountNumber))))}
                                   </Typography.Text>
                               </Col>
                               <Col span={3} style={{marginLeft: "-30px"}}>
                                   <Typography.Text strong>Total Credits: {" "}</Typography.Text>
                                   <Typography.Text>
-                                    {helperCredit(adjustedJournals.filter(f => (f.data.status === "approved" || f.data.status === "pending") && parseInt(g.data.accountNumber) === parseInt(f.data.accountNumber)), g)}
+                                    {formatCurrencyChange(helperCredit(adjustedJournals.filter(f => (f.data.status === "approved" || f.data.status === "pending") && parseInt(g.data.accountNumber) === parseInt(f.data.accountNumber))))}
                                   </Typography.Text>
                               </Col>
                               <Col span={2} style={{marginLeft: "-30px"}}>
                                   <Typography.Text strong>Total: {" "}</Typography.Text>
                                   <Typography.Text>
-                                    {helperTotal(adjustedJournals.filter(f => (f.data.status === "approved" || "pending") && parseInt(g.data.accountNumber) === parseInt(f.data.accountNumber)), g)}
+                                    {formatCurrencyChange(helperTotal(adjustedJournals.filter(f => (f.data.status === "approved" || "pending") && parseInt(g.data.accountNumber) === parseInt(f.data.accountNumber))))}
                                   </Typography.Text>
                               </Col>
                               <Col span={2} style={{marginLeft: "-38px"}}>

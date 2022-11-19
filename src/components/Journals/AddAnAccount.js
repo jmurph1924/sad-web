@@ -1,15 +1,12 @@
-import React, { useRef, useState} from 'react'
+import React, { useState} from 'react'
 import * as _ from "lodash";
 import { collection, addDoc, Timestamp } from "firebase/firestore"
 import { db } from "../../firebase-config"
 import { Row, Col, Typography, Button, notification, Input, Modal, Tooltip, Select} from "antd"
-import { useAuth } from '../../contexts/AuthContext'
 
 
 const AddAnAccount = ({isAddAnAccountVisible = false, onModalChange = _.noop, chartsOfAccountsInfo = []}) => {
 
-    const { currentUser } = useAuth()
-    
     const [error, setError] = useState("")
     const [loading, setLoading] = useState(false)
     const [accountDescription, setAccountDescription] = useState("");
