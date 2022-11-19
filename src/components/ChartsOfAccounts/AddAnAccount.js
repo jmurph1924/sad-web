@@ -4,6 +4,7 @@ import { collection, addDoc, Timestamp } from "firebase/firestore"
 import { db } from "../../firebase-config"
 import { Row, Col, Typography, Button, message, Input, Modal, Tooltip} from "antd"
 import { useAuth } from '../../contexts/AuthContext'
+import { FOCUSABLE_SELECTOR } from '@testing-library/user-event/dist/utils';
 
 
 const AddAnAccount = ({isAddAnAccountVisible = false, onModalChange = _.noop, chartsOfAccountsInfo = []}) => {
@@ -39,7 +40,7 @@ const AddAnAccount = ({isAddAnAccountVisible = false, onModalChange = _.noop, ch
         setOrder(parseInt(order));
 
         const userCollectionRef = collection(db, 'changeLog')
-        addDoc(userCollectionRef, { active, accountDescription, accountName, accountNumber: parseInt(accountNumber), accountCategory, accountSubCategory, balance, comments, credit, dateAccountAdded, debit, initialBalance, normalSide, order, statement, userId }).then(response => {
+        addDoc(userCollectionRef, { active, accountDescription, accountName, accountNumber: parseInt(accountNumber), accountCategory, accountSubCategory, balance, comments, credit, dateAccountAdded, debit, initialBalance, normalSide, order, statement, userId, finalized: false }).then(response => {
             try {
         setError("")
         setLoading(true)

@@ -6,7 +6,7 @@ import { Row, Col, Typography, Button, notification, Input, Modal, Tooltip, Sele
 import { useAuth } from '../../contexts/AuthContext'
 
 
-const AddAnAccount = ({isAddAnAccountVisible = false, onModalChange = _.noop, chartsOfAccountsInfo = []}) => {
+const AddAnAdjustedAccount = ({isAddAnAccountVisible = false, onModalChange = _.noop, chartsOfAccountsInfo = []}) => {
 
     const { currentUser } = useAuth()
     
@@ -21,7 +21,7 @@ const AddAnAccount = ({isAddAnAccountVisible = false, onModalChange = _.noop, ch
     const status = "pending";
 
     async function handleSubmit() {
-        const usersCollectionRef = collection(db, 'journals')
+        const usersCollectionRef = collection(db, 'adjustedJournals')
         const accountNumb = accountNumber?.data?.accountNumber
         setCredit(parseFloat(credit));
         setDebit(parseFloat(debit));
@@ -90,7 +90,7 @@ const AddAnAccount = ({isAddAnAccountVisible = false, onModalChange = _.noop, ch
                             <Row gutter={[12,12]}>
                             <Col span={4} style={{marginBottom: "10px"}}>
                                 <Select style={{width: "95%"}} onChange={e => setAccountNumber(chartsOfAccountsInfo.find(f => f.data.accountName === e))}>
-                                    {chartsOfAccountsInfo.filter(f => f.data.active === true && f.data.finalized === false).map(item => (
+                                    {chartsOfAccountsInfo.filter(f => f.data.active === true && f.data.finalized === true).map(item => (
                                         <Select.Option key={item?.data.accountName}>
                                         {item?.data.accountName}
                                         </Select.Option>
@@ -116,4 +116,4 @@ const AddAnAccount = ({isAddAnAccountVisible = false, onModalChange = _.noop, ch
 
 }
 
-export default AddAnAccount;
+export default AddAnAdjustedAccount;

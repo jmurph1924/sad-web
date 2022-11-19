@@ -7,19 +7,19 @@ import { collection, getDocs, doc, updateDoc, Timestamp, addDoc } from "firebase
 import { db } from "../../firebase-config";
 import { Typography, Table, Button, Input, Row, Collapse, Calendar, Modal, Col, notification, message, Tooltip, DatePicker, Alert } from "antd";
 import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
-import "./Journals.css";
+import "./AdjustedJournals.css";
 import { useAuth } from '../../contexts/AuthContext'
 
 import HelpModal from "../HelpModal/HelpModal";
-import AddAnAccount from "./AddAnAccount";
+import AddAnAdjustedAccount from "./AddAnAdjustedAccount";
 
 const currencyFormatDecimal = { code: "USD", decimalDigits: 2, precision: 2};
 
-const Journals = () => {
+const AdjustedJournals = () => {
 
   const navigate = useNavigate();
   const { currentUser } = useAuth()
-  const [journals, setJournals] = useState([]);
+  const [adjustedJournals, setJournals] = useState([]);
   const [ calendar, setCalendar ] = useState(false);
   const [ helpModal, setHelpModal ] = useState(false);
   const [ accountModal, setAccountModal ] = useState(false);
@@ -32,17 +32,15 @@ const Journals = () => {
   const [searchedJournal1, setSearchedJournals1] = useState(null);
   const [searchedJournal2, setSearchedJournals2] = useState(null);
   const [searchedJournal3, setSearchedJournals3] = useState(null);
-  const isPopupVisible = users?.some((e) => _.isEqual(e.data.email, currentUser?.email) && _.isEqual(e.data.role, "Administrator" || "Manager"))  && journals?.some(f => f.data.status === "pending")
+  const isPopupVisible = users?.some((e) => _.isEqual(e.data.email, currentUser?.email) && _.isEqual(e.data.role, "Administrator" || "Manager"))  && adjustedJournals?.some(f => f.data.status === "pending")
 
   const location = useLocation()
   const specificAccount2 = location.state;
-  const journal2 = journals.filter(f => parseInt(f.data.accountNumber) === parseInt(specificAccount2?.specificAccount2));
+  const journal2 = adjustedJournals.filter(f => parseInt(f.data.accountNumber) === parseInt(specificAccount2?.specificAccount2));
 
     //Calling getUsers function
     useEffect(() => {
       getUsers()
-      getJournals()
-      getChartsOfAccounts()
     }, [])
 
     const handleDisable = (id, status) => {
@@ -55,7 +53,7 @@ const Journals = () => {
           },
         });
       } else {
-        const docRef = doc(db, 'journals', id)
+        const docRef = doc(db, 'adjustedJournals', id)
         updateDoc(docRef, {status, comments}).then(response => {
           getJournals()
         }).catch(error => console.log(error.message))
@@ -79,7 +77,7 @@ const Journals = () => {
 
     if(!_.isNil(value)){
       if(accountNumber.data.accountName === value){
-      setSearch(journals.filter(e => _.isEqual(parseInt(e?.data.accountNumber), parseInt(accountNumber.data.accountNumber))))
+      setSearch(adjustedJournals.filter(e => _.isEqual(parseInt(e?.data.accountNumber), parseInt(accountNumber.data.accountNumber))))
       setIsAccountSearch(true)  
       } else {
         message.error("Account Does Not Exist Please Try Again");
@@ -89,8 +87,8 @@ const Journals = () => {
 
   const searchAccountNumber = (value) => {
     if(!_.isNil(value)){
-      if(journals.some(e => _.isEqual(parseInt(e?.data.accountNumber), parseInt(value)))){
-        setSearch(journals.filter(e => _.isEqual(parseInt(e?.data.accountNumber), parseInt(value))))
+      if(adjustedJournals.some(e => _.isEqual(parseInt(e?.data.accountNumber), parseInt(value)))){
+        setSearch(adjustedJournals.filter(e => _.isEqual(parseInt(e?.data.accountNumber), parseInt(value))))
         setIsAccountSearch(true)
       } else {
         message.error("Account Does Not Exist Please Try Again");
@@ -102,10 +100,14 @@ const Journals = () => {
     return currencyFormatter.format(amount, currencyFormatDecimal)
   }
 
+    useEffect(() => {
+        getJournals()
+        getChartsOfAccounts()
+    }, [])
 
     const getJournals = () => {
         // Specifies database collection you are using
-        const usersCollectionRef = collection(db, 'journals')
+        const usersCollectionRef = collection(db, 'adjustedJournals')
 
         // Gets all the documents from that collection
         getDocs(usersCollectionRef).then(response => {
@@ -624,7 +626,7 @@ const Journals = () => {
       ];
 
       let locale3 = {
-        emptyText: 'No Current Journals',
+        emptyText: 'No Current Adjusted Journals',
       };
 
       const JournalsTable = (data, tablename) => (
@@ -636,7 +638,7 @@ const Journals = () => {
           setSearchedJournals1(null);
         }
         else{
-          setSearchedJournals1(journals.filter(f => moment(f?.data.dateAccountAdded.toDate()).format('MM/DD/YYYY') === moment(date).format('MM/DD/YYYY')));
+          setSearchedJournals1(adjustedJournals.filter(f => moment(f?.data.dateAccountAdded.toDate()).format('MM/DD/YYYY') === moment(date).format('MM/DD/YYYY')));
         }
       }
       const searchtheDate2 = (date) => {
@@ -644,7 +646,7 @@ const Journals = () => {
           setSearchedJournals2(null);
         }
         else{
-          setSearchedJournals2(journals.filter(f => moment(f?.data.dateAccountAdded.toDate()).format('MM/DD/YYYY') === moment(date).format('MM/DD/YYYY')));
+          setSearchedJournals2(adjustedJournals.filter(f => moment(f?.data.dateAccountAdded.toDate()).format('MM/DD/YYYY') === moment(date).format('MM/DD/YYYY')));
         }
       }
       const searchtheDate3 = (date) => {
@@ -652,7 +654,7 @@ const Journals = () => {
           setSearchedJournals3(null);
         }
         else{
-          setSearchedJournals3(journals.filter(f => moment(f?.data.dateAccountAdded.toDate()).format('MM/DD/YYYY') === moment(date).format('MM/DD/YYYY')));
+          setSearchedJournals3(adjustedJournals.filter(f => moment(f?.data.dateAccountAdded.toDate()).format('MM/DD/YYYY') === moment(date).format('MM/DD/YYYY')));
         }
       }
 
@@ -697,10 +699,10 @@ const Journals = () => {
         return total;
       }
 
-      const finalizeJournal = (journals, charts) => {
-        if(journals.some(f => f.data.status === "pending")){
+      const finalizeJournal = (adjustedJournals, charts) => {
+        if(adjustedJournals.some(f => f.data.status === "pending")){
           notification.error({
-            message: 'Please Finalize All Pending Journals',
+            message: 'Please Finalize All Pending Adjusted Journals',
             onClick: () => {
               console.log('Notification Clicked!');
             },
@@ -716,18 +718,18 @@ const Journals = () => {
 
 
     return(
-        <div className="journals-container">
+        <div className="adjustedJournals-container">
             <Row style={{width: "1850px", marginLeft: "-360px", marginTop: "-60px", marginBottom: "-30px"}}>
               { users?.some((e) => _.isEqual(e.data.email, currentUser?.email) && _.isEqual(e.data.role, "Administrator")) &&
               <Col span={isPopupVisible ? 10 : 22} style={{paddingLeft: "10px"}}>
-                <Button onClick={() => setAccountModal(true)}> Add a New Journal </Button>
-              </Col>
-              }
-              { isPopupVisible && 
-              <Col span={12}>
+                <Button onClick={() => setAccountModal(true)}> Add a New Adjusted Journal </Button>
+                </Col>
+                }
+                { isPopupVisible && 
+                <Col span={12}>
               <Alert
-                style = {{maxWidth: "20%", justifyContent: "center"}}
-                message="New Pending Journals"
+                style = {{maxWidth: "25%", justifyContent: "center"}}
+                message="New Pending Adjusted Journals"
                 type="success"
             />
             </Col>}
@@ -736,7 +738,7 @@ const Journals = () => {
               </Col>
             </Row>
             <HelpModal isHelpModalVisible={helpModal} onModalChange={() => helpModalSetter()}/>
-            <AddAnAccount isAddAnAccountVisible={accountModal} onModalChange={() => setAccountModal(false)} chartsOfAccountsInfo={chartsOfAccounts} />
+            <AddAnAdjustedAccount isAddAnAccountVisible={accountModal} onModalChange={() => setAccountModal(false)} chartsOfAccountsInfo={chartsOfAccounts} />
             <Modal type="primary" style={{marginRight: "1550px"}} title="Calendar" width={350} visible={calendar} footer={[ <Button key="back" onClick={() => setCalendar(!calendar)}>Ok</Button>]} onCancel={() => setCalendar(!calendar)}>
               <Calendar fullscreen={false} className="site-calendar-demo-card" />
             </Modal>
@@ -779,7 +781,7 @@ const Journals = () => {
                     {isAccountSearch === true && 
                     <Table style={{width: "2000px"}} locale={locale3} columns={columns3} dataSource={search} />}
                     </Collapse.Panel>
-                    <Collapse.Panel header="Approved Journals" key="3">
+                    <Collapse.Panel header="Approved Adjusted Journals" key="3">
                         <Col span={4} style={{paddingBottom: "10px"}}>
                             <DatePicker
                               format={"MM/DD/YYYY"}
@@ -789,44 +791,47 @@ const Journals = () => {
                               allowClear={true}
                             />
                         </Col>
-                        { chartsOfAccounts.map(g => (
+                        {chartsOfAccounts.map(g => (
                           <>
                           <Row>
                             <Typography.Text strong>{g.data.accountName}</Typography.Text>
-                          {JournalsTable(!_.isNil(searchedJournal1) ? searchedJournal1.filter(f => f.data.status === "approved" && parseInt(g.data.accountNumber) === parseInt(f.data.accountNumber)) : journals.filter(f => f.data.status === "approved" && parseInt(g.data.accountNumber) === parseInt(f.data.accountNumber)), columns2)}
+                          {JournalsTable(!_.isNil(searchedJournal1) ? searchedJournal1.filter(f => f.data.status === "approved" && parseInt(g.data.accountNumber) === parseInt(f.data.accountNumber)) : adjustedJournals.filter(f => f.data.status === "approved" && parseInt(g.data.accountNumber) === parseInt(f.data.accountNumber)), columns2)}
                           </Row>
                           <Row style={{marginBottom: "40px", paddingTop: "5px"}}>
                             <Col span={6}>
-                                <Typography.Text strong>Approved Journals {g?.data?.accountName}</Typography.Text>
+                                <Typography.Text strong>Approved Adjusted Journals {g?.data?.accountName}</Typography.Text>
                             </Col>
                             <Col span={3} style={{marginLeft: "-40px"}}>
                                 <Typography.Text strong>Total Debits: {" "}</Typography.Text>
                                 <Typography.Text>
-                                  {helperDebit(journals.filter(f => f.data.status === "approved" && parseInt(g.data.accountNumber) === parseInt(f.data.accountNumber)), g)}
+                                  {helperDebit(adjustedJournals.filter(f => f.data.status === "approved" && parseInt(g.data.accountNumber) === parseInt(f.data.accountNumber)), g)}
                                 </Typography.Text>
                             </Col>
                             <Col span={3} style={{marginLeft: "-30px"}}>
                                 <Typography.Text strong>Total Credits: {" "}</Typography.Text>
                                 <Typography.Text>
-                                  {helperCredit(journals.filter(f => f.data.status === "approved" && parseInt(g.data.accountNumber) === parseInt(f.data.accountNumber)), g)}
+                                  {helperCredit(adjustedJournals.filter(f => f.data.status === "approved" && parseInt(g.data.accountNumber) === parseInt(f.data.accountNumber)), g)}
                                 </Typography.Text>
                             </Col>
                             <Col span={2} style={{marginLeft: "-30px"}}>
                                 <Typography.Text strong>Total: {" "}</Typography.Text>
                                 <Typography.Text>
-                                  {formatCurrencyChange(helperTotal(journals.filter(f => f.data.status === "approved" && parseInt(g.data.accountNumber) === parseInt(f.data.accountNumber)), g))}
+                                  {formatCurrencyChange(helperTotal(adjustedJournals.filter(f => f.data.status === "approved" && parseInt(g.data.accountNumber) === parseInt(f.data.accountNumber)), g))}
                                 </Typography.Text>
                             </Col>
                             <Col style={{paddingLeft: "700px"}}>
                               <Button 
-                              onClick={() => finalizeJournal(journals.filter(f => parseInt(g.data.accountNumber) === parseInt(f.data.accountNumber)), g)}
-                              disabled={helperTotal(journals.filter(f => f.data.status === "approved" && parseInt(g.data.accountNumber) === parseInt(f.data.accountNumber)), g) > 0 || g.data.finalized === true}>{g.data.finalized === true ? "Journal Finalized" : "Finalize Journal"}</Button>
+                              onClick={() => finalizeJournal(adjustedJournals.filter(f => parseInt(g.data.accountNumber) === parseInt(f.data.accountNumber)), g)}
+                              disabled={helperTotal(adjustedJournals.filter(f => f.data.status === "approved" && parseInt(g.data.accountNumber) === parseInt(f.data.accountNumber)), g) > 0 
+                              || g.data.finalized === true}>
+                                {g.data.finalized === true ? "Journal Finalized" : "Finalize Journal"}
+                              </Button>
                             </Col>
                         </Row>
                         </>
                         ))}
                     </Collapse.Panel>
-                    <Collapse.Panel header="Pending Journals" key="4">
+                    <Collapse.Panel header="Pending Adjusted Journals" key="4">
                         <Col span={4} style={{paddingBottom: "10px"}}>
                             <DatePicker
                               format={"MM/DD/YYYY"}
@@ -840,37 +845,37 @@ const Journals = () => {
                           <>
                             <Row>
                               <Typography.Text strong>{g.data.accountName}</Typography.Text>
-                              {JournalsTable(!_.isNil(searchedJournal2) ? searchedJournal2.filter(f => f.data.status === "pending" && parseInt(g.data.accountNumber) === parseInt(parseInt(f.data.accountNumber))) : journals.filter(f => f.data.status === "pending" && parseInt(g.data.accountNumber) === parseInt(f.data.accountNumber)), columns)}
+                              {JournalsTable(!_.isNil(searchedJournal2) ? searchedJournal2.filter(f => f.data.status === "pending" && parseInt(g.data.accountNumber) === parseInt(parseInt(f.data.accountNumber))) : adjustedJournals.filter(f => f.data.status === "pending" && parseInt(g.data.accountNumber) === parseInt(f.data.accountNumber)), columns)}
                             </Row>
-                          {users?.some((e) => _.isEqual(e.data.email, currentUser?.email) && _.isEqual(e.data.role, "Administrator" || "Manager")) && journals.filter(f => f.data.status === "pending" && parseInt(g.data.accountNumber) === parseInt(f.data.accountNumber)).length > 0  &&
+                          {users?.some((e) => _.isEqual(e.data.email, currentUser?.email) && _.isEqual(e.data.role, "Administrator" || "Manager")) && adjustedJournals.filter(f => f.data.status === "pending" && parseInt(g.data.accountNumber) === parseInt(f.data.accountNumber)).length > 0  &&
                             <Row style={{marginBottom: "40px", paddingTop: "5px"}}>
                               <Col span={6}>
-                                  <Typography.Text strong>Approved/Pending Journals</Typography.Text>
+                                  <Typography.Text strong>Approved/Pending Adjusted Journals</Typography.Text>
                               </Col>
                               <Col span={3} style={{marginLeft: "-40px"}}>
                                   <Typography.Text strong>Total Debits: {" "}</Typography.Text>
                                   <Typography.Text>
-                                    {helperDebit(journals.filter(f => (f.data.status === "approved" || f.data.status === "pending") && parseInt(g.data.accountNumber) === parseInt(f.data.accountNumber)), g)}
+                                    {helperDebit(adjustedJournals.filter(f => (f.data.status === "approved" || f.data.status === "pending") && parseInt(g.data.accountNumber) === parseInt(f.data.accountNumber)), g)}
                                   </Typography.Text>
                               </Col>
                               <Col span={3} style={{marginLeft: "-30px"}}>
                                   <Typography.Text strong>Total Credits: {" "}</Typography.Text>
                                   <Typography.Text>
-                                    {helperCredit(journals.filter(f => (f.data.status === "approved" || f.data.status === "pending") && parseInt(g.data.accountNumber) === parseInt(f.data.accountNumber)), g)}
+                                    {helperCredit(adjustedJournals.filter(f => (f.data.status === "approved" || f.data.status === "pending") && parseInt(g.data.accountNumber) === parseInt(f.data.accountNumber)), g)}
                                   </Typography.Text>
                               </Col>
                               <Col span={2} style={{marginLeft: "-30px"}}>
                                   <Typography.Text strong>Total: {" "}</Typography.Text>
                                   <Typography.Text>
-                                    {helperTotal(journals.filter(f => (f.data.status === "approved" || "pending") && parseInt(g.data.accountNumber) === parseInt(f.data.accountNumber)), g)}
+                                    {helperTotal(adjustedJournals.filter(f => (f.data.status === "approved" || "pending") && parseInt(g.data.accountNumber) === parseInt(f.data.accountNumber)), g)}
                                   </Typography.Text>
                               </Col>
                               <Col span={2} style={{marginLeft: "-38px"}}>
                                   <Typography.Text strong>Approve/Reject  All: {" "}</Typography.Text>
                               </Col>
                               <Col span={2}>
-                                <Button style={{ color: 'green', marginLeft: "-20px" }} onClick={() => journals?.filter(f => f.data.status === "pending" && parseInt(g.data.accountNumber) === parseInt(f.data.accountNumber)).map(item => (handleDisable(item.id, "approved")))} icon={<CheckCircleOutlined/>}/>
-                                <Button style={{ color: 'red', marginLeft: "15px" }} onClick={() => journals?.filter(f => f.data.status === "pending" && parseInt(g.data.accountNumber) === parseInt(f.data.accountNumber)).map(item => (handleDisable(item.id, "rejected")))} icon={<CloseCircleOutlined/>}/>
+                                <Button style={{ color: 'green', marginLeft: "-20px" }} onClick={() => adjustedJournals?.filter(f => f.data.status === "pending" && parseInt(g.data.accountNumber) === parseInt(f.data.accountNumber)).map(item => (handleDisable(item.id, "approved")))} icon={<CheckCircleOutlined/>}/>
+                                <Button style={{ color: 'red', marginLeft: "15px" }} onClick={() => adjustedJournals?.filter(f => f.data.status === "pending" && parseInt(g.data.accountNumber) === parseInt(f.data.accountNumber)).map(item => (handleDisable(item.id, "rejected")))} icon={<CloseCircleOutlined/>}/>
                               </Col>
                               <Col span={1}>
                                 <Typography.Text strong>Comments: {" "}</Typography.Text>
@@ -883,7 +888,7 @@ const Journals = () => {
                         </>
                         ))}
                     </Collapse.Panel>
-                    <Collapse.Panel header="Rejected Journals" key="5">
+                    <Collapse.Panel header="Rejected Adjusted Journals" key="5">
                         <Col span={4} style={{paddingBottom: "10px"}}>
                             <DatePicker
                               format={"MM/DD/YYYY"}
@@ -896,7 +901,7 @@ const Journals = () => {
                         {chartsOfAccounts.map(g => (
                           <>
                             <Typography.Text strong>{g.data.accountName}</Typography.Text>
-                            {JournalsTable(!_.isNil(searchedJournal3) ? searchedJournal3.filter(f => f.data.status === "rejected" && parseInt(g.data.accountNumber) === parseInt(f.data.accountNumber)) : journals.filter(f => f.data.status === "rejected" && parseInt(g.data.accountNumber) === parseInt(f.data.accountNumber)), columns2)}
+                            {JournalsTable(!_.isNil(searchedJournal3) ? searchedJournal3.filter(f => f.data.status === "rejected" && parseInt(g.data.accountNumber) === parseInt(f.data.accountNumber)) : adjustedJournals.filter(f => f.data.status === "rejected" && parseInt(g.data.accountNumber) === parseInt(f.data.accountNumber)), columns2)}
                           </>
                         ))}
                     </Collapse.Panel>
@@ -906,4 +911,4 @@ const Journals = () => {
     );
 }
 
-export default Journals;
+export default AdjustedJournals;
