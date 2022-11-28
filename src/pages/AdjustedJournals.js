@@ -1,13 +1,13 @@
 import * as React from 'react'
-import Journals from '../components/Journals/Journals';
+import AdjustedJournals from '../components/AdjustedJournals/AdjustedJournals';
 
 //Creating Journals Page
-const JournalsPage = () => {
+const AdjustedJournalsPage = () => {
     return(
         <div style={{ background: "#041C32", height: "100%", minHeight: "980px" }}>
-            <Journals />
+            <AdjustedJournals />
         </div>
     );
 }
 //Exporting Journals Page
-export default JournalsPage
+export default AdjustedJournalsPage

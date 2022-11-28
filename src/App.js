@@ -18,6 +18,7 @@ import FooterItem from "./pages/Footer";
 import ChartsAccountPage from "./pages/ChartsOfAccounts"
 import LedgersPage from "./pages/Ledgers"
 import JournalsPage from "./pages/Journals"
+import AdjustedJournalsPage from "./pages/AdjustedJournals"
 
 function App() {
   // Brings in whether the current user is logged in or not
@@ -43,6 +44,7 @@ function App() {
           <Route path="/administrator" element={<AdministratorPage />} />
           <Route path="/ledgers" element={<LedgersPage />}/>
           <Route path="/journals" element={<JournalsPage />}/>
+          <Route path="/adjustedJournals" element={<AdjustedJournalsPage/>} />
         </Route>
         {/* Pages that are visible without login */}
           <Route path="/login" element={<LoginPage />} />

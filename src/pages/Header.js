@@ -76,7 +76,12 @@ const MenuItemizer = () => {
                   </Menu.Item>
                   <Menu.Item key="Journals" style={{paddingTop: "13px"}}>
                     <Link to="/journals">
-                      Journal Entry
+                      Journal Entries
+                    </Link>
+                  </Menu.Item>
+                  <Menu.Item key="AdjustedJournals" style={{paddingTop: "13px"}}>
+                    <Link to="/adjustedJournals">
+                      Adjusted Journal Entries
                     </Link>
                   </Menu.Item>
                   {/* Checks to see if the user is an administrator */}

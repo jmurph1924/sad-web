@@ -305,7 +305,7 @@ const ChartsAccountpage = () => {
             return (
               <>
                 <Tooltip title="This is the account numbers">
-                  <Typography.Text strong> Account Added </Typography.Text>
+                  <Typography.Text strong> Journal Added </Typography.Text>
                 </Tooltip>
               </>
             )
@@ -855,7 +855,7 @@ const ChartsAccountpage = () => {
             return (
               <>
                 <Tooltip title="This is the account numbers">
-                  <Typography.Text strong> Account Added </Typography.Text>
+                  <Typography.Text strong> Journal Added </Typography.Text>
                 </Tooltip>
               </>
             )
