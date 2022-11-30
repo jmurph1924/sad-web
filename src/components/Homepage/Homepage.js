@@ -598,7 +598,7 @@ const Homepage = () => {
             </Row>
             <Row style={{maxWidth: "1200px", marginLeft: "350px", paddingLeft: "485px", paddingBottom: "20px", height: "60px"}}/>
             <Row style={{maxWidth: "1200px", marginLeft: "350px", paddingBottom: "20px", justifyContent: "center", backgroundColor: "#ECB365"}}>
-                <Col span={6} style={{paddingRight: "20px", marginTop: "20px",}}>
+                <Col span={7} style={{paddingRight: "20px", marginTop: "20px",}}>
                     <Card style={{backgroundColor: liquidColor}}>
                         <Meta
                         title="Liquidity ratios"
@@ -606,7 +606,7 @@ const Homepage = () => {
                         />
                     </Card >
                 </Col >
-                <Col span={6} style={{paddingRight: "20px", marginTop: "20px"}}>
+                <Col span={7} style={{paddingRight: "20px", marginTop: "20px"}}>
                     <Card style={{backgroundColor: liquidColor2}}> 
                         <Meta
                         title="Leverage ratios"
@@ -614,7 +614,7 @@ const Homepage = () => {
                         />
                     </Card>
                 </Col>
-                <Col span={6} style={{paddingRight: "20px", marginTop: "20px"}}>
+                <Col span={7} style={{paddingRight: "20px", marginTop: "20px"}}>
                     <Card style={{backgroundColor: liquidColor3}}>
                         <Meta
                         title="Efficiency ratios"
@@ -628,22 +628,22 @@ const Homepage = () => {
                 <>
                     <Row style={{maxWidth: "1200px", marginLeft: "350px", paddingLeft: "485px", paddingBottom: "20px", height: "60px", backgroundColor: "#04293A"}}/>
                     <Row style={{maxWidth: "1200px", marginLeft: "350px", paddingLeft: "485px", paddingBottom: "20px", backgroundColor: "#04293A"}}>
-                        <Col style={{marginLeft: "-260px"}}>
+                        <Col style={{marginLeft: "-410px"}}>
                             <DatePicker.RangePicker onChange={(e) => handleChangeDebut(e)}/>
                         </Col>
                     </Row>
                     <Row style={{maxWidth: "1200px", marginLeft: "350px", paddingBottom: "20px", justifyContent: "center", backgroundColor: "#04293A"}}>
-                        <Col span={5} style={{paddingRight: "20px"}}>
+                        <Col span={7} style={{paddingRight: "20px"}}>
                             <Card title="Trial Balance" bordered={true}>
                                 <Button onClick={() => generateInfo("trialbalance")}> Generate Trial Balance </Button>
                             </Card>
                         </Col>
-                        <Col span={5} style={{paddingRight: "20px"}}>
+                        <Col span={7} style={{paddingRight: "20px"}}>
                             <Card title="Balance Sheet" bordered={false}>
                                 <Button onClick={() => generateInfo("balancesheet")}> Generate Balance Sheet </Button>
                             </Card>
                         </Col>
-                        <Col span={5}>
+                        <Col span={7}>
                             <Card title="Retained Earnings" bordered={false}>
                                 <Button onClick={() => generateInfo("retainedEarnings")}> Generate Retained Earnings </Button>
                             </Card>
