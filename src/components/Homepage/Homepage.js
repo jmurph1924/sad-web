@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom'
 import { db } from "../../firebase-config"
 import { Row, Col, Card, DatePicker, Button, Table, Tooltip, Alert, message, Typography } from "antd"
 
+const { Meta } = Card;
 const currencyFormatDecimal = { code: "USD", decimalDigits: 2, precision: 2};
 
 //Homepage Creation and Layout
@@ -27,6 +28,12 @@ const Homepage = () => {
     const [ daysLeft, setDaysLeft ] = useState("");
     const { currentUser, logout } = useAuth()
     const isPopupVisible2 = users?.some((e) => _.isEqual(e.data.email, currentUser?.email) && (_.isEqual(e.data.role, "Administrator") || _.isEqual(e.data.role, "Manager"))) && journals?.some(f => f.data.status === "pending")
+    const [liquidityRatio, setLiquidityRatio] = useState(null); 
+    const [ liquidColor, setLiquidColor ] = useState(null);
+    const [liquidityRatio2, setLiquidityRatio2] = useState(null); 
+    const [ liquidColor2, setLiquidColor2 ] = useState(null);
+    const [liquidityRatio3, setLiquidityRatio3] = useState(null); 
+    const [ liquidColor3, setLiquidColor3 ] = useState(null);
 
     useEffect(() => {
         getChartsOfAccounts()
@@ -64,6 +71,9 @@ const Homepage = () => {
             }))
             //Adds that array to state
             setJournals(charts);
+            liquidity(charts)
+            liquidity2(charts)
+            liquidity3(charts)
         }).catch(error => console.log(error.message))
       }
 
@@ -235,6 +245,73 @@ const Homepage = () => {
         return formatCurrencyChange(total);
       }
 
+      const liquidity = (chartsSorted) => {
+        const totalCredit = chartsSorted.reduce((prev, current) => {
+          return prev + parseFloat(current.data.credit)
+        }, 0)
+
+        const totalDebit = chartsSorted.reduce((prev, current) => {
+          return prev + parseFloat(current.data.debit)
+        }, 0)
+
+        let total = totalDebit/totalCredit;
+
+        if(total > 1) {
+            setLiquidColor("lightgreen")
+        }
+        else if(total < 1){
+            setLiquidColor("red")
+        }
+        else {
+            setLiquidColor("yellow")
+        }
+
+        setLiquidityRatio(total);
+      }
+      const liquidity2 = (chartsSorted) => {
+        const totalCredit = chartsSorted.reduce((prev, current) => {
+          return prev + parseFloat(current.data.credit)
+        }, 0)
+
+        const totalDebit = chartsSorted.reduce((prev, current) => {
+          return prev + parseFloat(current.data.debit)
+        }, 0)
+
+        let total = totalCredit/totalDebit;
+
+        if(total < 1) {
+            setLiquidColor2("lightgreen")
+        }
+        else if(total > 1){
+            setLiquidColor2("red")
+        }
+        else {
+            setLiquidColor2("yellow")
+        }
+
+        setLiquidityRatio2(total);
+      }
+      const liquidity3 = (chartsSorted) => {
+        const totalCredit = chartsSorted.reduce((prev, current) => {
+          return prev + parseFloat(current.data.credit)
+        }, 0)
+
+        const totalAssets  = chartsSorted.filter(f => f.data.debit === "0" || f.data.debit === 0)
+
+        let total = totalCredit/totalAssets.length;
+
+        if(total < 50) {
+            setLiquidColor3("lightgreen")
+        }
+        else if(total > 50){
+            setLiquidColor3("red")
+        }
+        else {
+            setLiquidColor3("yellow")
+        }
+
+        setLiquidityRatio3(total);
+      }
 
     const handleRetainedEarnings = () => {
         let userCsv = [];
@@ -520,10 +597,33 @@ const Homepage = () => {
                 </Col>
             </Row>
             <Row style={{maxWidth: "1200px", marginLeft: "350px", paddingLeft: "485px", paddingBottom: "20px", height: "60px"}}/>
-            {/* <Row style={{maxWidth: "1200px", marginLeft: "350px", paddingBottom: "20px", justifyContent: "center", backgroundColor: "#ECB365"}}>
-                
+            <Row style={{maxWidth: "1200px", marginLeft: "350px", paddingBottom: "20px", justifyContent: "center", backgroundColor: "#ECB365"}}>
+                <Col span={6} style={{paddingRight: "20px", marginTop: "20px",}}>
+                    <Card style={{backgroundColor: liquidColor}}>
+                        <Meta
+                        title="Liquidity ratios"
+                        description={liquidityRatio}
+                        />
+                    </Card >
+                </Col >
+                <Col span={6} style={{paddingRight: "20px", marginTop: "20px"}}>
+                    <Card style={{backgroundColor: liquidColor2}}> 
+                        <Meta
+                        title="Leverage ratios"
+                        description={liquidityRatio2}
+                        />
+                    </Card>
+                </Col>
+                <Col span={6} style={{paddingRight: "20px", marginTop: "20px"}}>
+                    <Card style={{backgroundColor: liquidColor3}}>
+                        <Meta
+                        title="Efficiency ratios"
+                        description={liquidityRatio3}
+                        />
+                    </Card>
+                </Col>
             </Row>
-            <Row style={{maxWidth: "1200px", marginLeft: "350px", paddingLeft: "485px", paddingBottom: "20px", height: "60px"}}/> */}
+            <Row style={{maxWidth: "1200px", marginLeft: "350px", paddingLeft: "485px", paddingBottom: "20px", height: "60px"}}/>
             { users?.some((e) => _.isEqual(e.data.email, currentUser?.email) && (_.isEqual(e.data.role, "Administrator") || _.isEqual(e.data.role, "Manager"))) &&
                 <>
                     <Row style={{maxWidth: "1200px", marginLeft: "350px", paddingLeft: "485px", paddingBottom: "20px", height: "60px", backgroundColor: "#04293A"}}/>
