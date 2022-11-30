@@ -8,6 +8,17 @@ import { Row, Typography, Collapse, Table, Button, Select, message, Input, Form,
 import "./Administrator.css"
 import AdministratorNewUser from "./AdministratorNewUser";
 
+const customStyles = {
+  menu: base => ({
+  ...base,
+  // override border radius to match the box
+  borderRadius: 0,
+  // kill the gap
+  marginTop: 0,
+  zIndex: 999
+  }),
+}
+
 //Administrator Function
 const Administrator = () => {
 
@@ -181,11 +192,23 @@ const Administrator = () => {
             return (
               //Role Drop-down Creation
             <>
-              <Select defaultValue={item?.data.role} style={{width: "300px", opacity: ".9"}} onSelect={e => handleRoleChange(item.id, e)}>
-                <Select.Option value="Administrator">Administrator</Select.Option>
-                <Select.Option value="Manager">Manager</Select.Option>
-                <Select.Option value="Accountant">Accountant</Select.Option>
-              </Select>
+              <Select 
+                defaultValue={item?.data.role} 
+                style={{width: "300px"}} 
+                options={[
+                {
+                  value: 'Administrator',
+                  label: 'Administrator',
+                },
+                {
+                  value: 'Manager',
+                  label: 'Manager',
+                },
+                {
+                  value: 'Accountant',
+                  label: 'Accountant',
+                },
+              ]} onSelect={e => handleRoleChange(item.id, e)}/>
             </>
             )
           }

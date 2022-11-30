@@ -32,7 +32,7 @@ const Journals = () => {
   const [searchedJournal1, setSearchedJournals1] = useState(null);
   const [searchedJournal2, setSearchedJournals2] = useState(null);
   const [searchedJournal3, setSearchedJournals3] = useState(null);
-  const isPopupVisible = users?.some((e) => _.isEqual(e.data.email, currentUser?.email) && _.isEqual(e.data.role, "Administrator" || "Manager"))  && journals?.some(f => f.data.status === "pending")
+  const isPopupVisible = users?.some((e) => _.isEqual(e.data.email.toLowerCase(), currentUser?.email) && _.isEqual(e.data.role, "Administrator" || "Manager"))  && journals?.some(f => f.data.status === "pending")
 
   const location = useLocation()
   const specificAccount2 = location.state;
@@ -259,7 +259,7 @@ const Journals = () => {
           }
         },
         {
-          hidden: users?.some((e) => _.isEqual(e.data.email, currentUser?.email) && !_.isEqual(e.data.role, "Administrator" || "Manager")),
+          hidden: users?.some((e) => _.isEqual(e.data.email.toLowerCase(), currentUser?.email) && !_.isEqual(e.data.role, "Administrator" || "Manager")),
           title: () => {
             return (
               <>
@@ -287,7 +287,7 @@ const Journals = () => {
           }
         },
         {
-          hidden: users?.some((e) => _.isEqual(e.data.email, currentUser?.email) && !_.isEqual(e.data.role, "Administrator" || "Manager")),
+          hidden: users?.some((e) => _.isEqual(e.data.email.toLowerCase(), currentUser?.email) && !_.isEqual(e.data.role, "Administrator" || "Manager")),
           title: () => {
             return (
               <>
@@ -718,11 +718,9 @@ const Journals = () => {
     return(
         <div className="journals-container">
             <Row style={{width: "1850px", marginLeft: "-360px", marginTop: "-60px", marginBottom: "-30px"}}>
-              { users?.some((e) => _.isEqual(e.data.email, currentUser?.email) && _.isEqual(e.data.role, "Administrator")) &&
               <Col span={isPopupVisible ? 10 : 22} style={{paddingLeft: "10px"}}>
                 <Button onClick={() => setAccountModal(true)}> Add a New Journal </Button>
               </Col>
-              }
               { isPopupVisible && 
               <Col span={12}>
               <Alert
@@ -842,7 +840,7 @@ const Journals = () => {
                               <Typography.Text strong>{g.data.accountName}</Typography.Text>
                               {JournalsTable(!_.isNil(searchedJournal2) ? searchedJournal2.filter(f => f.data.status === "pending" && parseInt(g.data.accountNumber) === parseInt(parseInt(f.data.accountNumber))) : journals.filter(f => f.data.status === "pending" && parseInt(g.data.accountNumber) === parseInt(f.data.accountNumber)), columns)}
                             </Row>
-                          {users?.some((e) => _.isEqual(e.data.email, currentUser?.email) && _.isEqual(e.data.role, "Administrator" || "Manager")) && journals.filter(f => f.data.status === "pending" && parseInt(g.data.accountNumber) === parseInt(f.data.accountNumber)).length > 0  &&
+                          {users?.some((e) => _.isEqual(e.data.email.toLowerCase(), currentUser?.email) && _.isEqual(e.data.role, "Administrator" || "Manager")) && journals.filter(f => f.data.status === "pending" && parseInt(g.data.accountNumber) === parseInt(f.data.accountNumber)).length > 0  &&
                             <Row style={{marginBottom: "40px", paddingTop: "5px"}}>
                               <Col span={6}>
                                   <Typography.Text strong>Approved/Pending Journals</Typography.Text>
