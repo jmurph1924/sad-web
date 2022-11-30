@@ -44,7 +44,8 @@ const Homepage = () => {
             setFilteredInfo(journals.filter(f => moment(f?.data.dateAccountAdded.toDate()).format('MM/DD/YYYY') >= moment(dateRange1).format('MM/DD/YYYY') && moment(f?.data.dateAccountAdded.toDate()).format('MM/DD/YYYY') <= moment(dateRange2).format('MM/DD/YYYY')))
         } else if (info == "retainedEarnings"){
             setDocumentType(info)
-            setColumnType(columns)
+            setColumnType(columns2)
+            setFilteredInfo(journals.filter(f => moment(f?.data.dateAccountAdded.toDate()).format('MM/DD/YYYY') >= moment(dateRange1).format('MM/DD/YYYY') && moment(f?.data.dateAccountAdded.toDate()).format('MM/DD/YYYY') <= moment(dateRange2).format('MM/DD/YYYY')))
         }
 
         setSpreadSheetVisible(true)
@@ -88,7 +89,7 @@ const Homepage = () => {
         } else if(info == "balancesheet"){
             handleBalanceSheet()
         } else if (info == "retainedEarnings"){
-            // handleRetainedEarnings(data, column3)
+            handleRetainedEarnings()
         }
     }
 
@@ -185,6 +186,79 @@ const Homepage = () => {
         //Sheet Creation for data
         const excel = new Excel();
         excel.addSheet("test").addColumns(columns5).addDataSource(userCsv).saveAs(`BalanceSheet.xlsx`);
+      };
+
+      const columns6 = [
+        {
+            //Name Section Creation
+            title: "Name",
+            dataIndex: "Name",
+            key: "Name"
+          },
+          {
+            //Debit Section Creation
+            title: "Assets",
+            dataIndex: "Assets",
+            key: "Assets"
+          },
+          {
+            //Credit of Birth Section Creation
+            title: "Liabilities and Equity",
+            dataIndex: "Liabilities",
+            key: "Liabilities"
+          },
+          {
+            //Credit of Birth Section Creation
+            title: "Final Earnings",
+            dataIndex: "Retained",
+            key: "Retained"
+          },
+    ]
+
+    const helperTotal = (chartsSorted) => {
+        const totalCredit = chartsSorted.reduce((prev, current) => {
+          return prev + parseFloat(current.data.credit)
+        }, 0)
+
+        const totalDebit = chartsSorted.reduce((prev, current) => {
+          return prev + parseFloat(current.data.debit)
+        }, 0)
+
+        let total = null;
+
+        if(totalCredit > totalDebit){
+          total = totalCredit - totalDebit
+        } else if (totalDebit > totalCredit){
+          total = totalDebit - totalCredit
+        }
+
+        return formatCurrencyChange(total);
+      }
+
+
+    const handleRetainedEarnings = () => {
+        let userCsv = [];
+        let userObj = {};
+        let finalObj = {};
+
+        for(let i = 0; i < filteredInfo.length; i++){
+          userObj = {
+            Name: filteredInfo[i].data.accountName,
+            Assets: ((!_.isNil(filteredInfo[i].data.debit) || filteredInfo[i].data.debit) != "0" ? formatCurrencyChange(filteredInfo[i].data.debit) : ""),
+            Liabilities: ((!_.isNil(filteredInfo[i].data.credit) || filteredInfo[i].data.credit) != "0" ? formatCurrencyChange(filteredInfo[i].data.credit) : ""),
+          }
+            userCsv.push(userObj)
+          if(i === filteredInfo.length - 1){
+            finalObj = {
+                Name: "Retained Earnings",
+                Retained: helperTotal(filteredInfo),
+              }
+              userCsv.push(finalObj)
+          }
+        }
+        //Sheet Creation for data
+        const excel = new Excel();
+        excel.addSheet("test").addColumns(columns6).addDataSource(userCsv).saveAs(`RetainedEarnings.xlsx`);
       };
 
     //Calling getUsers function
@@ -498,9 +572,13 @@ const Homepage = () => {
                                 {ChartsOfAccountsTable(filteredInfo)}
                             </Row>
                             <Row style={{backgroundColor: "#04293A", maxWidth: "1200px", minHeight: "60px", marginLeft: "350px", justifyContent: "left"}}>
+                                {(documentType === "balancesheet" || documentType === "trialbalance") &&
                                 <Col span={6}>
                                     <Typography.Text style={{color: "white", marginLeft: "100px"}} strong>Totals</Typography.Text>
                                 </Col>
+                                }
+                                {documentType === "trialbalance" &&
+                                <>
                                 <Col span={3} style={{marginLeft: "210px"}}>
                                     <Typography.Text style={{color: "white"}} strong>Total Debits: {" "}</Typography.Text>
                                     <Typography.Text style={{color: "white"}}>
@@ -513,6 +591,31 @@ const Homepage = () => {
                                         {helperCredit(filteredInfo)}
                                     </Typography.Text>
                                 </Col>
+                                </>}
+                                {documentType === "balancesheet" &&
+                                <>
+                                <Col span={3} style={{marginLeft: "210px"}}>
+                                    <Typography.Text style={{color: "white"}} strong>Total Assets: {" "}</Typography.Text>
+                                    <Typography.Text style={{color: "white"}}>
+                                        {helperDebit(filteredInfo)}
+                                    </Typography.Text>
+                                </Col>
+                                <Col span={3} style={{marginLeft: "100px"}}>
+                                    <Typography.Text style={{color: "white"}} strong>Total Liablities: {" "}</Typography.Text>
+                                    <Typography.Text style={{color: "white"}}>
+                                        {helperCredit(filteredInfo)}
+                                    </Typography.Text>
+                                </Col>
+                                </>}
+                                {documentType === "retainedEarnings" &&
+                                <>
+                                <Col span={3} style={{marginLeft: "100px"}}>
+                                    <Typography.Text style={{color: "white"}} strong>Retained Earnings: {" "}</Typography.Text>
+                                    <Typography.Text style={{color: "white"}}>
+                                        {helperTotal(filteredInfo)}
+                                    </Typography.Text>
+                                </Col>
+                                </>}
 
                             </Row>
                         </>
