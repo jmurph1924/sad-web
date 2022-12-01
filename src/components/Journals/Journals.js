@@ -661,6 +661,11 @@ const Journals = () => {
         setHelpModal(false)
       }
 
+      const addJournalsSetter = () => {
+        getJournals()
+        setAccountModal(false)
+      }
+
       const helperDebit = (chartsSorted) => {
         const totalValue = chartsSorted.reduce((prev, current) => {
           return prev + parseFloat(current.data.debit)
@@ -734,7 +739,7 @@ const Journals = () => {
               </Col>
             </Row>
             <HelpModal isHelpModalVisible={helpModal} onModalChange={() => helpModalSetter()}/>
-            <AddAnAccount isAddAnAccountVisible={accountModal} onModalChange={() => setAccountModal(false)} chartsOfAccountsInfo={chartsOfAccounts} />
+            <AddAnAccount isAddAnAccountVisible={accountModal} onModalChange={() => addJournalsSetter()} chartsOfAccountsInfo={chartsOfAccounts} />
             <Modal type="primary" style={{marginRight: "1550px"}} title="Calendar" width={350} visible={calendar} footer={[ <Button key="back" onClick={() => setCalendar(!calendar)}>Ok</Button>]} onCancel={() => setCalendar(!calendar)}>
               <Calendar fullscreen={false} className="site-calendar-demo-card" />
             </Modal>
