@@ -38,9 +38,10 @@ const AddAnAccount = ({isAddAnAccountVisible = false, onModalChange = _.noop, ch
         setBalance(parseFloat(balance));
         setInitialBalance(parseFloat(initialBalance));
         setOrder(parseInt(order));
+        const finalized = false;
 
         const userCollectionRef = collection(db, 'changeLog')
-        addDoc(userCollectionRef, { active, accountDescription, accountName, accountNumber: parseInt(accountNumber), accountCategory, accountSubCategory, balance, comments, credit, dateAccountAdded, debit, initialBalance, normalSide, order, statement, userId, finalized: false }).then(response => {
+        addDoc(userCollectionRef, { active, accountDescription, accountName, accountNumber: parseInt(accountNumber), finalized, accountCategory, accountSubCategory, balance, comments, credit, dateAccountAdded, debit, initialBalance, normalSide, order, statement, userId }).then(response => {
             try {
         setError("")
         setLoading(true)
@@ -57,7 +58,7 @@ const AddAnAccount = ({isAddAnAccountVisible = false, onModalChange = _.noop, ch
         }else if(chartsOfAccountsInfo?.some(f => _.isEqual(f.data.accountName, accountName))){
             message.error("Account Name Already Exist")
         } else {
-            addDoc(usersCollectionRef, { active, accountDescription, accountName, accountNumber, accountCategory, accountSubCategory, balance, comments, credit, dateAccountAdded, debit, initialBalance, normalSide, order, statement, userId }).then(response => {
+            addDoc(usersCollectionRef, { active, accountDescription, accountName, accountNumber, accountCategory, finalized, accountSubCategory, balance, comments, credit, dateAccountAdded, debit, initialBalance, normalSide, order, statement, userId }).then(response => {
                     try {
                 setError("")
                 setLoading(true)

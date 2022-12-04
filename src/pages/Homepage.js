@@ -5,7 +5,7 @@ import Homepage from '../components/Homepage/Homepage';
 const HomepagePage = () => {
 
     return (
-        <div style={{ background: "#041C32", height: "920px" }}>
+        <div style={{ background: "#041C32", height: "2000px" }}>
             <Homepage />
         </div>
     )
