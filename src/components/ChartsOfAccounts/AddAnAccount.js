@@ -6,9 +6,9 @@ import { Row, Col, Typography, Button, message, Input, Modal, Tooltip} from "ant
 import { useAuth } from '../../contexts/AuthContext'
 import { FOCUSABLE_SELECTOR } from '@testing-library/user-event/dist/utils';
 
-
+//Add an Account Function
 const AddAnAccount = ({isAddAnAccountVisible = false, onModalChange = _.noop, chartsOfAccountsInfo = []}) => {
-
+    //Variable Creation
     const { currentUser } = useAuth()
 
     const [error, setError] = useState("")
@@ -30,6 +30,7 @@ const AddAnAccount = ({isAddAnAccountVisible = false, onModalChange = _.noop, ch
     const userId = currentUser?.email
     const active = true;
 
+    //Add an Account submit handle
     async function handleSubmit() {
         const usersCollectionRef = collection(db, 'chartsOfAccounts')
 
@@ -75,7 +76,7 @@ const AddAnAccount = ({isAddAnAccountVisible = false, onModalChange = _.noop, ch
         }
     }
 
-
+    //Add account window
     return (
         <div style={{ background: "#041C32"}}>
             <Modal type="primary" title="Add a New Account"  width={1800} visible={isAddAnAccountVisible} footer={[ 

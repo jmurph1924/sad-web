@@ -13,6 +13,7 @@ import { useAuth } from '../../contexts/AuthContext'
 import HelpModal from "../HelpModal/HelpModal";
 import AddAnAccount from "./AddAnAccount";
 
+//Journals Function Creation
 const currencyFormatDecimal = { code: "USD", decimalDigits: 2, precision: 2};
 
 const Journals = () => {
@@ -719,7 +720,7 @@ const Journals = () => {
         }
       }
 
-
+    //Return of Created columns and layouts for the Journals pages
     return(
         <div className="journals-container">
             <Row style={{width: "1850px", marginLeft: "-360px", marginTop: "-60px", marginBottom: "-30px"}}>

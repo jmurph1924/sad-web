@@ -4,7 +4,7 @@ import { collection, addDoc, Timestamp } from "firebase/firestore"
 import { db } from "../../firebase-config"
 import { Row, Col, Typography, Button, notification, Input, Modal, Tooltip, Select} from "antd"
 
-
+//AddanAdjustedAccount Function creation
 const AddAnAdjustedAccount = ({isAddAnAccountVisible = false, onModalChange = _.noop, chartsOfAccountsInfo = []}) => {
 
     const [error, setError] = useState("")
@@ -17,6 +17,7 @@ const AddAnAdjustedAccount = ({isAddAnAccountVisible = false, onModalChange = _.
     const [debit, setDebit] = useState(null);
     const status = "pending";
 
+    //Submit handle for adjusted journals
     async function handleSubmit() {
         const usersCollectionRef = collection(db, 'adjustedJournals')
         const accountNumb = accountNumber?.data?.accountNumber
@@ -49,7 +50,7 @@ const AddAnAdjustedAccount = ({isAddAnAccountVisible = false, onModalChange = _.
         }
     
 
-
+        //Add a New journal window creation
     return (
         <div style={{ background: "#041C32"}}>
             <Modal type="primary" title="Add a New Journal"  width={1800} visible={isAddAnAccountVisible} footer={[ 

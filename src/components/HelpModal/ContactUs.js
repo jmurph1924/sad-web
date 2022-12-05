@@ -2,7 +2,7 @@ import * as React from 'react'
 import * as _ from "lodash"
 import { Typography, Row, Col } from "antd"
 
-
+//Help page creation
 const ContactUs = () => {
 
     return(

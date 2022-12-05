@@ -12,6 +12,7 @@ import { useAuth } from '../../contexts/AuthContext'
 import HelpModal from "../HelpModal/HelpModal";
 import AddAnAccount from "./AddAnAccount";
 
+//Variable Creation
 const currencyFormatDecimal = { code: "USD", decimalDigits: 2, precision: 2};
 
 const ChartsAccountpage = () => {

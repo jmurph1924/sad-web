@@ -8,6 +8,7 @@ import { db } from "../../firebase-config"
 import { Table, Button, Input, Row, Collapse, Col, DatePicker } from "antd"
 import "./Ledgers.css";
 
+//Ledger Function Creation
 const currencyFormatDecimal = { code: "USD", decimalDigits: 2, precision: 2};
 
 const Ledgers = () => {
@@ -295,6 +296,7 @@ const Ledgers = () => {
         <Table locale={locale3} columns={columns} dataSource={ledgerCharts} />
       );
 
+    //Return of Created columns and layouts for the Ledgers page
     return(
         <div className="Ledgers-container">
             <Row style={{justifyContent: "center"}}>

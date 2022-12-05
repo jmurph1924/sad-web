@@ -9,6 +9,7 @@ import LedgersHelp from './LedgersHelp';
 import AccessibilityHelp from './AccessibilityHelp';
 import ContactUs from './ContactUs';
 
+//HelpModal function Creation
 const HelpModal = ({ isHelpModalVisible = false, onModalChange = _.noop }) => {
 
     return(

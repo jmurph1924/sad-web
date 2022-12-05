@@ -4,7 +4,7 @@ import { collection, addDoc, Timestamp } from "firebase/firestore"
 import { db } from "../../firebase-config"
 import { Row, Col, Typography, Button, notification, Input, Modal, Tooltip, Select} from "antd"
 
-
+//AddanAccount Function Creation
 const AddAnAccount = ({isAddAnAccountVisible = false, onModalChange = _.noop, chartsOfAccountsInfo = []}) => {
 
     const [error, setError] = useState("")
@@ -48,8 +48,7 @@ const AddAnAccount = ({isAddAnAccountVisible = false, onModalChange = _.noop, ch
             }
         }
     
-
-
+    //Return of Created columns and layouts for the AddanAccount page
     return (
         <div style={{ background: "#041C32"}}>
             <Modal type="primary" title="Add a New Journal"  width={1800} visible={isAddAnAccountVisible} footer={[ 
