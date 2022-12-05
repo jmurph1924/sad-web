@@ -194,7 +194,7 @@ const Administrator = () => {
             <>
               <Select 
                 defaultValue={item?.data.role} 
-                style={{width: "300px"}} 
+                style={{width: "300px", zIndex: "9999"}} 
                 options={[
                 {
                   value: 'Administrator',

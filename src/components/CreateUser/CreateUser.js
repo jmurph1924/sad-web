@@ -155,8 +155,8 @@ const CreateUser = () => {
                     <Col>
                         <Typography.Text className="stylingColor">Role</Typography.Text>
                     </Col>
-                    <Col>
-                        <Select placeholder="Select a Role" style={{width: "425px", opacity: ".9"}} onSelect={e => setRole(e)}>
+                    <Col style={{ zIndex: "999"}}>
+                        <Select placeholder="Select a Role" style={{width: "425px"}} onSelect={e => setRole(e)}>
                             <Select.Option value="Administrator">Administrator</Select.Option>
                             <Select.Option value="Manager">Manager</Select.Option>
                             <Select.Option value="Accountant">Accountant</Select.Option>
