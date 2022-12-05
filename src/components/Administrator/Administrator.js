@@ -89,7 +89,7 @@ const Administrator = () => {
             return (
               //Role Drop-down menu Creation
             <>
-              <Select defaultValue={item?.data.role} style={{width: "300px", opacity: ".9"}} onSelect={e => handleRoleChange(item.id, e)}>
+              <Select defaultValue={item?.data.role} style={{width: "300px", zIndex: "9999"}} onSelect={e => handleRoleChange(item.id, e)}>
                 <Select.Option value="Administrator">Administrator</Select.Option>
                 <Select.Option value="Manager">Manager</Select.Option>
                 <Select.Option value="Accountant">Accountant</Select.Option>
