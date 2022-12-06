@@ -46,6 +46,8 @@ const ChartsAccountpage = () => {
   const [ userEmail, setUserEmail ] = useState("");
   const [ userSubject, setUserSubject ] = useState("");
   const [ userContent, setUserContent ] = useState("");
+  const [adjustedJournals, setAdjustedJournals] = useState([]);
+  const [journals, setJournals] = useState([]);
   const userId = currentUser?.email
   const active = true;
 
@@ -104,8 +106,100 @@ const ChartsAccountpage = () => {
 
     //Calling getUsers function
     useEffect(() => {
+      getJournals()
+      getAdjustedJournals()
       getUsers()
     }, [])
+
+    const getAdjustedJournals = () => {
+      // Specifies database collection you are using
+      const usersCollectionRef = collection(db, 'adjustedJournals')
+
+      // Gets all the documents from that collection
+      getDocs(usersCollectionRef).then(response => {
+          // maps documents to an array
+          const charts = response.docs.map(doc => ({
+              data: doc.data(), 
+              id: doc.id,
+          }))
+          //Adds that array to state
+          setAdjustedJournals(charts);
+      }).catch(error => console.log(error.message))
+    }
+
+    const getJournals = () => {
+      // Specifies database collection you are using
+      const usersCollectionRef = collection(db, 'journals')
+
+      // Gets all the documents from that collection
+      getDocs(usersCollectionRef).then(response => {
+          // maps documents to an array
+          const charts = response.docs.map(doc => ({
+              data: doc.data(), 
+              id: doc.id,
+          }))
+          //Adds that array to state
+          setJournals(charts);
+      }).catch(error => console.log(error.message))
+    }
+
+    const helperDebit = (chartsSorted) => {
+      const totalValue = chartsSorted.reduce((prev, current) => {
+        return prev + parseFloat(current.data.debit)
+      }, 0)
+
+      return totalValue;
+    }
+
+    const helperCredit = (chartsSorted) => {
+      const totalValue = chartsSorted.reduce((prev, current) => {
+        return prev + parseFloat(current.data.credit)
+      }, 0)
+
+      return totalValue;
+    }
+
+    const helperTotal = (chartsSorted) => {
+      const totalCredit = chartsSorted.reduce((prev, current) => {
+        return prev + parseFloat(current.data.credit)
+      }, 0)
+
+      const totalDebit = chartsSorted.reduce((prev, current) => {
+        return prev + parseFloat(current.data.debit)
+      }, 0)
+
+      let total = null;
+
+      if(totalCredit > totalDebit){
+        total = totalCredit - totalDebit
+      } else if (totalDebit > totalCredit){
+        total = totalDebit - totalCredit
+      }
+
+      return total;
+    }
+
+    const getTheBalance = (item, status) => {
+      if(status === "balance"){
+        if(adjustedJournals.some(f => parseInt(f.data.accountNumber) === parseInt(item.data.accountNumber) && f.data.status === "approved")){
+          return helperTotal(adjustedJournals.filter(f => parseInt(f.data.accountNumber) === parseInt(item.data.accountNumber && f.data.status === "approved")))
+        } else {
+          return helperTotal(journals.filter(f => parseInt(f.data.accountNumber) === parseInt(item.data.accountNumber) && f.data.status === "approved"))
+        }
+      } else if (status === "credit"){
+        if(adjustedJournals.some(f => parseInt(f.data.accountNumber) === parseInt(item.data.accountNumber) && f.data.status === "approved")){
+          return helperCredit(adjustedJournals.filter(f => parseInt(f.data.accountNumber) === parseInt(item.data.accountNumber) && f.data.status === "approved"))
+        } else {
+          return helperCredit(journals.filter(f => parseInt(f.data.accountNumber) === parseInt(item.data.accountNumber) && f.data.status === "approved"))
+        }
+      } else {
+        if(adjustedJournals.some(f => parseInt(f.data.accountNumber) === parseInt(item.data.accountNumber) && f.data.status === "approved")){
+          return helperDebit(adjustedJournals.filter(f => parseInt(f.data.accountNumber) === parseInt(item.data.accountNumber) && f.data.status === "approved"))
+        } else {
+          return helperDebit(journals.filter(f => parseInt(f.data.accountNumber) === parseInt(item.data.accountNumber) && f.data.status === "approved"))
+        }
+      }
+    }
 
    // Gets users from database
    const getUsers = () => {
@@ -818,7 +912,7 @@ const ChartsAccountpage = () => {
             return (
                 <>
                     <>
-                        {formatCurrencyChange(item?.data.debit)}
+                      {formatCurrencyChange(getTheBalance(item, "debit"))}
                     </>
               </>
             )
@@ -839,7 +933,7 @@ const ChartsAccountpage = () => {
             return (
                 <>
                     <>
-                        {formatCurrencyChange(item?.data.credit)}
+                      {formatCurrencyChange(getTheBalance(item, "credit"))}
                     </>
               </>
             )
@@ -860,7 +954,7 @@ const ChartsAccountpage = () => {
             return (
                 <>
                     <>
-                        {formatCurrencyChange(item?.data.balance)}
+                      {formatCurrencyChange(getTheBalance(item, "balance"))}
                     </>
               </>
             )
