@@ -599,7 +599,7 @@ const Homepage = () => {
             <Row style={{maxWidth: "1200px", marginLeft: "350px", paddingLeft: "485px", paddingBottom: "20px", height: "60px"}}/>
             <Row style={{maxWidth: "1200px", marginLeft: "350px", paddingBottom: "20px", justifyContent: "center", backgroundColor: "#ECB365"}}>
                 <Col span={7} style={{paddingRight: "20px", marginTop: "20px",}}>
-                <Tooltip Title="Current Assets / Current Liabilities">
+                <Tooltip placement="top" title="Current Assets / Current Liabilities">
                     <Card style={{backgroundColor: liquidColor}}>
                         <Meta
                         title="Liquidity ratios"
@@ -609,7 +609,7 @@ const Homepage = () => {
                   </Tooltip>
                 </Col >
                 <Col span={7} style={{paddingRight: "20px", marginTop: "20px"}}>
-                <Tooltip Title="Total Debt / Total Assets">
+                <Tooltip placement="top" title="Total Debt / Total Assets">
                     <Card style={{backgroundColor: liquidColor2}}> 
                         <Meta
                         title="Leverage ratios"
@@ -619,7 +619,7 @@ const Homepage = () => {
                   </Tooltip>
                 </Col>
                 <Col span={7} style={{paddingRight: "20px", marginTop: "20px"}}>
-                  <Tooltip Title="Cost of Goods sold / Average Accounts Payable">
+                  <Tooltip placement="top" title="Cost of Goods sold / Average Accounts Payable">
                     <Card style={{backgroundColor: liquidColor3}}>
                         <Meta
                         title="Efficiency ratios"
