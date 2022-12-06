@@ -871,7 +871,7 @@ const Journals = () => {
                               <Col span={2} style={{marginLeft: "-30px"}}>
                                   <Typography.Text strong>Total: {" "}</Typography.Text>
                                   <Typography.Text>
-                                    {helperTotal(journals.filter(f => (f.data.status === "approved" || "pending") && parseInt(g.data.accountNumber) === parseInt(f.data.accountNumber)), g)}
+                                    {formatCurrencyChange(helperTotal(journals.filter(f => (f.data.status === "approved" || "pending") && parseInt(g.data.accountNumber) === parseInt(f.data.accountNumber)), g))}
                                   </Typography.Text>
                               </Col>
                               <Col span={2} style={{marginLeft: "-38px"}}>
