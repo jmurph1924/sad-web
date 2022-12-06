@@ -798,6 +798,8 @@ const AdjustedJournals = () => {
                         </Col>
                         {chartsOfAccounts.map(g => (
                           <>
+                          {(!_.isNil(searchedJournal1) ? searchedJournal1.some(f => f.data.status === "approved" && parseInt(g.data.accountNumber) === parseInt(f.data.accountNumber)) : adjustedJournals.some(f => f.data.status === "approved" && parseInt(g.data.accountNumber) === parseInt(f.data.accountNumber))) &&
+                          <>
                           <Row>
                             <Typography.Text strong>{g.data.accountName}</Typography.Text>
                           {JournalsTable(!_.isNil(searchedJournal1) ? searchedJournal1.filter(f => f.data.status === "approved" && parseInt(g.data.accountNumber) === parseInt(f.data.accountNumber)) : adjustedJournals.filter(f => f.data.status === "approved" && parseInt(g.data.accountNumber) === parseInt(f.data.accountNumber)), columns2)}
@@ -834,6 +836,8 @@ const AdjustedJournals = () => {
                             </Col>
                         </Row>
                         </>
+                        }
+                        </>
                         ))}
                     </Collapse.Panel>
                     <Collapse.Panel header="Pending Adjusted Journals" key="4">
@@ -847,6 +851,8 @@ const AdjustedJournals = () => {
                             />
                         </Col>
                         {chartsOfAccounts.map(g => (
+                          <>
+                          {(!_.isNil(searchedJournal2) ? searchedJournal2.some(f => f.data.status === "pending" && parseInt(g.data.accountNumber) === parseInt(f.data.accountNumber)) : adjustedJournals.some(f => f.data.status === "pending" && parseInt(g.data.accountNumber) === parseInt(f.data.accountNumber))) &&
                           <>
                             <Row>
                               <Typography.Text strong>{g.data.accountName}</Typography.Text>
@@ -890,6 +896,8 @@ const AdjustedJournals = () => {
                               </Col>
                           </Row>
                           }
+                          </>
+}
                         </>
                         ))}
                     </Collapse.Panel>
@@ -905,8 +913,12 @@ const AdjustedJournals = () => {
                         </Col>
                         {chartsOfAccounts.map(g => (
                           <>
+                          {(!_.isNil(searchedJournal3) ? searchedJournal3.some(f => f.data.status === "rejected" && parseInt(g.data.accountNumber) === parseInt(f.data.accountNumber)) : adjustedJournals.some(f => f.data.status === "rejected" && parseInt(g.data.accountNumber) === parseInt(f.data.accountNumber))) &&
+                          <>
                             <Typography.Text strong>{g.data.accountName}</Typography.Text>
                             {JournalsTable(!_.isNil(searchedJournal3) ? searchedJournal3.filter(f => f.data.status === "rejected" && parseInt(g.data.accountNumber) === parseInt(f.data.accountNumber)) : adjustedJournals.filter(f => f.data.status === "rejected" && parseInt(g.data.accountNumber) === parseInt(f.data.accountNumber)), columns2)}
+                          </>
+                          }
                           </>
                         ))}
                     </Collapse.Panel>

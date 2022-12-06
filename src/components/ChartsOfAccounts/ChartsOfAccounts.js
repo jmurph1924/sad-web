@@ -72,12 +72,28 @@ const ChartsAccountpage = () => {
       console.log(error.message)
     })
 
+    const usersCollectionRef2 = collection(db, 'ledgers')
+    addDoc(usersCollectionRef2, { journal: parseInt(accountNumber), name: accountName, description: accountCategory, balance, credit, date: dateAccountAdded, debit }).then(response => {
+      try {
+    setError("")
+    setLoading(true)
+    } catch(e) {
+        setError("Failed to create an ledger")
+    }
+    setLoading(false)
+    }).catch(error => {
+      console.log(error.message)
+    })
+
     setTimeout(() => {
     const docRef = doc(db, 'chartsOfAccounts', search.id)
     updateDoc(docRef, { active, accountDescription, accountName, accountCategory, accountSubCategory, balance, comments, credit, debit, initialBalance, normalSide, order, statement }).then(() => {
       message.info("Successfully Updated Account")
       getUsers()
     }).catch(error => console.log(error.message))
+
+
+
     getChartsOfAccounts();
     getChangeLogs();
     setIsEditVisible(false);
