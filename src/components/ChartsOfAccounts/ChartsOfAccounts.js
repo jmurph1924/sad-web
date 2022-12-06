@@ -231,8 +231,9 @@ const ChartsAccountpage = () => {
   };
   const searchAccountNumber = (value) => {
     if(!_.isNil(value)){
-      if(chartsOfAccounts.some(e => _.isEqual(e?.data.accountNumber, value))){
-        setSearch(chartsOfAccounts.find(e => _.isEqual(e?.data.accountNumber, parseInt(value))))
+      if(chartsOfAccounts.some(e => parseInt(e?.data.accountNumber) == value)){
+        console.log(chartsOfAccounts.find(e => _.isEqual(parseInt(e?.data.accountNumber), parseInt(value))))
+        setSearch(chartsOfAccounts.find(e => _.isEqual(parseInt(e?.data.accountNumber), parseInt(value))))
         setIsAccountSearch(true)
       } else {
         message.error("Account Does Not Exist Please Try Again");
@@ -1379,6 +1380,7 @@ const ChartsAccountpage = () => {
                           style={{
                             width: 200,
                           }}
+                          onPressEnter={(e) => searchAccountNumber(e)}
                           onSearch={(e) => searchAccountName(e)}
                         />
                       </Col>
@@ -1388,6 +1390,7 @@ const ChartsAccountpage = () => {
                           style={{
                             width: 200,
                           }}
+                          onPressEnter={(e) => searchAccountNumber(e)}
                           onSearch={(e) => searchAccountNumber(e)}
                         />
                       </Col>
